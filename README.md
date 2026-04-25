@@ -466,7 +466,7 @@ CLI 不经过 MCP Server，直接以 HTTP 客户端身份调 tyc OpenAPI；TypeS
 
 ```bash
 # 从 monorepo 同步（cli/t1_1 子目录视角）
-cp ../../docs/t1_1/api-registry.yaml ./api-registry.yaml
+cp ../../conf/api-registry.yaml ./api-registry.yaml
 npm run build
 ```
 
