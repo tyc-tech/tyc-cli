@@ -1,6 +1,6 @@
 {
   "name": "tyc-agent-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "天眼查 OpenAPI 业务语义层命令行工具 — 167 个聚合工具 / 15 个分类 / 命令行 30 秒直查企业数据",
   "main": "dist/index.js",
   "bin": {
