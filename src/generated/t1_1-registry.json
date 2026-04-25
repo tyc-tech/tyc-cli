@@ -4,7 +4,7 @@
     {
       "group": "company",
       "name_zh": "企业基础信息",
-      "tool_count": 19
+      "tool_count": 52
     },
     {
       "group": "risk",
@@ -14,12 +14,12 @@
     {
       "group": "intellectual_property",
       "name_zh": "知识产权",
-      "tool_count": 10
+      "tool_count": 14
     },
     {
       "group": "operation",
       "name_zh": "经营与公示",
-      "tool_count": 23
+      "tool_count": 32
     },
     {
       "group": "history",
@@ -30,51 +30,6 @@
       "group": "executive",
       "name_zh": "董监高",
       "tool_count": 15
-    },
-    {
-      "group": "equity_relation",
-      "name_zh": "股权与关系图谱",
-      "tool_count": 7
-    },
-    {
-      "group": "group",
-      "name_zh": "集团信息",
-      "tool_count": 4
-    },
-    {
-      "group": "investment_agency",
-      "name_zh": "投资机构",
-      "tool_count": 5
-    },
-    {
-      "group": "private_fund",
-      "name_zh": "私募基金",
-      "tool_count": 4
-    },
-    {
-      "group": "construction_qualification",
-      "name_zh": "建筑资质",
-      "tool_count": 4
-    },
-    {
-      "group": "company_search",
-      "name_zh": "企业搜索",
-      "tool_count": 4
-    },
-    {
-      "group": "financial_analysis",
-      "name_zh": "财务分析",
-      "tool_count": 11
-    },
-    {
-      "group": "enterprise_report",
-      "name_zh": "企业报告",
-      "tool_count": 2
-    },
-    {
-      "group": "geography_park",
-      "name_zh": "地理与园区",
-      "tool_count": 5
     }
   ],
   "tools": [
@@ -3854,8 +3809,8 @@
     },
     {
       "name": "get_equity_tree",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业上下游对外投资关系，包含直接与间接投资企业的层级结构。",
       "params": [
         {
@@ -3879,8 +3834,8 @@
     },
     {
       "name": "get_relation_path",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询两家公司之间路径最短的关联关系，关系囊括法人、任职、投资、分支、诉讼、竞合、债务。",
       "params": [
         {
@@ -3911,8 +3866,8 @@
     },
     {
       "name": "get_relation_graph",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业关系图谱，包含法人、股东、高管、对外投资、分支机构等节点与边关系。",
       "params": [
         {
@@ -3936,8 +3891,8 @@
     },
     {
       "name": "get_equity_ratio",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业股权控制结构及疑似实际控制人路径。",
       "params": [
         {
@@ -3961,8 +3916,8 @@
     },
     {
       "name": "get_controlled_companies",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业向下穿透后实际控制的公司列表，包含对应公司、出资比例、投资链。",
       "params": [
         {
@@ -3986,8 +3941,8 @@
     },
     {
       "name": "get_parent_company",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业总公司信息（若当前企业是分公司）。",
       "params": [
         {
@@ -4011,8 +3966,8 @@
     },
     {
       "name": "get_shareholder_change",
-      "group": "equity_relation",
-      "category_name_zh": "股权与关系图谱",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业股权变更历史。",
       "params": [
         {
@@ -4036,8 +3991,8 @@
     },
     {
       "name": "get_group_info",
-      "group": "group",
-      "category_name_zh": "集团信息",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业所属集团的基本信息与详情，包括集团名称、主公司、疑似实际控制人。",
       "params": [
         {
@@ -4066,12 +4021,12 @@
         }
       ],
       "execution": "serial",
-      "cliMethod": "info"
+      "cliMethod": "group-info"
     },
     {
       "name": "get_group_members",
-      "group": "group",
-      "category_name_zh": "集团信息",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询集团下的成员企业，返回企业的名称、法人、注册资本、成立日期、登记状态。",
       "params": [
         {
@@ -4091,12 +4046,12 @@
           "required": true
         }
       ],
-      "cliMethod": "members"
+      "cliMethod": "group-members"
     },
     {
       "name": "get_group_investors",
-      "group": "group",
-      "category_name_zh": "集团信息",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询集团对外投资企业信息，包括企业名称、法定代表人、登记状态、注册资本、集团内参与投资该企业的成员列表。",
       "params": [
         {
@@ -4126,12 +4081,12 @@
         }
       ],
       "execution": "serial",
-      "cliMethod": "investors"
+      "cliMethod": "group-investors"
     },
     {
       "name": "get_group_shareholders",
-      "group": "group",
-      "category_name_zh": "集团信息",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询集团投资方信息，包括投资方名称、类型、法定代表人、登记状态、集团内被该投资方投资的成员列表。",
       "params": [
         {
@@ -4161,12 +4116,12 @@
         }
       ],
       "execution": "serial",
-      "cliMethod": "shareholders"
+      "cliMethod": "group-shareholders"
     },
     {
       "name": "get_invest_agency_profile",
-      "group": "investment_agency",
-      "category_name_zh": "投资机构",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询投资机构画像，聚合被投企业、机构团队、投资统计分析。",
       "params": [
         {
@@ -4206,8 +4161,8 @@
     },
     {
       "name": "get_invest_agency_news",
-      "group": "investment_agency",
-      "category_name_zh": "投资机构",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询投资机构相关新闻舆情信息。",
       "params": [
         {
@@ -4231,8 +4186,8 @@
     },
     {
       "name": "get_invest_agency_public_investments",
-      "group": "investment_agency",
-      "category_name_zh": "投资机构",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询投资机构的公开与未公开投资产品/企业。",
       "params": [
         {
@@ -4264,8 +4219,8 @@
     },
     {
       "name": "get_invest_agency_funds",
-      "group": "investment_agency",
-      "category_name_zh": "投资机构",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询投资机构管理的基金公司、对外投资基金与基金管理人。",
       "params": [
         {
@@ -4305,8 +4260,8 @@
     },
     {
       "name": "get_invest_agency_events",
-      "group": "investment_agency",
-      "category_name_zh": "投资机构",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询投资机构最新投资动态。",
       "params": [
         {
@@ -4330,8 +4285,8 @@
     },
     {
       "name": "get_private_fund_profile",
-      "group": "private_fund",
-      "category_name_zh": "私募基金",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询私募基金机构画像，聚合登记、会员、诚信、法律意见书状态。",
       "params": [
         {
@@ -4375,12 +4330,12 @@
           "required": false
         }
       ],
-      "cliMethod": "profile"
+      "cliMethod": "private-fund-profile"
     },
     {
       "name": "get_private_fund_executives",
-      "group": "private_fund",
-      "category_name_zh": "私募基金",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询私募基金机构的法定代表人与高管从业资格信息。",
       "params": [
         {
@@ -4408,12 +4363,12 @@
           "required": false
         }
       ],
-      "cliMethod": "executives"
+      "cliMethod": "private-fund-executives"
     },
     {
       "name": "get_private_fund_products",
-      "group": "private_fund",
-      "category_name_zh": "私募基金",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询私募基金机构名下基金产品信息。",
       "params": [
         {
@@ -4433,12 +4388,12 @@
           "required": true
         }
       ],
-      "cliMethod": "products"
+      "cliMethod": "private-fund-products"
     },
     {
       "name": "get_private_fund_related",
-      "group": "private_fund",
-      "category_name_zh": "私募基金",
+      "group": "operation",
+      "category_name_zh": "经营与公示",
       "description": "查询企业相关的私募基金（对外投资中涉及的基金）。",
       "params": [
         {
@@ -4458,12 +4413,12 @@
           "required": true
         }
       ],
-      "cliMethod": "related"
+      "cliMethod": "private-fund-related"
     },
     {
       "name": "get_construction_qualifications",
-      "group": "construction_qualification",
-      "category_name_zh": "建筑资质",
+      "group": "intellectual_property",
+      "category_name_zh": "知识产权",
       "description": "查询企业建筑资质证书，包括发证日期、证书有效期、资质类别、资质证书号、资质名称、发证机关。",
       "params": [
         {
@@ -4495,8 +4450,8 @@
     },
     {
       "name": "get_construction_registered_personnel",
-      "group": "construction_qualification",
-      "category_name_zh": "建筑资质",
+      "group": "intellectual_property",
+      "category_name_zh": "知识产权",
       "description": "查询企业建筑资质注册人员，包括姓名、注册类别、注册号（执业印章号）、注册专业、证书编号。",
       "params": [
         {
@@ -4528,8 +4483,8 @@
     },
     {
       "name": "get_construction_projects",
-      "group": "construction_qualification",
-      "category_name_zh": "建筑资质",
+      "group": "intellectual_property",
+      "category_name_zh": "知识产权",
       "description": "查询企业建筑资质工程项目，包括项目编号、项目名称、项目属地、项目类别、建设单位、中标日期、合同金额。",
       "params": [
         {
@@ -4561,8 +4516,8 @@
     },
     {
       "name": "get_construction_bad_conduct",
-      "group": "construction_qualification",
-      "category_name_zh": "建筑资质",
+      "group": "intellectual_property",
+      "category_name_zh": "知识产权",
       "description": "查询建筑资质企业不良行为，包括诚信记录编号、查看事由、实施部门、发布有效期、决定内容。",
       "params": [
         {
@@ -4586,8 +4541,8 @@
     },
     {
       "name": "search_companies",
-      "group": "company_search",
-      "category_name_zh": "企业搜索",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过关键词检索企业列表，返回企业名称、企业 ID、类型、成立日期、经营状态、统一社会信用代码、法定代表人。",
       "params": [
         {
@@ -4611,8 +4566,8 @@
     },
     {
       "name": "search_companies_by_industry_region",
-      "group": "company_search",
-      "category_name_zh": "企业搜索",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过行业、地区、关键词查询企业列表。",
       "params": [
         {
@@ -4650,8 +4605,8 @@
     },
     {
       "name": "search_companies_by_tag",
-      "group": "company_search",
-      "category_name_zh": "企业搜索",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过行业、地区、标签名称获取企业列表。",
       "params": [
         {
@@ -4682,8 +4637,8 @@
     },
     {
       "name": "search_companies_by_ranking",
-      "group": "company_search",
-      "category_name_zh": "企业搜索",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过榜单名称获取企业列表。",
       "params": [
         {
@@ -4707,8 +4662,8 @@
     },
     {
       "name": "get_financial_summary",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司财务简析数据，包括营业收入、净利润、总资产、净资产、净利率、毛利率、资产负债率。",
       "params": [
         {
@@ -4732,8 +4687,8 @@
     },
     {
       "name": "get_financial_main_indicators",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司年度与季度主要指标数据，包括基本每股收益、扣非每股收益、稀释每股收益、每股净资产。",
       "params": [
         {
@@ -4765,8 +4720,8 @@
     },
     {
       "name": "get_income_statement",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司利润表数据，包括营业总收入、营业总成本、其他经营收益、营业利润、利润总额、净利润。",
       "params": [
         {
@@ -4790,8 +4745,8 @@
     },
     {
       "name": "get_balance_sheet",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司资产负债表数据，包括流动资产、非流动资产合计、流动负债、非流动负债、所有者权益。",
       "params": [
         {
@@ -4815,8 +4770,8 @@
     },
     {
       "name": "get_cash_flow_statement",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司现金流量表数据，包括经营活动现金流、投资活动现金流、筹资活动现金流。",
       "params": [
         {
@@ -4840,8 +4795,8 @@
     },
     {
       "name": "get_share_structure",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司股本结构、股本变动、分红、配股等股权演化信息。",
       "params": [
         {
@@ -4889,8 +4844,8 @@
     },
     {
       "name": "get_stock_shareholders",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司十大股东、十大流通股东、参股控股股东。",
       "params": [
         {
@@ -4922,8 +4877,8 @@
     },
     {
       "name": "get_stock_executives",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司董监高、重要人员与联系方式。",
       "params": [
         {
@@ -4963,8 +4918,8 @@
     },
     {
       "name": "get_stock_violations",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司违规处理信息，包括公告日期、处罚对象、处罚类型、处罚金额、处理人。",
       "params": [
         {
@@ -4988,8 +4943,8 @@
     },
     {
       "name": "get_stock_prospectus",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询上市公司招股书信息，包括招股书标题、股票名称、招股书内容、发布日期。",
       "params": [
         {
@@ -5013,8 +4968,8 @@
     },
     {
       "name": "search_listed_companies",
-      "group": "financial_analysis",
-      "category_name_zh": "财务分析",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过搜索关键字获取上市公司信息，返回公司名称、股票名称、股票代码、证券类别、上市状态、上市时间。",
       "params": [
         {
@@ -5038,8 +4993,8 @@
     },
     {
       "name": "get_enterprise_report_basic",
-      "group": "enterprise_report",
-      "category_name_zh": "企业报告",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业基础版信用报告，包括工商信息、分支机构、变更记录、主要人员、联系方式等。",
       "params": [
         {
@@ -5059,12 +5014,12 @@
           "required": true
         }
       ],
-      "cliMethod": "basic"
+      "cliMethod": "enterprise-report-basic"
     },
     {
       "name": "get_enterprise_report_professional",
-      "group": "enterprise_report",
-      "category_name_zh": "企业报告",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业专业版信用报告，包括基础版所有字段 + 司法风险、经营风险、知识产权、经营信息、上市等全维度数据。",
       "params": [
         {
@@ -5084,12 +5039,12 @@
           "required": true
         }
       ],
-      "cliMethod": "professional"
+      "cliMethod": "enterprise-report-professional"
     },
     {
       "name": "get_park_info",
-      "group": "geography_park",
-      "category_name_zh": "地理与园区",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业所在园区信息，包括园区名称、园区面积、主管单位、所属地区。",
       "params": [
         {
@@ -5113,8 +5068,8 @@
     },
     {
       "name": "search_park_companies",
-      "group": "geography_park",
-      "category_name_zh": "地理与园区",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过园区名称获取企业列表，返回企业名称、类型、成立日期、经营状态、统一社会信用代码、法定代表人。",
       "params": [
         {
@@ -5138,8 +5093,8 @@
     },
     {
       "name": "get_nearby_companies",
-      "group": "geography_park",
-      "category_name_zh": "地理与园区",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "通过经纬度查询附近公司。",
       "params": [
         {
@@ -5177,8 +5132,8 @@
     },
     {
       "name": "get_company_location",
-      "group": "geography_park",
-      "category_name_zh": "地理与园区",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业经纬度信息。",
       "params": [
         {
@@ -5198,12 +5153,12 @@
           "required": true
         }
       ],
-      "cliMethod": "company-location"
+      "cliMethod": "location"
     },
     {
       "name": "get_company_logo",
-      "group": "geography_park",
-      "category_name_zh": "地理与园区",
+      "group": "company",
+      "category_name_zh": "企业基础信息",
       "description": "查询企业无水印 Logo 链接。",
       "params": [
         {
@@ -5223,7 +5178,7 @@
           "required": true
         }
       ],
-      "cliMethod": "company-logo"
+      "cliMethod": "logo"
     }
   ]
 }

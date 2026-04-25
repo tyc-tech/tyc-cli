@@ -59,7 +59,7 @@ function deriveCliMethod(name: string, group: string): string {
   // 1. 去前缀动词：get_ / search_ / verify_
   let method = name.replace(/^(get_|search_|verify_)/, "");
   // 2. 去分类前缀（如 group=company，方法 company_registration_info → registration_info）
-  //    分类如 private_fund / financial_analysis / enterprise_report 同理处理
+  //    剥离的依据是当前 SSOT 中工具的 group 字段；如 group=company 时 get_company_logo → logo
   if (method.startsWith(group + "_")) {
     method = method.slice(group.length + 1);
   }

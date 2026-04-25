@@ -15,7 +15,7 @@
 
 **核心能力**：
 
-- 🎯 **15 大业务分类**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高 · 股权图谱 · 集团信息 · 投资机构 · 私募基金 · 建筑资质 · 企业搜索 · 财务分析 · 企业报告 · 地理与园区
+- 🎯 **6 大业务分类**：企业基础信息（含股权图谱 / 集团 / 企业搜索 / 财务分析 / 企业报告 / 地理园区子分类）· 风险合规 · 知识产权（含建筑资质子分类）· 经营与公示（含投资机构 / 私募基金子分类）· 历史信息 · 董监高
 - 🔧 **167 个聚合工具**：每个工具内部自动并发调多个 tyc 原子 API，按业务语义合并输出
 - 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳自动格式化 / 自动注入 `_summary` / `_empty` / `_warnings` 元数据
 - 🔒 **安全可控**：Authorization 透传不解析，配置文件本地化，敏感字段不入仓
@@ -40,7 +40,7 @@
   - `--pretty`：缩进 2 空格的 JSON，调试友好
   - `--md`：Markdown 表格，复制即用
 - **`--verbose` 调试**：打印 HTTP 请求详情到 stderr，定位问题
-- **`tyc --help` / `tyc <分类> --help`**：动态展开 15 分类下的全部命令
+- **`tyc --help` / `tyc <分类> --help`**：动态展开 6 分类下的全部命令
 
 ### 🏢 为企业级应用设计
 
@@ -64,25 +64,16 @@
 
 ## ⚡ 功能特性
 
-### 15 大业务分类
+### 6 大业务分类
 
 | 分类 | Go 包名 | 工具数 | 适合场景 |
 |------|---------|--------|---------|
-| 企业基础信息 | `company` | 19 | 工商核验、股东、年报、财务概览 |
+| 企业基础信息 | `company` | 52 | 工商核验、股东、年报、财务概览、股权图谱、集团、企业搜索、财务分析、信用报告、园区/经纬度 |
 | 风险合规 | `risk` | 36 | 失信、被执行、行政处罚、破产、欠税 |
-| 知识产权 | `intellectual_property` | 10 | 专利、商标、软著、知产出质 |
-| 经营与公示 | `operation` | 23 | 招投标、资质、许可、舆情、招聘 |
+| 知识产权 | `intellectual_property` | 14 | 专利、商标、软著、知产出质、建筑资质 |
+| 经营与公示 | `operation` | 32 | 招投标、资质、许可、舆情、招聘、投资机构、私募基金 |
 | 历史信息 | `history` | 18 | 历史工商、历史司法、历史投资 |
 | 董监高 | `executive` | 15 | 高管个人画像、控制企业、合作伙伴 |
-| 股权与关系图谱 | `equity_relation` | 7 | 股权树、最短路径、控股穿透 |
-| 集团信息 | `group` | 4 | 集团成员、对外投资、投资方 |
-| 投资机构 | `investment_agency` | 5 | 机构画像、被投、管理基金 |
-| 私募基金 | `private_fund` | 4 | 基金管理人、产品、诚信 |
-| 建筑资质 | `construction_qualification` | 4 | 资质证书、注册人员、工程项目 |
-| 企业搜索 | `company_search` | 4 | 关键词、行业地区、标签搜索 |
-| 财务分析 | `financial_analysis` | 11 | 三表、股本、股东、董监高、招股书 |
-| 企业报告 | `enterprise_report` | 2 | 基础版/专业版信用报告 |
-| 地理与园区 | `geography_park` | 5 | 园区、附近公司、经纬度、Logo |
 
 完整工具清单查看：`tyc <category> --help` 或本仓库 [`api-registry.yaml`](api-registry.yaml)。
 
@@ -139,7 +130,7 @@ tyc risk dishonest-info "..." --pretty --verbose
 | 命令 | 说明 |
 |------|------|
 | `tyc init --authorization <token>` | 配置 Authorization，保存到 `~/.tyc/config.json` |
-| `tyc --help` | 显示 15 个分类总览 |
+| `tyc --help` | 显示 6 个分类总览 |
 | `tyc <category> --help` | 显示某分类下全部命令 |
 | `tyc <category> <method> --help` | 显示具体命令的入参说明 |
 | `tyc --version` | 显示当前版本号 |
@@ -160,7 +151,7 @@ tyc risk dishonest-info "..." --pretty --verbose
 tyc <分类> <方法-kebab> <位置参数> [--可选参数 值]
 ```
 
-- **分类**：15 个 Go 包名（`company` / `risk` / ... / `geography_park`）
+- **分类**：6 个 Go 包名（`company` / `risk` / `intellectual_property` / `operation` / `history` / `executive`）
 - **方法**：自动从 tool name 推导（`get_company_registration_info` → `registration-info`；`get_personnel_dishonest` → `personnel-dishonest`，自动剥离分类前缀）
 - **位置参数**：第一个必填参数（通常是 `searchKey`）
 - **可选参数**：如 `--humanName`、`--searchKey2`、`--id`、`--applicant` 等
@@ -169,7 +160,7 @@ tyc <分类> <方法-kebab> <位置参数> [--可选参数 值]
 
 ## 📚 查询指令手册（节选典型场景）
 
-### 1️⃣ company（企业基础信息，19 个工具）
+### 1️⃣ company（企业基础信息，52 个工具）
 
 ```bash
 # 工商登记基础（多源聚合：ic/baseinfoV2 + ic/companyType）
@@ -227,7 +218,7 @@ tyc risk detail "RISK_ID"
 tyc risk judicial-case "..."
 ```
 
-### 3️⃣ intellectual_property（知识产权，10 个工具）
+### 3️⃣ intellectual_property（知识产权，14 个工具）
 
 ```bash
 # 专利 / 商标 / 软著 / 作品著作权
@@ -249,7 +240,7 @@ tyc intellectual_property search-patents "新能源" --applicant "宁德时代"
 tyc intellectual_property trademark-detail "TM12345"
 ```
 
-### 4️⃣ operation（经营与公示，23 个工具）
+### 4️⃣ operation（经营与公示，32 个工具）
 
 ```bash
 # 招投标
@@ -314,64 +305,81 @@ tyc executive person-risk-overview "..." --humanName "张三"
 tyc executive person-judicial-assistance "..." --humanName "张三"
 ```
 
-### 7️⃣ equity_relation（股权与关系图谱，7 个工具）
+### 7️⃣ company 子分类（33 个工具）
 
 ```bash
-# 股权树 / 控股穿透 / 总公司
-tyc equity_relation equity-tree "..."
-tyc equity_relation controlled-companies "..."
-tyc equity_relation parent-company "..."
+# 股权与关系图谱（原 equity_relation 7 个，已并入 company）
+tyc company equity-tree "..."
+tyc company controlled-companies "..."
+tyc company parent-company "..."
+tyc company relation-graph "..."
+tyc company relation-path "企业 A" --searchKey2 "企业 B"   # 双企业最短路径
+tyc company shareholder-change "..."
 
-# 关系图谱（一键节点+边）
-tyc equity_relation relation-graph "..."
+# 集团信息（原 group 4 个，serial 串行执行）
+tyc company group-info "..."
+tyc company group-members "..."
+tyc company group-investors "..."
+tyc company group-shareholders "..."
 
-# 双企业最短路径
-tyc equity_relation relation-path "企业 A" --searchKey2 "企业 B"
+# 企业搜索（原 company_search 4 个）
+tyc company companies "百度" --industry "互联网"            # 关键词 / 行业地区
+tyc company companies-by-tag "人工智能"
+tyc company companies-by-ranking "胡润榜"
 
-# 股权变更历史
-tyc equity_relation shareholder-change "..."
+# 财务分析（原 financial_analysis 11 个，仅上市公司）
+tyc company income-statement "..."
+tyc company balance-sheet "..."
+tyc company cash-flow-statement "..."
+tyc company financial-summary "..."
+tyc company financial-main-indicators "..."
+tyc company share-structure "..."
+tyc company stock-shareholders "..."
+tyc company stock-executives "..."
+tyc company stock-prospectus "..."
+tyc company stock-violations "..."
+tyc company listed-companies "新能源"
+
+# 企业报告（原 enterprise_report 2 个）
+tyc company enterprise-report-basic "..."
+tyc company enterprise-report-professional "..."
+
+# 地理与园区（原 geography_park 5 个）
+tyc company park-info "中关村软件园"
+tyc company park-companies "中关村软件园"
+tyc company nearby-companies 116.391 --latitude 39.907 --radius 1000
+tyc company location "..."   # 企业经纬度
+tyc company logo "..."       # 企业 Logo
 ```
 
-### 8️⃣ financial_analysis（财务分析，11 个工具，仅上市公司）
+### 8️⃣ operation 子分类（合并自原 2 个分类，9 个工具）
 
 ```bash
-# 财务三表
-tyc financial_analysis income-statement "..."
-tyc financial_analysis balance-sheet "..."
-tyc financial_analysis cash-flow-statement "..."
+# 投资机构（原 investment_agency 5 个，searchKey = 投资机构名）
+tyc operation invest-agency-profile "红杉资本"
+tyc operation invest-agency-news "红杉资本"
+tyc operation invest-agency-public-investments "红杉资本"
+tyc operation invest-agency-funds "红杉资本"
+tyc operation invest-agency-events "红杉资本"
 
-# 主要指标 / 简析
-tyc financial_analysis financial-summary "..."
-tyc financial_analysis financial-main-indicators "..."
-
-# 股本结构 / 十大股东 / 董监高
-tyc financial_analysis share-structure "..."
-tyc financial_analysis stock-shareholders "..."
-tyc financial_analysis stock-executives "..."
-
-# 招股书
-tyc financial_analysis stock-prospectus "..."
-
-# 上市公司搜索
-tyc financial_analysis search-listed-companies "新能源"
+# 私募基金（原 private_fund 4 个）
+tyc operation private-fund-profile "..."
+tyc operation private-fund-executives "..."
+tyc operation private-fund-products "..."
+tyc operation private-fund-related "..."
 ```
 
-### 9️⃣ geography_park（地理与园区，5 个工具）
+### 9️⃣ intellectual_property 子分类（合并自原 1 个分类，4 个工具）
 
 ```bash
-# 园区画像 + 入园企业
-tyc geography_park park-info "中关村软件园"
-tyc geography_park search-park-companies "中关村软件园"
-
-# 经纬度雷达
-tyc geography_park nearby-companies 116.391 --latitude 39.907 --radius 1000
-
-# 企业经纬度 / Logo
-tyc geography_park company-location "..."
-tyc geography_park company-logo "..."
+# 建筑资质（原 construction_qualification 4 个）
+tyc intellectual_property construction-qualifications "..."
+tyc intellectual_property construction-registered-personnel "..."
+tyc intellectual_property construction-projects "..."
+tyc intellectual_property construction-bad-conduct "..."
 ```
 
-> 完整 15 分类的命令清单可通过 `tyc <分类> --help` 实时查看，或浏览 [`api-registry.yaml`](api-registry.yaml)。
+> 完整 6 分类的命令清单可通过 `tyc <分类> --help` 实时查看，或浏览 [`api-registry.yaml`](api-registry.yaml)。
 
 ---
 
@@ -435,7 +443,7 @@ tyc-agent-cli/
     │   └── jsonToMarkdown.ts # JSON → Markdown 表格化（--md 选项使用）
     ├── commands/
     │   ├── init.ts           # tyc init 命令
-    │   └── category.ts       # 动态注册 15 分类 × N 方法子命令
+    │   └── category.ts       # 动态注册 6 分类 × N 方法子命令
     └── generated/
         └── t1_1-registry.json # 构建产物（gitignored，npm pack 不含）
 ```
