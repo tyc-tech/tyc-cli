@@ -1,0 +1,36 @@
+{
+  "name": "tyc-agent-cli-t1_1",
+  "version": "0.1.0",
+  "description": "天眼查 T1.1 业务语义层 CLI — 聚合多个 OpenAPI，返回透传英文 key 的结构化 JSON",
+  "bin": {
+    "tyc": "./dist/index.js"
+  },
+  "scripts": {
+    "prebuild": "tsx scripts/build-registry.ts",
+    "build": "npm run prebuild && tsc && mkdir -p dist/generated && cp src/generated/t1_1-registry.json dist/generated/",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "tianyancha",
+    "tyc",
+    "openapi",
+    "cli",
+    "t1_1",
+    "aggregation"
+  ],
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0",
+    "yaml": "^2.7.0"
+  }
+}
