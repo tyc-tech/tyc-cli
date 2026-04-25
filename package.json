@@ -1,7 +1,8 @@
 {
-  "name": "tyc-agent-cli-t1_1",
+  "name": "tyc-agent-cli",
   "version": "0.1.0",
-  "description": "天眼查 T1.1 业务语义层 CLI — 聚合多个 OpenAPI，返回透传英文 key 的结构化 JSON",
+  "description": "天眼查 OpenAPI 业务语义层命令行工具 — 167 个聚合工具 / 15 个分类 / 命令行 30 秒直查企业数据",
+  "main": "dist/index.js",
   "bin": {
     "tyc": "./dist/index.js"
   },
@@ -9,7 +10,11 @@
     "prebuild": "tsx scripts/build-registry.ts",
     "build": "npm run prebuild && tsc && mkdir -p dist/generated && cp src/generated/t1_1-registry.json dist/generated/",
     "dev": "tsx src/index.ts",
-    "test": "vitest run"
+    "lint": "eslint src/ scripts/",
+    "lint:fix": "eslint src/ scripts/ --fix",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -19,18 +24,45 @@
     "tyc",
     "openapi",
     "cli",
-    "t1_1",
-    "aggregation"
+    "ai-agent",
+    "mcp",
+    "enterprise-data",
+    "due-diligence",
+    "kyb"
   ],
-  "type": "module",
+  "author": "tyc-agent-cli contributors",
   "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/tianyancha-tech/tyc-agent-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tianyancha-tech/tyc-agent-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tianyancha-tech/tyc-agent-cli/issues"
+  },
+  "files": [
+    "dist/",
+    "api-registry.yaml",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "commander": "^13.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.7.0",
+    "vitest": "^2.0.0",
     "yaml": "^2.7.0"
   }
 }

@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import type { TycConfig } from "./types.js";
 
-// T1 与 T1.1 共享配置文件 ~/.tyc/config.json
+// ~/.tyc/config.json
 const CONFIG_DIR = join(homedir(), ".tyc");
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 

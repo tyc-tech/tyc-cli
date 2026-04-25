@@ -3,8 +3,9 @@ import { getCategories, getToolsByGroup } from "../registry.js";
 import { getAuthorization } from "../config.js";
 import { runTool } from "../aggregator.js";
 import { applyTransformer } from "../transformer.js";
+import { jsonToMarkdown } from "../utils/jsonToMarkdown.js";
 
-// T1.1 动态注册：按 api-registry.yaml 生成 `tyc <group> <method>` 命令。
+// 动态注册：按 api-registry.yaml 生成 `tyc <group> <method>` 命令。
 export function registerCategoryCommands(program: Command): void {
   const categories = getCategories();
 
@@ -49,9 +50,16 @@ export function registerCategoryCommands(program: Command): void {
             verbose: !!program.opts().verbose,
           });
           const out = applyTransformer(bound, results, warnings);
-          const text = program.opts().pretty
-            ? JSON.stringify(out, null, 2)
-            : JSON.stringify(out);
+          // 输出格式优先级：--md > --pretty > 紧凑 JSON
+          const opts = program.opts();
+          let text: string;
+          if (opts.md) {
+            text = jsonToMarkdown(out, bound.name);
+          } else if (opts.pretty) {
+            text = JSON.stringify(out, null, 2);
+          } else {
+            text = JSON.stringify(out);
+          }
           console.log(text);
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);

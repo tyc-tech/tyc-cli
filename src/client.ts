@@ -1,4 +1,4 @@
-// T1 与 T1.1 复用同一个底层 tyc OpenAPI HTTP 客户端逻辑。
+// tyc OpenAPI HTTP 客户端逻辑。
 const DOMAIN = "https://open.api.tianyancha.com";
 const BASE_PATH = "/services/open";
 

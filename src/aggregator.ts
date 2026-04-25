@@ -1,4 +1,4 @@
-// T1.1 Aggregator (TS 版本)
+// Aggregator (TS 版本)
 // 对齐 tools/t1_1/aggregator/aggregator.go 的语义：
 //  - parallel: 并发调用全部 sources，required 失败抛错，非 required 失败记 warnings
 //  - serial:   前一步结果注入后一步 params 上下文（{{.scope.result.path}}）

@@ -1,4 +1,4 @@
-// T1.1 Transformer (TS 版本)
+// Transformer (TS 版本)
 // 对齐 tools/t1_1/transformer/transformer.go：
 //   1. 按 sources 声明顺序做顶层 map 覆盖合并
 //   2. 时间戳字段值格式化为 Asia/Shanghai 字符串（key 不变）

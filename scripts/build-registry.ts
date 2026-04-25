@@ -1,8 +1,11 @@
 /**
  * build-registry.ts
  *
- * 读 docs/t1_1/api-registry.yaml 生成 src/generated/t1_1-registry.json。
- * 为每个 tool 计算 cliMethod（kebab-case），校验无命名冲突。
+ * 读 ../api-registry.yaml（仓库自带 SSOT 副本）生成 src/generated/t1_1-registry.json。
+ * 为每个 tool 计算 cliMethod（kebab-case，自动剥离分类前缀），校验无命名冲突。
+ *
+ * 注：此 yaml 是 apimcp monorepo 中 docs/t1_1/api-registry.yaml 的 vendored 副本，
+ *    便于本仓库独立构建与发布到 npm。同步规则见 README.md "SSOT 同步" 一节。
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -10,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const YAML_PATH = resolve(__dirname, "../../../docs/t1_1/api-registry.yaml");
+const YAML_PATH = resolve(__dirname, "../api-registry.yaml");
 const OUT_DIR = resolve(__dirname, "../src/generated");
 const OUT_PATH = resolve(OUT_DIR, "t1_1-registry.json");
 

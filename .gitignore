@@ -1,0 +1,26 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+src/generated/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# 日志
+*.log
+npm-debug.log*
+
+# TypeScript 增量缓存
+*.tsbuildinfo
+
+# 测试覆盖率
+coverage/
+
+# 本地配置（不应入库）
+.env
+.env.local
