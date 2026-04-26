@@ -1,9 +1,9 @@
-# tyc-agent-cli
+# tyc-cli
 
 > 天眼查 OpenAPI 业务语义层命令行工具 —— 为人类与 AI Agent 而生的企业数据查询利器
 
-[![npm version](https://img.shields.io/npm/v/tyc-agent-cli.svg)](https://www.npmjs.com/package/tyc-agent-cli)
-[![npm download](https://img.shields.io/npm/dm/tyc-agent-cli.svg)](https://www.npmjs.com/package/tyc-agent-cli)
+[![npm version](https://img.shields.io/npm/v/tyc-cli.svg)](https://www.npmjs.com/package/tyc-cli)
+[![npm download](https://img.shields.io/npm/dm/tyc-cli.svg)](https://www.npmjs.com/package/tyc-cli)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node ≥ 18](https://img.shields.io/badge/node-%E2%89%A518-brightgreen.svg)](#-环境准备)
 
@@ -11,7 +11,7 @@
 
 ## 📖 项目简介
 
-`tyc-agent-cli` 是基于天眼查 OpenAPI 的命令行工具，旨在帮助开发者和 AI Agent 快速访问企业工商信息、知识产权、司法风险、董监高画像等全维度商业数据。
+`tyc-cli` 是基于天眼查 OpenAPI 的命令行工具，旨在帮助开发者和 AI Agent 快速访问企业工商信息、知识产权、司法风险、董监高画像等全维度商业数据。
 
 **核心能力**：
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 🌟 为什么选择 tyc-agent-cli？
+## 🌟 为什么选择 tyc-cli？
 
 ### 🤖 为 AI Agent 原生设计
 
@@ -50,7 +50,7 @@
 
 ### 🚀 零门槛上手
 
-- **3 分钟安装**：`npm install -g tyc-agent-cli`
+- **3 分钟安装**：`npm install -g tyc-cli`
 - **一行命令查询**：无需编写代码，命令行直达数据
 - **MIT 协议**：可自由二次开发与商用分发
 
@@ -90,11 +90,11 @@
 
 ```bash
 # 全局安装（推荐）
-npm install -g tyc-agent-cli
+npm install -g tyc-cli
 
 # 或本地安装后 npm link
-git clone https://github.com/tianyancha-tech/tyc-agent-cli.git
-cd tyc-agent-cli
+git clone https://github.com/tianyancha-tech/tyc-cli.git
+cd tyc-cli
 npm install && npm run build && npm link
 ```
 
@@ -419,7 +419,7 @@ vim ~/.tyc/config.json
 ## 🏗️ 目录结构
 
 ```
-tyc-agent-cli/
+tyc-cli/
 ├── api-registry.yaml         # SSOT：167 个工具的注册元数据（构建时输入）
 ├── package.json              # bin: tyc / entry: dist/index.js
 ├── tsconfig.json
@@ -452,9 +452,9 @@ tyc-agent-cli/
 
 ## 🔁 与 MCP Server 的关系
 
-`tyc-agent-cli` 配套的 MCP Server（基于 Go 实现的 [apimcp](https://github.com/tianyancha-tech/apimcp)）暴露**完全相同的 167 个工具**到 AI Agent。两者：
+`tyc-cli` 配套的 MCP Server（基于 Go 实现的 [apimcp](https://github.com/tianyancha-tech/apimcp)）暴露**完全相同的 167 个工具**到 AI Agent。两者：
 
-| 维度 | tyc-agent-cli | MCP Server (apimcp) |
+| 维度 | tyc-cli | MCP Server (apimcp) |
 |-----|--------------|---------------------|
 | 协议 | 命令行 / npm 包 | JSON-RPC 2.0 over Streamable HTTP |
 | 实现 | TypeScript | Go |

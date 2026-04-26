@@ -1,5 +1,5 @@
 {
-  "name": "tyc-agent-cli",
+  "name": "tyc-cli",
   "version": "0.1.1",
   "description": "天眼查 OpenAPI 业务语义层命令行工具 — 167 个聚合工具 / 15 个分类 / 命令行 30 秒直查企业数据",
   "main": "dist/index.js",
@@ -30,16 +30,16 @@
     "due-diligence",
     "kyb"
   ],
-  "author": "tyc-agent-cli contributors",
+  "author": "tyc-cli contributors",
   "license": "MIT",
   "type": "module",
-  "homepage": "https://github.com/tianyancha-tech/tyc-agent-cli#readme",
+  "homepage": "https://github.com/tianyancha-tech/tyc-cli#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tianyancha-tech/tyc-agent-cli.git"
+    "url": "git+https://github.com/tianyancha-tech/tyc-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/tianyancha-tech/tyc-agent-cli/issues"
+    "url": "https://github.com/tianyancha-tech/tyc-cli/issues"
   },
   "files": [
     "dist/",
