@@ -1,6 +1,6 @@
 # tyc-cli
 
-> 天眼查 OpenAPI 业务语义层命令行工具 —— 为人类与 AI Agent 而生的企业数据查询利器
+> 天眼查 MCP 命令行工具 —— 为人类与 AI Agent 而生的企业数据查询利器
 
 [![npm version](https://img.shields.io/npm/v/tyc-cli.svg)](https://www.npmjs.com/package/tyc-cli)
 [![npm download](https://img.shields.io/npm/dm/tyc-cli.svg)](https://www.npmjs.com/package/tyc-cli)
@@ -11,71 +11,19 @@
 
 ## 📖 项目简介
 
-`tyc-cli` 是基于天眼查 OpenAPI 的命令行工具，旨在帮助开发者和 AI Agent 快速访问企业工商信息、知识产权、司法风险、董监高画像等全维度商业数据。
+`tyc-cli` 是天眼查 MCP Server 的官方命令行客户端。通过 MCP 协议（JSON-RPC 2.0 over
+Streamable HTTP）调用天眼查 167 个业务语义聚合工具，覆盖企业工商、知产、司法风险、
+董监高等全维度商业数据。
 
-**核心能力**：
+**核心特点**：
 
-- 🎯 **6 大业务分类**：企业基础信息（含股权图谱 / 集团 / 企业搜索 / 财务分析 / 企业报告 / 地理园区子分类）· 风险合规 · 知识产权（含建筑资质子分类）· 经营与公示（含投资机构 / 私募基金子分类）· 历史信息 · 董监高
-- 🔧 **167 个聚合工具**：每个工具内部自动并发调多个 tyc 原子 API，按业务语义合并输出
-- 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳自动格式化 / 自动注入 `_summary` / `_empty` / `_warnings` 元数据
-- 🔒 **安全可控**：Authorization 透传不解析，配置文件本地化，敏感字段不入仓
-
----
-
-## 🌟 为什么选择 tyc-cli？
-
-### 🤖 为 AI Agent 原生设计
-
-- **tyc 英文 key 透传**：返回值顶层全为 `name` / `items` / `creditCode` / `total` 等英文字段，避免中英混用造成的 LLM 理解抖动
-- **时间戳自动格式化**：毫秒时间戳值自动转为 `Asia/Shanghai` 字符串（`yyyy-MM-dd`），key 名不变，便于 Agent 直接消费
-- **空结果归一化**：tyc 的 `经查无结果`（error_code 300000）自动归一为 `{items: [], total: 0, _empty: true}` + 友好摘要，便于 Agent 分支判断
-- **三种输出格式**：紧凑 JSON / 缩进 JSON (`--pretty`) / Markdown 表格 (`--md`)，适配不同 Agent 上屏需求
-- **确定性错误码**：失败/熔断/无权限有清晰区分，可基于退出码自动重试
-
-### 👤 为人类开发者设计
-
-- **简洁命令**：`tyc company registration-info "企业名称"`（自动剥离分类前缀，告别 `tyc company company-registration-info` 冗余）
-- **三种输出 mode**：
-  - 默认紧凑 JSON：适合 `jq` 管道
-  - `--pretty`：缩进 2 空格的 JSON，调试友好
-  - `--md`：Markdown 表格，复制即用
-- **`--verbose` 调试**：打印 HTTP 请求详情到 stderr，定位问题
-- **`tyc --help` / `tyc <分类> --help`**：动态展开 6 分类下的全部命令
-
-### 🏢 为企业级应用设计
-
-- **配置驱动**：统一配置 `~/.tyc/config.json`，支持多环境切换
-- **静态命令树**：构建时从 SSOT (`api-registry.yaml`) 生成命令，无需联网自省
-- **无状态**：每次调用独立鉴权，可水平扩展用于批处理脚本
-
-### 🚀 零门槛上手
-
-- **3 分钟安装**：`npm install -g tyc-cli`
-- **一行命令查询**：无需编写代码，命令行直达数据
-- **MIT 协议**：可自由二次开发与商用分发
-
-### 🛡️ 安全可控
-
-- **Authorization 透传**：CLI 不解析、不验签、不上报，原样发给天眼查 OpenAPI
-- **配置本地化**：token 仅保存在 `~/.tyc/config.json`，权限 600
-- **敏感字段不入仓**：`.gitignore` 排除 `.env` 与本地配置
-
----
-
-## ⚡ 功能特性
-
-### 6 大业务分类
-
-| 分类 | Go 包名 | 工具数 | 适合场景 |
-|------|---------|--------|---------|
-| 企业基础信息 | `company` | 52 | 工商核验、股东、年报、财务概览、股权图谱、集团、企业搜索、财务分析、信用报告、园区/经纬度 |
-| 风险合规 | `risk` | 36 | 失信、被执行、行政处罚、破产、欠税 |
-| 知识产权 | `intellectual_property` | 14 | 专利、商标、软著、知产出质、建筑资质 |
-| 经营与公示 | `operation` | 32 | 招投标、资质、许可、舆情、招聘、投资机构、私募基金 |
-| 历史信息 | `history` | 18 | 历史工商、历史司法、历史投资 |
-| 董监高 | `executive` | 15 | 高管个人画像、控制企业、合作伙伴 |
-
-完整工具清单查看：`tyc <category> --help` 或本仓库 [`api-registry.yaml`](api-registry.yaml)。
+- 🧠 **MCP 客户端架构**：CLI 只做协议转换与参数透传；多源合并、时间戳格式化、
+  空结果归一化、`_summary` 注入等业务逻辑由 MCP Server 完成
+- 🔌 **即插即用**：默认连接官方 MCP 端点 `https://ai-mcp.tianyancha.com/mcp`；
+  支持 `--url` 指向私有部署
+- 🔄 **Session 复用**：`Mcp-Session-Id` 本地缓存 24 小时，后续调用零 initialize 开销
+- 🎯 **6 大业务分类 / 167 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
+- 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳格式化 / `_summary / _empty / _warnings` 元数据
 
 ---
 
@@ -83,16 +31,16 @@
 
 ### 1. 环境准备
 
-- **Node.js**：≥ 18.0.0（推荐 LTS）
+- **Node.js** ≥ 18.0.0（推荐 LTS）
 - **天眼查 API Token**：联系天眼查商务获取或自行注册
 
-### 2. 安装工具
+### 2. 安装
 
 ```bash
 # 全局安装（推荐）
 npm install -g tyc-cli
 
-# 或本地安装后 npm link
+# 或源码安装
 git clone https://github.com/tianyancha-tech/tyc-cli.git
 cd tyc-cli
 npm install && npm run build && npm link
@@ -101,381 +49,224 @@ npm install && npm run build && npm link
 ### 3. 初始化配置
 
 ```bash
+# 连接官方 MCP（默认）
 tyc init --authorization "YOUR_API_TOKEN"
-# Authorization 保存在 ~/.tyc/config.json（与 MCP Server 共享）
+
+# 连接自建 MCP
+tyc init --authorization "YOUR_API_TOKEN" --url "http://your-mcp-host:8080/mcp"
+
+# 仅写配置、不校验（离线环境或先配好稍后上线）
+tyc init --authorization "YOUR_API_TOKEN" --no-verify
 ```
 
-### 4. 开启查询
+> `tyc init` 保存配置后会立即向 MCP 发一次 `initialize`：成功则打印 `已建立 MCP session`，
+> 失败则退出码 1 并提示连通性问题。加 `--no-verify` 可跳过校验。
+
+配置存于 `~/.tyc/config.json`（权限 600）：
+
+```json
+{
+  "url": "https://ai-mcp.tianyancha.com/mcp",
+  "headers": {
+    "Authorization": "YOUR_API_TOKEN"
+  }
+}
+```
+
+### 4. 开始查询
 
 ```bash
-# 企业工商信息
 tyc company registration-info "北京百度网讯科技有限公司"
-
-# 董监高失信被执行（双参数）
-tyc executive personnel-dishonest "北京字节跳动科技有限公司" --humanName "张一鸣"
-
-# Markdown 友好输出
-tyc company registration-info "北京百度网讯科技有限公司" --md
-
-# 缩进 JSON 调试
-tyc risk dishonest-info "..." --pretty --verbose
+tyc risk dishonest-info "..." --md
+tyc executive personnel-dishonest "..." --humanName "张三"
 ```
 
 ---
 
 ## 📖 命令手册
 
-### 基础管理命令
+### 基础命令
 
 | 命令 | 说明 |
 |------|------|
-| `tyc init --authorization <token>` | 配置 Authorization，保存到 `~/.tyc/config.json` |
+| `tyc init --authorization <token>` | 写入 `headers.Authorization`；保存后会立即向 MCP 发一次 `initialize` 校验连通性 |
+| `tyc init --url <url>` | 设置 MCP endpoint |
+| `tyc init --header K=V` | 注入自定义 header（可重复）；值留空则删除该 key |
+| `tyc init --no-verify` | 仅写配置，跳过连通性校验（离线配置场景） |
+| `tyc init --clear-session` | 清除本地 session 缓存 |
 | `tyc --help` | 显示 6 个分类总览 |
 | `tyc <category> --help` | 显示某分类下全部命令 |
 | `tyc <category> <method> --help` | 显示具体命令的入参说明 |
-| `tyc --version` | 显示当前版本号 |
 
 ### 全局选项
 
 | 选项 | 说明 |
 |------|------|
-| `--pretty` | 缩进 2 空格的 JSON 输出（调试友好） |
-| `--md` | Markdown 表格化输出（适合人类阅读 / Agent 上屏） |
-| `--verbose` | 输出 HTTP 请求详情到 stderr |
+| `--pretty` | 缩进 2 空格 JSON 输出（调试友好） |
+| `--md` | Markdown 表格化输出（人类阅读 / Agent 上屏） |
+| `--verbose` | 打印 MCP 请求详情到 stderr（URL / Mcp-Session-Id / 掩码 Authorization / 响应原文） |
 
-> 三个输出模式互斥优先级：`--md` > `--pretty` > 默认紧凑 JSON。
+三种输出互斥优先级：`--md > --pretty > 默认`。
 
-### 数据查询调用格式
+### 环境变量覆盖
 
-```
-tyc <分类> <方法-kebab> <位置参数> [--可选参数 值]
-```
-
-- **分类**：6 个 Go 包名（`company` / `risk` / `intellectual_property` / `operation` / `history` / `executive`）
-- **方法**：自动从 tool name 推导（`get_company_registration_info` → `registration-info`；`get_personnel_dishonest` → `personnel-dishonest`，自动剥离分类前缀）
-- **位置参数**：第一个必填参数（通常是 `searchKey`）
-- **可选参数**：如 `--humanName`、`--searchKey2`、`--id`、`--applicant` 等
+| 变量 | 作用 |
+|------|------|
+| `TYC_MCP_ENDPOINT` | 临时覆盖 `url`（优先级高于 config.json） |
+| `TYC_AUTHORIZATION` | config 中缺省 Authorization 时兜底 |
 
 ---
 
-## 📚 查询指令手册（节选典型场景）
+## 📚 查询指令手册
 
-### 1️⃣ company（企业基础信息，52 个工具）
+### 企业基础信息（company，52）
 
 ```bash
-# 工商登记基础（多源聚合：ic/baseinfoV2 + ic/companyType）
-tyc company registration-info "北京百度网讯科技有限公司"
-
-# 实际控制人
-tyc company actual-controller "..."
-
-# 受益所有人 (UBO)
-tyc company beneficial-owners "..."
-
-# 主要人员
-tyc company key-personnel "..."
-
-# 企业年报
-tyc company annual-reports "..."
-
-# 财务数据（5 源聚合：上市优先 stock/* + 非上市回退 ic/annualreport）
-tyc company financial-data "..."
-
-# 上市信息
-tyc company listing-info "..."
-
-# 三要素核验
-tyc company accuracy "..." --legalPersonName "梁志祥"
+tyc company registration-info "北京百度网讯科技有限公司"   # 工商登记
+tyc company actual-controller "..."                       # 实际控制人
+tyc company beneficial-owners "..."                       # UBO
+tyc company key-personnel "..."                           # 主要人员
+tyc company annual-reports "..."                          # 企业年报
+tyc company financial-data "..."                          # 财务数据（上市/非上市自动回退）
+tyc company accuracy "..." --legalPersonName "梁志祥"     # 三要素核验
+tyc company equity-tree "..."                             # 股权图谱
+tyc company relation-path "A" --searchKey2 "B"            # 双企业最短路径
+tyc company group-info "..."                              # 集团信息（serial 串行执行）
 ```
 
-### 2️⃣ risk（风险合规，36 个工具）
+### 风险合规（risk，36）
 
 ```bash
-# 失信被执行
-tyc risk dishonest-info "..."
-
-# 被执行人
-tyc risk judgment-debtor-info "..."
-
-# 限制高消费
-tyc risk high-consumption-restriction "..."
-
-# 行政处罚
-tyc risk administrative-penalty "..."
-
-# 破产重整
-tyc risk bankruptcy-reorganization "..."
-
-# 司法拍卖 / 裁判文书 / 立案信息 / ...
-
-# 综合风险总览
-tyc risk overview "..."
-
-# 风险详情（基于 ID）
-tyc risk detail "RISK_ID"
-
-# 司法解析
-tyc risk judicial-case "..."
+tyc risk dishonest-info "..."                  # 失信被执行
+tyc risk judgment-debtor-info "..."            # 被执行人
+tyc risk high-consumption-restriction "..."    # 限高
+tyc risk administrative-penalty "..."          # 行政处罚
+tyc risk bankruptcy-reorganization "..."       # 破产重整
+tyc risk overview "..."                        # 综合风险总览
+tyc risk judicial-case "..."                   # 司法解析
 ```
 
-### 3️⃣ intellectual_property（知识产权，14 个工具）
+### 知识产权（intellectual_property，14）
 
 ```bash
-# 专利 / 商标 / 软著 / 作品著作权
 tyc intellectual_property patent-info "..."
 tyc intellectual_property trademark-info "..."
 tyc intellectual_property software-copyright-info "..."
-tyc intellectual_property copyright-work-info "..."
-
-# 网站备案 + 公众号
-tyc intellectual_property internet-service-info "..."
-
-# 创新力评分
-tyc intellectual_property ipr-score "..."
-
-# 专利搜索（搜索类）
+tyc intellectual_property ipr-score "..."                         # 创新力评分
 tyc intellectual_property search-patents "新能源" --applicant "宁德时代"
-
-# 商标详情（基于注册号）
-tyc intellectual_property trademark-detail "TM12345"
+tyc intellectual_property construction-qualifications "..."       # 建筑资质
 ```
 
-### 4️⃣ operation（经营与公示，32 个工具）
+### 经营与公示（operation，32）
 
 ```bash
-# 招投标
 tyc operation bidding-info "..."
-
-# 资质证书 / 行政许可 / 电信许可
 tyc operation qualifications "..."
 tyc operation administrative-license "..."
-tyc operation telecom-license "..."
-
-# 信用评价（纳税信用 + 债券评级）
-tyc operation credit-evaluation "..."
-
-# 融资记录
-tyc operation financing-records "..."
-
-# 新闻舆情
 tyc operation news-sentiment "..."
-
-# 招聘动态
 tyc operation recruitment-info "..."
-
-# 抽查检查 / 双随机抽查
-tyc operation spot-check-info "..."
-tyc operation random-check "..."
+tyc operation invest-agency-profile "红杉资本"         # 投资机构
+tyc operation private-fund-profile "..."               # 私募基金
 ```
 
-### 5️⃣ history（历史信息，18 个工具）
+### 历史信息（history，18）
 
 ```bash
-# 历史工商 / 历史股东 / 历史投资
 tyc history historical-registration "..."
 tyc history historical-shareholders "..."
-tyc history historical-investments "..."
-
-# 历史司法
 tyc history historical-judicial-docs "..."
-tyc history historical-dishonest "..."
-tyc history historical-judgment-debtor "..."
-
-# 历史信息总览
 tyc history historical-overview "..."
 ```
 
-### 6️⃣ executive（董监高 · 双参数实体强锚定，15 个工具）
+### 董监高（executive，15） · 双参数实体强锚定
 
 ```bash
-# 董监高现状（11 个核心工具）
 tyc executive personnel-dishonest "..." --humanName "张三"
-tyc executive personnel-judgment-debtor "..." --humanName "张三"
-tyc executive personnel-high-consumption-ban "..." --humanName "张三"
-tyc executive personnel-controlled-companies "..." --humanName "张三"
-tyc executive personnel-related-companies "..." --humanName "张三"
-
-# 历史维度
-tyc executive personnel-historical-dishonest "..." --humanName "张三"
-
-# 人员画像深度（4 个 TYC 扩展工具）
 tyc executive person-profile "..." --humanName "张三"
 tyc executive person-partners "..." --humanName "张三"
 tyc executive person-risk-overview "..." --humanName "张三"
-tyc executive person-judicial-assistance "..." --humanName "张三"
 ```
 
-### 7️⃣ company 子分类（33 个工具）
-
-```bash
-# 股权与关系图谱（原 equity_relation 7 个，已并入 company）
-tyc company equity-tree "..."
-tyc company controlled-companies "..."
-tyc company parent-company "..."
-tyc company relation-graph "..."
-tyc company relation-path "企业 A" --searchKey2 "企业 B"   # 双企业最短路径
-tyc company shareholder-change "..."
-
-# 集团信息（原 group 4 个，serial 串行执行）
-tyc company group-info "..."
-tyc company group-members "..."
-tyc company group-investors "..."
-tyc company group-shareholders "..."
-
-# 企业搜索（原 company_search 4 个）
-tyc company companies "百度" --industry "互联网"            # 关键词 / 行业地区
-tyc company companies-by-tag "人工智能"
-tyc company companies-by-ranking "胡润榜"
-
-# 财务分析（原 financial_analysis 11 个，仅上市公司）
-tyc company income-statement "..."
-tyc company balance-sheet "..."
-tyc company cash-flow-statement "..."
-tyc company financial-summary "..."
-tyc company financial-main-indicators "..."
-tyc company share-structure "..."
-tyc company stock-shareholders "..."
-tyc company stock-executives "..."
-tyc company stock-prospectus "..."
-tyc company stock-violations "..."
-tyc company listed-companies "新能源"
-
-# 企业报告（原 enterprise_report 2 个）
-tyc company enterprise-report-basic "..."
-tyc company enterprise-report-professional "..."
-
-# 地理与园区（原 geography_park 5 个）
-tyc company park-info "中关村软件园"
-tyc company park-companies "中关村软件园"
-tyc company nearby-companies 116.391 --latitude 39.907 --radius 1000
-tyc company location "..."   # 企业经纬度
-tyc company logo "..."       # 企业 Logo
-```
-
-### 8️⃣ operation 子分类（合并自原 2 个分类，9 个工具）
-
-```bash
-# 投资机构（原 investment_agency 5 个，searchKey = 投资机构名）
-tyc operation invest-agency-profile "红杉资本"
-tyc operation invest-agency-news "红杉资本"
-tyc operation invest-agency-public-investments "红杉资本"
-tyc operation invest-agency-funds "红杉资本"
-tyc operation invest-agency-events "红杉资本"
-
-# 私募基金（原 private_fund 4 个）
-tyc operation private-fund-profile "..."
-tyc operation private-fund-executives "..."
-tyc operation private-fund-products "..."
-tyc operation private-fund-related "..."
-```
-
-### 9️⃣ intellectual_property 子分类（合并自原 1 个分类，4 个工具）
-
-```bash
-# 建筑资质（原 construction_qualification 4 个）
-tyc intellectual_property construction-qualifications "..."
-tyc intellectual_property construction-registered-personnel "..."
-tyc intellectual_property construction-projects "..."
-tyc intellectual_property construction-bad-conduct "..."
-```
-
-> 完整 6 分类的命令清单可通过 `tyc <分类> --help` 实时查看，或浏览 [`api-registry.yaml`](api-registry.yaml)。
+完整命令清单：`tyc <category> --help`。
 
 ---
 
-## ⚙️ 配置说明
-
-### 配置文件路径
+## 🏗️ 架构
 
 ```
-~/.tyc/config.json
+┌─────────────┐         ┌─────────────────────────────┐         ┌─────────────────┐
+│   tyc-cli   │ ──JSON──▶│  天眼查 MCP Server           │ ──HTTP──▶│ tyc OpenAPI     │
+│ (npm / TS)  │ ◀───RPC──│  (ai-mcp.tianyancha.com/mcp) │ ◀───────│                 │
+└─────────────┘         └─────────────────────────────┘         └─────────────────┘
+       │                              │
+       │                              └─ 多源并发聚合 · 时间戳格式化 · _summary 注入 · 空结果归一化
+       │
+       └─ 仅命令树 · 参数透传 · Session 管理 · --md/--pretty 呈现
 ```
 
-### 字段解析
+**CLI 的职责**：
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `authorization` | string | 天眼查 OpenAPI Token，原样透传到下游 |
-| `baseUrl` | string（可选） | 自定义 tyc OpenAPI 域名，默认 `https://open.api.tianyancha.com` |
+1. 解析命令行（commander）
+2. 组装 `tools/call` JSON-RPC 请求，透传 `Authorization` header
+3. Session 管理（`initialize` + 24h 缓存 + 失效重建）
+4. 解析 MCP Streamable HTTP 响应（纯 JSON 或 SSE）
+5. 格式化输出（紧凑 JSON / `--pretty` / `--md`）
 
-### 配置命令
+**CLI 不做**：
 
-```bash
-# 设置/更新 Authorization
-tyc init --authorization "YOUR_API_TOKEN"
-
-# 手动编辑（不推荐）
-vim ~/.tyc/config.json
-```
-
-### 安全性提示
-
-- 配置文件权限默认 600（用户只读写）
-- token 不入 git，`.gitignore` 已排除常见敏感路径
-- `--verbose` 模式下，token 在日志中以 `xxxx****xxxx` 形式打码
+- 不解析 Authorization，不验签，不计费
+- 不合并多源，不做时间戳格式化
+- 不生成 `_summary` / `_empty` / `_warnings`（由 MCP Server 注入）
+- 不缓存业务结果
 
 ---
 
-## 🏗️ 目录结构
+## 📂 目录结构
 
 ```
 tyc-cli/
-├── api-registry.yaml         # SSOT：167 个工具的注册元数据（构建时输入）
-├── package.json              # bin: tyc / entry: dist/index.js
+├── package.json              # bin: tyc · entry: dist/index.js
 ├── tsconfig.json
-├── .eslintrc.cjs
 ├── LICENSE                   # MIT
 ├── README.md                 # 本文件
 ├── CHANGELOG.md
 │
-├── scripts/
-│   └── build-registry.ts     # 构建时：YAML → src/generated/t1_1-registry.json
-│
 └── src/
     ├── index.ts              # CLI 入口（commander 注册）
-    ├── types.ts              # Tool / Param / Source / Registry 类型
-    ├── client.ts             # tyc OpenAPI HTTP 客户端
-    ├── config.ts             # ~/.tyc/config.json 读写
-    ├── registry.ts           # 加载 t1_1-registry.json
-    ├── aggregator.ts         # 多源并发/串行调度 + condition 求值 + params_template 渲染
-    ├── transformer.ts        # 多源合并 + 时间戳格式化 + 元数据注入（_summary/_empty/_warnings）
-    ├── utils/
-    │   └── jsonToMarkdown.ts # JSON → Markdown 表格化（--md 选项使用）
+    ├── types.ts              # Catalog / Session / MCP 类型
+    ├── config.ts             # ~/.tyc/config.json 读写 · 环境变量兜底
+    ├── session.ts            # ~/.tyc/session.json 读写 · 24h TTL
+    ├── mcpClient.ts          # MCP JSON-RPC client · SSE 解析 · 失效重建
+    ├── registry.ts           # 读取打包内 catalog.json（命令树元数据）
+    ├── catalog.json          # 命令元数据：name / group / cliMethod / params
     ├── commands/
-    │   ├── init.ts           # tyc init 命令
-    │   └── category.ts       # 动态注册 6 分类 × N 方法子命令
-    └── generated/
-        └── t1_1-registry.json # 构建产物（gitignored，npm pack 不含）
+    │   ├── init.ts           # tyc init
+    │   └── category.ts       # 动态注册 6 分类 × N 方法
+    └── utils/
+        └── jsonToMarkdown.ts # --md 选项的 Markdown 渲染
 ```
 
 ---
 
-## 🔁 与 MCP Server 的关系
+## ⚙️ Session 管理
 
-`tyc-cli` 配套的 MCP Server（基于 Go 实现的 [apimcp](https://github.com/tianyancha-tech/apimcp)）暴露**完全相同的 167 个工具**到 AI Agent。两者：
+| 场景 | 行为 |
+|------|------|
+| 首次调用 | `initialize` → 读 `Mcp-Session-Id` header → 存 `~/.tyc/session.json` |
+| 24h 内复用 | 直接用缓存 `sessionId`，跳过 `initialize` |
+| 缓存过期（>24h） | 自动 re-initialize，用户无感 |
+| 服务端主动失效（404/410/"session not found"） | 删缓存 → 重建 → 重试 1 次 |
+| `tyc init` 变更 url / Authorization | 配置写入后自动清掉旧 session |
 
-| 维度 | tyc-cli | MCP Server (apimcp) |
-|-----|--------------|---------------------|
-| 协议 | 命令行 / npm 包 | JSON-RPC 2.0 over Streamable HTTP |
-| 实现 | TypeScript | Go |
-| SSOT | `api-registry.yaml` | 共享同一份 yaml |
-| 输出结构 | 完全一致（tyc 英文 key + 时间戳格式化 + 项目元数据） | 同 |
-| 用途 | 命令行直查 / 脚本批处理 / Agent 工具调用 | Agent MCP 协议接入 / Web 中间层 |
+`~/.tyc/session.json` 示例：
 
-CLI 不经过 MCP Server，直接以 HTTP 客户端身份调 tyc OpenAPI；TypeScript 端用 `aggregator.ts` + `transformer.ts` 重现了 Go 端的多源合并与元数据注入逻辑，**保证两端输出 1:1 等价**。
-
----
-
-## 📐 SSOT 同步
-
-本仓库的 `api-registry.yaml` 是 167 工具的 SSOT。`scripts/build-registry.ts` 在 `npm run build` 前自动读取此文件，生成 `src/generated/t1_1-registry.json` 作为 CLI 运行时数据源。
-
-如果你 fork 了上游 [apimcp](https://github.com/tianyancha-tech/apimcp) 大仓库做二次开发，需保持两边 yaml 同步：
-
-```bash
-# 从 monorepo 同步（cli/t1_1 子目录视角）
-cp ../../conf/api-registry.yaml ./api-registry.yaml
-npm run build
+```json
+{
+  "url": "https://ai-mcp.tianyancha.com/mcp",
+  "sessionId": "mcp-session-xxx",
+  "initializedAt": 1777272039739,
+  "protocolVersion": "2024-11-05"
+}
 ```
 
 ---
@@ -485,29 +276,60 @@ npm run build
 | 退出码 | 含义 | 处理建议 |
 |-------|------|---------|
 | 0 | 成功 | — |
-| 1 | 请求失败 | 查 stderr 详情，可能是网络/熔断/参数 |
-| 1 | 配置缺失 | 运行 `tyc init --authorization ...` |
+| 1 | 请求失败 / 配置缺失 / 业务错误 | 查 stderr；常见：未 `tyc init`、MCP 不可达、tyc 无权限 |
 
-下游 tyc OpenAPI 错误码：
+下游 tyc OpenAPI 错误码（由 MCP Server 归一化后呈现）：
 
-| error_code | 含义 | CLI 表现 |
-|-----------|------|---------|
-| 0 | 成功 | 正常输出 |
-| 300000 | 经查无结果 | 自动归一为 `{items: [], total: 0, _empty: true}` + `_summary` 友好文案 |
-| 300005 | 无权限（token 不含此接口） | exit 1 + stderr 详情 |
-| 其他 | 各类业务/系统错误 | exit 1 + 透传错误信息 |
+| error_code | CLI 表现 |
+|-----------|---------|
+| 0 | 正常输出 |
+| 300000（经查无结果） | 成功退出 + `{items: [], total: 0, _empty: true}` + `_summary` |
+| 300005（无权限） | 透传错误 + exit 1 |
+| 其他 | 透传错误 + exit 1 |
+
+---
+
+## 🔁 与 MCP Server 的关系
+
+| 维度 | `tyc-cli` | 天眼查 MCP Server |
+|-----|---------|-------------------|
+| 协议 | MCP client（JSON-RPC over Streamable HTTP） | MCP server |
+| 实现 | TypeScript | Go |
+| 职责 | 命令树 · 参数透传 · 格式化输出 | 多源聚合 · 时间戳格式化 · 元数据注入 · Authorization 透传至 OpenAPI |
+| 运维 | 用户本地安装 | 官方托管 `ai-mcp.tianyancha.com`，或用户自建 |
+
+CLI 和 MCP Server 共享同一 167 工具清单；工具元数据从打包内的 `catalog.json`
+读取，保证命令树冷启动零网络开销。
+
+---
+
+## 🧪 开发自测
+
+如果你 fork 了本项目做二次开发，可以跑打包内的测试脚本验证：
+
+```bash
+# 默认连本地自建 MCP（需要你自己起 apimcp）
+bash test/t1_1/cli/run_t1_1.sh
+
+# 打线上官方 MCP（只需要一个有效 Authorization）
+bash test/t1_1/cli/run_t1_1.sh -o
+
+# 线上 + 详细日志
+bash test/t1_1/cli/run_t1_1.sh -o -v
+
+# 环境变量覆盖
+MCP_URL=https://my-mcp.example.com/mcp AUTH_TOKEN=xxx bash test/t1_1/cli/run_t1_1.sh
+```
+
+`-o` = `--online`，切到 `https://ai-mcp.tianyancha.com/mcp`；`-v` = `--verbose`。
+单分类脚本加 `-p` 可独立触发 preflight：`bash test/t1_1/cli/test_company.sh -p -o`。
 
 ---
 
 ## 🤝 贡献
 
-欢迎 Issue / PR！主要协作流程：
-
-1. Fork 本仓库
-2. 编辑 `api-registry.yaml` 新增工具条目（参考已有条目格式）
-3. `npm run build` 验证生成的命令树
-4. `npm run lint` 通过
-5. 提交 PR
+欢迎 Issue / PR！CLI 代码改动主要集中在 `src/`，工具清单由 MCP Server 侧 SSOT
+同步生成（`catalog.json`）。如果你发现命令树与服务端实际工具集不一致，提 Issue 即可。
 
 ---
 
@@ -515,4 +337,4 @@ npm run build
 
 本项目采用 [MIT License](LICENSE)。
 
-数据来源：天眼查 OpenAPI（用户需自行获取并合规使用 token）。本工具不存储、不转发、不解析用户的查询数据，所有调用直连天眼查接口。
+数据来源：天眼查 OpenAPI（用户需自行获取并合规使用 token）。本工具不存储、不转发、不解析用户的查询数据，所有调用经天眼查 MCP Server 转发。

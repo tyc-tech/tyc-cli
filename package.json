@@ -1,17 +1,16 @@
 {
   "name": "tyc-cli",
-  "version": "0.1.1",
-  "description": "天眼查 OpenAPI 业务语义层命令行工具 — 167 个聚合工具 / 15 个分类 / 命令行 30 秒直查企业数据",
+  "version": "0.2.0",
+  "description": "天眼查 MCP CLI — 167 个业务语义聚合工具 · 命令行直达企业数据 · 通过 MCP Server 调用",
   "main": "dist/index.js",
   "bin": {
     "tyc": "./dist/index.js"
   },
   "scripts": {
-    "prebuild": "tsx scripts/build-registry.ts",
-    "build": "npm run prebuild && tsc && mkdir -p dist/generated && cp src/generated/t1_1-registry.json dist/generated/",
+    "build": "tsc && cp src/catalog.json dist/catalog.json",
     "dev": "tsx src/index.ts",
-    "lint": "eslint src/ scripts/",
-    "lint:fix": "eslint src/ scripts/ --fix",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run build"
@@ -26,6 +25,7 @@
     "cli",
     "ai-agent",
     "mcp",
+    "mcp-client",
     "enterprise-data",
     "due-diligence",
     "kyb"
@@ -43,7 +43,6 @@
   },
   "files": [
     "dist/",
-    "api-registry.yaml",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -62,7 +61,6 @@
     "eslint": "^9.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.7.0",
-    "vitest": "^2.0.0",
-    "yaml": "^2.7.0"
+    "vitest": "^2.0.0"
   }
 }

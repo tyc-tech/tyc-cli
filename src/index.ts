@@ -2,17 +2,17 @@
 import { Command } from "commander";
 import { registerInitCommand } from "./commands/init.js";
 import { registerCategoryCommands } from "./commands/category.js";
-import { getTotalCount, getCategories } from "./registry.js";
+import { getCategories, getTotalCount } from "./registry.js";
 
 const program = new Command()
   .name("tyc")
   .description(
-    `天眼查 CLI — ${getTotalCount()} 个业务语义聚合工具 · ${getCategories().length} 个分类 · 返回 tyc 英文 key 透传结构`
+    `天眼查 CLI — ${getTotalCount()} 个业务语义聚合工具 · ${getCategories().length} 个分类 · 通过 MCP Server 调用，返回 tyc 英文 key 透传结构`
   )
-  .version("0.1.0")
+  .version("0.2.0")
   .option("--pretty", "格式化 JSON 输出（缩进 2 空格）")
   .option("--md", "Markdown 表格化输出（适合人类阅读 / Agent 上屏）")
-  .option("--verbose", "输出请求详情到 stderr");
+  .option("--verbose", "打印 MCP 请求详情到 stderr");
 
 registerInitCommand(program);
 registerCategoryCommands(program);

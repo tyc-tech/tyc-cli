@@ -2,27 +2,36 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 规范，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased]
+## [0.2.0] - 2026-04-27
 
-## [0.1.0] - 2026-04-25
+### 架构重构
+
+- **CLI 改为 MCP 客户端**：不再直连 tyc OpenAPI，所有工具调用走天眼查 MCP Server
+  `https://ai-mcp.tianyancha.com/mcp`（默认），`--url` 可覆盖到自建 MCP
+- **移除本地业务逻辑**：多源聚合 / 时间戳格式化 / `_summary` 注入 / 空结果归一化
+  全部下沉到 MCP Server 端；CLI 只负责命令树、参数透传、`--md/--pretty` 呈现
+- **Session 管理**：首次调用执行 `initialize` 拿 `Mcp-Session-Id`，缓存在
+  `~/.tyc/session.json`，TTL 24 小时；过期或失效自动重建重试
+- **配置格式升级**：`~/.tyc/config.json` 改为 `{ url, headers }`，与通用 MCP
+  客户端配置一致；`Authorization` 写入 `headers.Authorization`，支持自定义 header
+- **Catalog 前置构建**：命令树由打包内 `catalog.json`（由 apimcp 主仓生成）构建，
+  冷启动零网络调用；内容仅含命令元数据（name/group/cliMethod/params），
+  不含服务端实现细节
 
 ### 新增
 
-- 🎉 **首发版本**：天眼查 业务语义层命令行工具
-- **15 个分类 / 167 个聚合工具**：覆盖企业基础信息、风险合规、知识产权、经营与公示、历史信息、董监高、股权与关系图谱、集团信息、投资机构、私募基金、建筑资质、企业搜索、财务分析、企业报告、地理与园区
-- **多源并发聚合**：每个工具自动并发调用多个 tyc OpenAPI，按声明顺序做顶层 map 覆盖合并；少量场景支持 `serial` 串行执行（前一步结果注入下一步参数）
-- **空结果归一化**：tyc `error_code: 300000`（经查无结果）自动归一为 `{items: [], total: 0, _empty: true}` + `_summary` 友好文案
-- **时间戳格式化**：毫秒时间戳值自动转为 `Asia/Shanghai` 字符串（`yyyy-MM-dd` / `yyyy-MM-dd HH:mm:ss`），key 名保持 tyc 英文不变
-- **命令名自动剥离分类前缀**：`get_company_registration_info` → `tyc company registration-info`
-- **三种输出格式**：
-  - 默认：紧凑 JSON（适合脚本管道）
-  - `--pretty`：缩进 JSON（适合调试）
-  - `--md`：Markdown 表格（适合人类阅读 / Agent 上屏）
-- **项目元数据注入**：`_summary` / `_empty` / `_warnings` 下划线前缀字段，与 tyc 业务字段区分
-- **`tyc init` 命令**：保存 Authorization 到 `~/.tyc/config.json`，与同名 MCP Server 共享配置
-- **`tyc list` / `tyc <category> --help`**：动态发现 15 个分类下的全部命令
-- **`--verbose`**：打印 HTTP 请求详情到 stderr，便于调试
+- `tyc init --url <url>`：配置 MCP endpoint（默认 `https://ai-mcp.tianyancha.com/mcp`）
+- `tyc init --header K=V`（可重复）：注入自定义 HTTP header
+- `tyc init --clear-session`：显式清理本地 session 缓存
+- `TYC_MCP_ENDPOINT` / `TYC_AUTHORIZATION` 环境变量覆盖
 
-### 数据源
+### 保留
 
-- 内置 `api-registry.yaml`（167 工具 SSOT）作为构建时数据源，无需联网即可静态生成命令树
+- `tyc <group> <method>` 命令形态与 0.1.0 完全一致
+- `--pretty / --md / --verbose` 三种输出模式
+- tyc 英文 key 透传（由 MCP Server 保证）
+- 6 分类 / 167 工具全量覆盖
+
+## [0.1.0] - 2026-04-25
+
+首发版本：CLI 直连 tyc OpenAPI 的初始实现。
