@@ -14,9 +14,16 @@ export interface CatalogParam {
   description: string;
 }
 
+// Tool 分层标签（对齐 docs/t1_1/tool-layers.md）
+// L0: 概要层（14 个） — 跨维度聚合 / 总览 / 评分 / 实体锚定；Agent 第一跳
+// L1: 明细层（53 个） — 一级数据维度展开；L0 _summary 后的第二跳
+// L2: 专业层（100 个） — ID 详情 / search_* / 上市/私募/建筑等垂直下钻
+export type ToolLayer = "L0" | "L1" | "L2";
+
 export interface CatalogTool {
   name: string;          // MCP tool 原名（如 get_actual_controller）
   group: string;         // company / risk / ...
+  layer: ToolLayer;      // L0 / L1 / L2
   cliMethod: string;     // tyc <group> <cliMethod>
   categoryNameZh: string;
   description: string;
@@ -29,9 +36,15 @@ export interface CatalogCategory {
   tool_count: number;
 }
 
+export interface CatalogLayerSummary {
+  layer: ToolLayer;
+  count: number;
+}
+
 export interface Catalog {
   version: string;
   categories: CatalogCategory[];
+  layers: CatalogLayerSummary[];
   tools: CatalogTool[];
 }
 

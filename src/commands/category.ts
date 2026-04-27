@@ -14,14 +14,24 @@ import type { CatalogTool, McpToolCallResult } from "../types.js";
 
 export function registerCategoryCommands(program: Command): void {
   for (const cat of getCategories()) {
+    const tools = getToolsByGroup(cat.group);
+    const layerCounts = countLayers(tools);
     const catCmd = program
       .command(cat.group)
-      .description(`${cat.name_zh}（${cat.tool_count} 个工具）`);
+      .description(
+        `${cat.name_zh}（${cat.tool_count} 个 · L0=${layerCounts.L0} L1=${layerCounts.L1} L2=${layerCounts.L2}）`
+      );
 
-    for (const tool of getToolsByGroup(cat.group)) {
+    for (const tool of tools) {
       bindMethod(catCmd, tool, program);
     }
   }
+}
+
+function countLayers(tools: CatalogTool[]): Record<"L0" | "L1" | "L2", number> {
+  const c = { L0: 0, L1: 0, L2: 0 };
+  for (const t of tools) c[t.layer] += 1;
+  return c;
 }
 
 function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void {
@@ -31,9 +41,11 @@ function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void 
   const positional = requiredParams[0] || null;
   const remainingRequired = requiredParams.slice(1);
 
+  // 在描述首部打上 [LX] 徽章，让 `tyc <group> --help` / `tyc <group> <method> --help`
+  // 都能直观看到分层信息；徽章不影响 Agent 对 description 的语义理解。
   let methodCmd = catCmd
     .command(tool.cliMethod)
-    .description(tool.description);
+    .description(`[${tool.layer}] ${tool.description}`);
 
   if (positional) {
     methodCmd = methodCmd.argument(`<${positional.name}>`, positional.description);
