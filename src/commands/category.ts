@@ -19,7 +19,7 @@ export function registerCategoryCommands(program: Command): void {
     const catCmd = program
       .command(cat.group)
       .description(
-        `${cat.name_zh}（${cat.tool_count} 个 · L0=${layerCounts.L0} L1=${layerCounts.L1} L2=${layerCounts.L2}）`
+        `${cat.name_zh}（${cat.tool_count} 个 · L0=${layerCounts.L0} L1=${layerCounts.L1} L2=${layerCounts.L2} L3=${layerCounts.L3}）`
       );
 
     for (const tool of tools) {
@@ -28,8 +28,10 @@ export function registerCategoryCommands(program: Command): void {
   }
 }
 
-function countLayers(tools: CatalogTool[]): Record<"L0" | "L1" | "L2", number> {
-  const c = { L0: 0, L1: 0, L2: 0 };
+function countLayers(
+  tools: CatalogTool[]
+): Record<"L0" | "L1" | "L2" | "L3", number> {
+  const c = { L0: 0, L1: 0, L2: 0, L3: 0 };
   for (const t of tools) c[t.layer] += 1;
   return c;
 }

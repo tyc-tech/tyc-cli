@@ -15,10 +15,11 @@ export interface CatalogParam {
 }
 
 // Tool 分层标签（对齐 docs/t1_1/tool-layers.md）
-// L0: 概要层（14 个） — 跨维度聚合 / 总览 / 评分 / 实体锚定；Agent 第一跳
-// L1: 明细层（53 个） — 一级数据维度展开；L0 _summary 后的第二跳
-// L2: 专业层（100 个） — ID 详情 / search_* / 上市/私募/建筑等垂直下钻
-export type ToolLayer = "L0" | "L1" | "L2";
+// L0: 实体锚定层（1 个） — search_companies；用户输入(简称/曾用名/模糊) → 精确企业（USCC + 别名 + 状态）。Agent 第 0 跳：不解决"是哪家"，下游全是漂的。
+// L1: 概要层（13 个） — 跨维度聚合 / 总览 / 评分 / 实体校验；Agent 拿到 USCC 后的第 1 跳。
+// L2: 明细层（53 个） — 一级数据维度展开（股权 / 诉讼 / 年报 / 知识产权 / 人员任职 …）；L1 _summary 指示后的第 2 跳。
+// L3: 专业层（100 个） — ID 详情 / search_* / 上市/私募/建筑/人员微查询；L2 列表条目的最终展开或垂直 SKILL 激活。
+export type ToolLayer = "L0" | "L1" | "L2" | "L3";
 
 export interface CatalogTool {
   name: string;          // MCP tool 原名（如 get_actual_controller）
