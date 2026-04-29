@@ -3,15 +3,15 @@
 // 本文件把"AI 优先的工具发现"这一 CLI 核心卖点落地为具体命令：
 //   - tyc layers          一屏看 4 层全景（架构 + 数量 + 推荐调用顺序）
 //   - tyc L0 list [--md|--json]   列出 L0（1 个实体锚定工具：search_companies）
-//   - tyc L1 list [--md|--json]   列出 L1（13 个概要工具，按分类分组）
-//   - tyc L2 list [--md|--json]   列出 L2（53 个明细工具，按分类分组）
+//   - tyc L1 list [--md|--json]   列出 L1（6 个 facet 队长，每 facet 1 个总览）
+//   - tyc L2 list [--md|--json]   列出 L2（60 个明细工具，按分类分组）
 //   - tyc L3 list [--md|--json]   列出 L3（100 个专业工具，按分类分组）
 //
-// 设计哲学（对齐 v5 §3.3 ①）：
+// 设计哲学：
 //   LLM 工具选择准确率在 10 内 >95%、30 掉到 ~70%、100+ <50%。
-//   tyc 把 L0 剥成"实体锚定"单 tool，默认推荐给 LLM 的 = L0 + L1 = 14（≤ 15 阈值），
-//   L2/L3 按 _summary + drill_down 按需发现。本命令的输出专门面向 Agent：
-//   紧凑、可 grep、可 JSON 解析。
+//   tyc 把 L0 剥成"实体锚定"单 tool，L1 收敛为"6 facet × 1 队长"对称结构，
+//   默认推荐给 LLM 的 = L0 + L1 = 7（≤ 15 默认暴露阈值），L2/L3 按 _summary +
+//   drill_down 按需发现。本命令的输出专门面向 Agent：紧凑、可 grep、可 JSON 解析。
 import type { Command } from "commander";
 import {
   getCategories,
@@ -46,9 +46,9 @@ const LAYER_SPECS: LayerSpec[] = [
     layer: "L1",
     title: "Overview · 概要层",
     summary:
-      "跨维度聚合、总览、评分、实体校验。Agent 拿到 USCC 后的第 1 跳，回包带 _summary + drill_down 线索。",
-    trigger: '"这家公司是什么 / 整体怎么样 / 有没有风险 / 能不能信任"',
-    contract: "不需要你提前知道维度；一次调用就能拿到 _summary + drill_down 线索。",
+      "**6 个 facet 队长，每 facet 1 个总览**：company-base / 风险 / 知产 / 经营信用 / 历史 / 董监高 各 1 个 L1 工具，单次调用聚合该 facet 多子维度。",
+    trigger: '"这家公司整体怎么样 / 风险如何 / 知产实力 / 经营状况 / 历史变更 / 这个人是谁"',
+    contract: "Agent 按 facet 选 1 个 L1 调用即得 _summary + drill_down 线索；不需要你预先在 facet 内挑子维度。",
   },
   {
     layer: "L2",
@@ -169,7 +169,7 @@ function renderLayersText(): string {
   const total = getTotalCount();
   const defaultSurface = getLayerCount("L0") + getLayerCount("L1");
   const lines: string[] = [];
-  lines.push("tyc-cli · Layered Tool Architecture (v5 §3.3 ①)");
+  lines.push("tyc-cli · Layered Tool Architecture");
   lines.push(
     `Total ${total} tools  ·  L0=${getLayerCount("L0")}  L1=${getLayerCount(
       "L1"
@@ -182,7 +182,7 @@ function renderLayersText(): string {
     `  tyc carves L0 into a single entity-resolution tool, so the default LLM`
   );
   lines.push(
-    `  surface is L0 + L1 = ${defaultSurface} tools (≤ v5's 15-tool limit);`
+    `  surface is L0 + L1 = ${defaultSurface} tools (≤ 15-tool exposure limit);`
   );
   lines.push("  L2/L3 are discovered on demand via _summary / drill_down_tools.");
   lines.push("");
@@ -221,7 +221,7 @@ function renderLayersMarkdown(): string {
     )}** · **L2=${getLayerCount("L2")}** · **L3=${getLayerCount("L3")}**  `
   );
   lines.push(
-    `> Design rationale (v5 §3.3 ①): LLM tool-selection accuracy collapses above 30 tools; tyc carves L0 into a dedicated entity-resolution tool so the default LLM surface = L0 + L1 = ${defaultSurface} tools (≤ 15-tool limit), discovers L2/L3 on demand.`
+    `> Design rationale: LLM tool-selection accuracy collapses above 30 tools; tyc carves L0 into a dedicated entity-resolution tool so the default LLM surface = L0 + L1 = ${defaultSurface} tools (≤ 15-tool limit), discovers L2/L3 on demand.`
   );
   lines.push("");
   lines.push("| Layer | Tools | Summary | Trigger |");

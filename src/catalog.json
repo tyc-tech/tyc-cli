@@ -5,12 +5,12 @@
     {
       "group": "company",
       "name_zh": "企业基础信息",
-      "tool_count": 52
+      "tool_count": 50
     },
     {
       "group": "risk",
       "name_zh": "风险合规",
-      "tool_count": 36
+      "tool_count": 35
     },
     {
       "group": "intellectual_property",
@@ -40,15 +40,15 @@
     },
     {
       "layer": "L1",
-      "count": 13
+      "count": 6
     },
     {
       "layer": "L2",
-      "count": 53
+      "count": 58
     },
     {
       "layer": "L3",
-      "count": 100
+      "count": 99
     }
   ],
   "tools": [
@@ -199,7 +199,7 @@
     {
       "name": "get_company_profile",
       "group": "company",
-      "layer": "L1",
+      "layer": "L2",
       "cliMethod": "profile",
       "categoryNameZh": "企业基础信息",
       "description": "查询企业的简介信息，包括企业名称、简介，适用于企业画像构建、企业业务分析场景。",
@@ -231,7 +231,7 @@
     {
       "name": "get_company_scale",
       "group": "company",
-      "layer": "L1",
+      "layer": "L2",
       "cliMethod": "scale",
       "categoryNameZh": "企业基础信息",
       "description": "查询企业规模相关指标，包括人员规模、参保人数、分支机构数量、对外投资数量等。",
@@ -247,7 +247,7 @@
     {
       "name": "get_company_tags",
       "group": "company",
-      "layer": "L1",
+      "layer": "L2",
       "cliMethod": "tags",
       "categoryNameZh": "企业基础信息",
       "description": "查询企业标签，包括领域分类、主营业务、榜单等标签信息。",
@@ -283,38 +283,6 @@
       "cliMethod": "controlled-companies",
       "categoryNameZh": "企业基础信息",
       "description": "查询企业向下穿透后实际控制的公司列表，包含对应公司、出资比例、投资链。",
-      "params": [
-        {
-          "name": "searchKey",
-          "type": "string",
-          "required": true,
-          "description": "企业名称 或 统一社会信用代码"
-        }
-      ]
-    },
-    {
-      "name": "get_enterprise_report_basic",
-      "group": "company",
-      "layer": "L1",
-      "cliMethod": "enterprise-report-basic",
-      "categoryNameZh": "企业基础信息",
-      "description": "查询企业基础版信用报告，包括工商信息、分支机构、变更记录、主要人员、联系方式等。",
-      "params": [
-        {
-          "name": "searchKey",
-          "type": "string",
-          "required": true,
-          "description": "企业名称 或 统一社会信用代码"
-        }
-      ]
-    },
-    {
-      "name": "get_enterprise_report_professional",
-      "group": "company",
-      "layer": "L1",
-      "cliMethod": "enterprise-report-professional",
-      "categoryNameZh": "企业基础信息",
-      "description": "查询企业专业版信用报告，包括基础版所有字段 + 司法风险、经营风险、知识产权、经营信息、上市等全维度数据。",
       "params": [
         {
           "name": "searchKey",
@@ -407,7 +375,7 @@
     {
       "name": "get_financial_summary",
       "group": "company",
-      "layer": "L1",
+      "layer": "L2",
       "cliMethod": "financial-summary",
       "categoryNameZh": "企业基础信息",
       "description": "查询上市公司财务简析数据，包括营业收入、净利润、总资产、净资产、净利率、毛利率、资产负债率。",
@@ -903,7 +871,7 @@
     {
       "name": "verify_company_accuracy",
       "group": "company",
-      "layer": "L1",
+      "layer": "L2",
       "cliMethod": "accuracy",
       "categoryNameZh": "企业基础信息",
       "description": "核实企业名称、法定代表人与统一社会信用代码的匹配性，适用于企业实名认证、准入资质初审及基础信息准确性校验。",
@@ -2434,22 +2402,6 @@
       "cliMethod": "default-info",
       "categoryNameZh": "风险合规",
       "description": "查询企业违约相关事项（聚合失信与被执行人中违约类条目）。",
-      "params": [
-        {
-          "name": "searchKey",
-          "type": "string",
-          "required": true,
-          "description": "企业名称 或 统一社会信用代码"
-        }
-      ]
-    },
-    {
-      "name": "get_disciplinary_list",
-      "group": "risk",
-      "layer": "L3",
-      "cliMethod": "disciplinary-list",
-      "categoryNameZh": "风险合规",
-      "description": "查询企业被纳入惩戒/黑名单情况（数据来源：天眼查风险标签聚合）。",
       "params": [
         {
           "name": "searchKey",

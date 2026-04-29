@@ -12,7 +12,7 @@ import {
 // 顶层 help：把"最懂 AI 的 CLI"落在 4 层架构 + 调用顺序 + 可发现性上。
 // Agent 看 tyc --help 时应立刻读懂"先 L0 锚定企业，再 L1 概览，再 L2 下钻，最后 L3 详情"这条主线。
 const helpText = `
-ARCHITECTURE — Layered Tool Discovery for LLM Agents (v5 §3.3 ①)
+ARCHITECTURE — Layered Tool Discovery for LLM Agents
 
   Cognitive research shows LLM tool-selection accuracy collapses above
   30 tools (>95% at 10, ~70% at 30, <50% at 100+). tyc counters this with
@@ -20,7 +20,7 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents (v5 §3.3 ①)
   entity-resolution layer:
 
     ┌─ L0  Resolve       ${pad(getLayerCount("L0"), 3)} tool    entity resolution · 简称/曾用名/模糊名 → 精确企业
-    ├─ L1  Overview     ${pad(getLayerCount("L1"), 3)} tools   cross-facet aggregation · scoring · entity-check
+    ├─ L1  Overview     ${pad(getLayerCount("L1"), 3)} tools   one captain per facet · returns _summary + drill_down
     ├─ L2  Drill-down   ${pad(getLayerCount("L2"), 3)} tools   one-hop into a specific data dimension
     └─ L3  Specialized  ${pad(getLayerCount("L3"), 3)} tools   id-based detail · search_* · vertical SKILLs
 
@@ -39,7 +39,7 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents (v5 §3.3 ①)
   Rule of thumb: the smaller the layer number, the higher the information
   density per token. L0 is MANDATORY — skipping it (without a USCC already
   in hand) wastes downstream calls on the wrong entity.
-  Default LLM surface = L0 + L1 = ${getLayerCount("L0") + getLayerCount("L1")} tools (≤ v5's 15-tool limit).
+  Default LLM surface = L0 + L1 = ${getLayerCount("L0") + getLayerCount("L1")} tools (≤ 15-tool exposure limit).
 
 DISCOVER BY LAYER
 
