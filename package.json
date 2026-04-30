@@ -33,13 +33,13 @@
   "author": "tyc-cli contributors",
   "license": "MIT",
   "type": "module",
-  "homepage": "https://github.com/tianyancha-tech/tyc-cli#readme",
+  "homepage": "https://github.com/tyc-tech/tyc-cli#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tianyancha-tech/tyc-cli.git"
+    "url": "git+https://github.com/tyc-tech/tyc-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/tianyancha-tech/tyc-cli/issues"
+    "url": "https://github.com/tyc-tech/tyc-cli/issues"
   },
   "files": [
     "dist/",

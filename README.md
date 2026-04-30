@@ -41,7 +41,7 @@ Streamable HTTP）调用天眼查 163 个业务语义聚合工具，覆盖企业
 npm install -g tyc-cli
 
 # 或源码安装
-git clone https://github.com/tianyancha-tech/tyc-cli.git
+git clone https://github.com/tyc-tech/tyc-cli.git
 cd tyc-cli
 npm install && npm run build && npm link
 ```
