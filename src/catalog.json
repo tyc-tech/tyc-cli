@@ -5,7 +5,7 @@
     {
       "group": "company",
       "name_zh": "企业基础信息",
-      "tool_count": 50
+      "tool_count": 49
     },
     {
       "group": "risk",
@@ -44,7 +44,7 @@
     },
     {
       "layer": "L2",
-      "count": 58
+      "count": 57
     },
     {
       "layer": "L3",
@@ -732,22 +732,6 @@
       "cliMethod": "stock-violations",
       "categoryNameZh": "企业基础信息",
       "description": "查询上市公司违规处理信息，包括公告日期、处罚对象、处罚类型、处罚金额、处理人。",
-      "params": [
-        {
-          "name": "searchKey",
-          "type": "string",
-          "required": true,
-          "description": "企业名称 或 统一社会信用代码"
-        }
-      ]
-    },
-    {
-      "name": "get_tax_invoice_info",
-      "group": "company",
-      "layer": "L2",
-      "cliMethod": "tax-invoice-info",
-      "categoryNameZh": "企业基础信息",
-      "description": "查询企业税号开票信息，包括纳税人识别号、企业类型、地址、联系电话、开户行、开户行账号，适用于财务开票场景。",
       "params": [
         {
           "name": "searchKey",
