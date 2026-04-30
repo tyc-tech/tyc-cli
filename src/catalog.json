@@ -25,7 +25,7 @@
     {
       "group": "history",
       "name_zh": "历史信息",
-      "tool_count": 18
+      "tool_count": 17
     },
     {
       "group": "executive",
@@ -48,7 +48,7 @@
     },
     {
       "layer": "L3",
-      "count": 99
+      "count": 98
     }
   ],
   "tools": [
@@ -1295,22 +1295,6 @@
       "cliMethod": "historical-dishonest",
       "categoryNameZh": "历史信息",
       "description": "查询企业历史上曾被列入失信被执行人名单但现已移出的记录，包含案号、执行法院、涉案金额、立案日期等。",
-      "params": [
-        {
-          "name": "searchKey",
-          "type": "string",
-          "required": true,
-          "description": "企业名称 或 统一社会信用代码"
-        }
-      ]
-    },
-    {
-      "name": "get_historical_environmental_penalty",
-      "group": "history",
-      "layer": "L3",
-      "cliMethod": "historical-environmental-penalty",
-      "categoryNameZh": "历史信息",
-      "description": "查询企业历史环保行政处罚记录（从历史行政处罚中按违法类型含环保/环境筛选），包括处罚结果、处罚金额及处罚机关。",
       "params": [
         {
           "name": "searchKey",
