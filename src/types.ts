@@ -24,11 +24,15 @@ export type ToolLayer = "L0" | "L1" | "L2" | "L3";
 export interface CatalogTool {
   name: string;          // MCP tool 原名（如 get_actual_controller）
   group: string;         // company / risk / ...
-  layer: ToolLayer;      // L0 / L1 / L2
+  layer: ToolLayer;      // L0 / L1 / L2 / L3
   cliMethod: string;     // tyc <group> <cliMethod>
   categoryNameZh: string;
   description: string;
   params?: CatalogParam[];
+  // L2 优先（"L2★ 队副"）：每个 L1 facet 在 L2 内挑 1 个高优先下钻工具，
+  // Agent 拿到 L1 _summary 后若不确定该往哪个 L2 钻，优先选这 6 个之一。
+  // 仅 layer=L2 时有意义；缺省视为 false。
+  priority?: boolean;
 }
 
 export interface CatalogCategory {

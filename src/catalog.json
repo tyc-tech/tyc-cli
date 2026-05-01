@@ -675,7 +675,8 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "get_stock_executives",
@@ -964,7 +965,8 @@
           "required": true,
           "description": "人员姓名"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "get_personnel_controlled_companies",
@@ -1446,7 +1448,8 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "get_historical_shareholders",
@@ -1675,7 +1678,8 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "search_patents",
@@ -1759,7 +1763,8 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "get_bonds",
@@ -2558,7 +2563,8 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ]
+      ],
+      "priority": true
     },
     {
       "name": "get_judicial_documents",

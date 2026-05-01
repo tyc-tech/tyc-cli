@@ -6,6 +6,7 @@ import { registerLayerCommands } from "./commands/layers.js";
 import {
   getCategories,
   getLayerCount,
+  getPriorityTools,
   getTotalCount,
 } from "./registry.js";
 
@@ -21,7 +22,7 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
 
     ┌─ L0  Resolve       ${pad(getLayerCount("L0"), 3)} tool    entity resolution · 简称/曾用名/模糊名 → 精确企业
     ├─ L1  Overview     ${pad(getLayerCount("L1"), 3)} tools   one captain per facet · returns _summary + drill_down
-    ├─ L2  Drill-down   ${pad(getLayerCount("L2"), 3)} tools   one-hop into a specific data dimension
+    ├─ L2  Drill-down   ${pad(getLayerCount("L2"), 3)} tools   one-hop into a specific data dimension (★ = L2 优先, see below)
     └─ L3  Specialized  ${pad(getLayerCount("L3"), 3)} tools   id-based detail · search_* · vertical SKILLs
 
   Recommended call order:
@@ -33,6 +34,7 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
                         anchored USCC. Read the response's _summary + drill_down.
     2. Descend to L2.  Follow hints to a specific dimension
                         (shareholders / litigation / patents / annual reports …).
+                        If unsure which L2, default to that facet's L2★ 优先 (below).
     3. Land on L3.     When L2 returns a list item with an \`id\`, a \`search_*\`
                         need arises, or a vertical SKILL is activated.
 
@@ -41,15 +43,23 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
   in hand) wastes downstream calls on the wrong entity.
   Default LLM surface = L0 + L1 = ${getLayerCount("L0") + getLayerCount("L1")} tools (≤ 15-tool exposure limit).
 
+L2 优先 ★ — \`L2★ 队副\`（${getPriorityTools().length} 个，每 facet 1 个）
+
+  Agent 拿到 L1 _summary 后若不确定走哪个 L2，对应 facet 的"L2 优先"是默认下钻：
+
+${renderPriorityLines()}
+
+  Detail: tyc layers / tyc L2 list   (★ marks priority rows)
+
 DISCOVER BY LAYER
 
-  tyc layers              one-screen architecture map
+  tyc layers              one-screen architecture map (含 L2 优先映射)
   tyc L0 list             list the ${getLayerCount("L0")} L0 tool (entity-resolve layer)
   tyc L1 list             list all ${getLayerCount("L1")} L1 tools (overview, grouped)
-  tyc L2 list             list all ${getLayerCount("L2")} L2 tools (drill-down, grouped)
+  tyc L2 list             list all ${getLayerCount("L2")} L2 tools (drill-down; ★ priority pinned to top)
   tyc L3 list             list all ${getLayerCount("L3")} L3 tools (specialized, grouped)
   tyc L0 list --md        Markdown tables (agent on-screen)
-  tyc L0 list --json      machine-readable JSON (id · cli · params · description)
+  tyc L0 list --json      machine-readable JSON (id · cli · params · description · priority)
 
 DISCOVER BY CATEGORY (orthogonal to layers, 6 groups)
 
@@ -83,6 +93,16 @@ function renderCategoryLines(): string {
   for (const c of getCategories()) {
     lines.push(
       `  tyc ${c.group.padEnd(22)} ${c.name_zh}  (${c.tool_count} tools)`
+    );
+  }
+  return lines.join("\n");
+}
+
+function renderPriorityLines(): string {
+  const lines: string[] = [];
+  for (const t of getPriorityTools()) {
+    lines.push(
+      `  ★ ${t.group.padEnd(22)} ${t.name.padEnd(36)} (tyc ${t.group} ${t.cliMethod})`,
     );
   }
   return lines.join("\n");

@@ -1,23 +1,26 @@
 // tyc L0 / L1 / L2 / L3 list  ·  tyc layers
 //
 // 本文件把"AI 优先的工具发现"这一 CLI 核心卖点落地为具体命令：
-//   - tyc layers          一屏看 4 层全景（架构 + 数量 + 推荐调用顺序）
+//   - tyc layers          一屏看 4 层全景（架构 + 数量 + 推荐调用顺序 + L2 优先）
 //   - tyc L0 list [--md|--json]   列出 L0（1 个实体锚定工具：search_companies）
 //   - tyc L1 list [--md|--json]   列出 L1（6 个 facet 队长，每 facet 1 个总览）
-//   - tyc L2 list [--md|--json]   列出 L2（60 个明细工具，按分类分组）
-//   - tyc L3 list [--md|--json]   列出 L3（100 个专业工具，按分类分组）
+//   - tyc L2 list [--md|--json]   列出 L2（按 group 分组；6 个 L2 优先工具置顶 ★）
+//   - tyc L3 list [--md|--json]   列出 L3（按 group 分组）
 //
 // 设计哲学：
 //   LLM 工具选择准确率在 10 内 >95%、30 掉到 ~70%、100+ <50%。
 //   tyc 把 L0 剥成"实体锚定"单 tool，L1 收敛为"6 facet × 1 队长"对称结构，
 //   默认推荐给 LLM 的 = L0 + L1 = 7（≤ 15 默认暴露阈值），L2/L3 按 _summary +
 //   drill_down 按需发现。本命令的输出专门面向 Agent：紧凑、可 grep、可 JSON 解析。
+//
+//   L2 优先（"L2★ 队副"）：每个 L1 facet 在 L2 内挑 1 个高优先下钻工具
+//   （6 个），Agent 拿到 L1 _summary 后若不确定走哪个 L2，默认推这 6 个之一。
 import type { Command } from "commander";
 import {
   getCategories,
   getCategoryName,
   getLayerCount,
-  getLayerSummaries,
+  getPriorityTools,
   getToolsByLayer,
   getTotalCount,
 } from "../registry.js";
@@ -100,11 +103,17 @@ function registerLayers(program: Command): void {
             contract: s.contract,
           })),
           categories: getCategories(),
+          l2_priority: getPriorityTools().map((t) => ({
+            facet: t.group,
+            tool: t.name,
+            cli: `tyc ${t.group} ${t.cliMethod}`,
+            description: t.description,
+          })),
           recommended_call_order: [
             `0. Anchor at L0 — feed the user's raw company name into the ${getLayerCount("L0")} L0 tool (search_companies); lock onto a USCC + official name`,
             `1. Ascend to L1 — pick ONE of the ${getLayerCount("L1")} overview tools with the anchored USCC`,
             "2. Read _summary + drill_down hints from the response",
-            `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools)`,
+            `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools); when unsure which L2, default to the facet's L2 优先 (★, see l2_priority)`,
             `4. Reach L3 for id-based detail, search_*, or vertical SKILL tools (${getLayerCount("L3")} tools)`,
           ],
         };
@@ -143,6 +152,10 @@ function registerLayerCmd(program: Command, spec: LayerSpec): void {
           count: tools.length,
           trigger: spec.trigger,
           contract: spec.contract,
+          priority_count:
+            layer === "L2"
+              ? tools.filter((t) => t.priority).length
+              : undefined,
           tools: tools.map((t) => ({
             name: t.name,
             group: t.group,
@@ -150,6 +163,7 @@ function registerLayerCmd(program: Command, spec: LayerSpec): void {
             cli: `tyc ${t.group} ${t.cliMethod}`,
             description: t.description,
             params: t.params ?? [],
+            ...(t.priority ? { priority: true } : {}),
           })),
         };
         console.log(JSON.stringify(payload, null, 2));
@@ -193,6 +207,19 @@ function renderLayersText(): string {
     lines.push(`      Trigger: ${s.trigger}`);
     lines.push(`      Contract: ${s.contract}`);
     lines.push(`      List:    tyc ${s.layer} list [--md|--json]`);
+    if (s.layer === "L2") {
+      const prio = getPriorityTools();
+      lines.push("");
+      lines.push(
+        `      L2 优先（★ "L2★ 队副"，每 facet 1 个，共 ${prio.length} 个）：Agent 拿到 L1 _summary`
+      );
+      lines.push("      若不确定走哪个 L2，默认推这 6 个之一：");
+      for (const t of prio) {
+        lines.push(
+          `        ★ ${pad(t.group, 22)} ${pad(t.name, 36)} (tyc ${t.group} ${t.cliMethod})`
+        );
+      }
+    }
     lines.push("");
   }
   lines.push("Recommended call order for agents:");
@@ -203,7 +230,9 @@ function renderLayersText(): string {
     `  1. Ascend to L1 — one of the ${getLayerCount("L1")} overview tools, with the anchored USCC`
   );
   lines.push("  2. Read _summary + drill_down hints in the response");
-  lines.push(`  3. Drill to L2 for a specific dimension (${getLayerCount("L2")} tools)`);
+  lines.push(
+    `  3. Drill to L2 for a specific dimension (${getLayerCount("L2")} tools); unsure which L2 → default to that facet's L2★ 优先 (see L2 block above)`
+  );
   lines.push(
     `  4. Reach L3 for id-based detail / search_* / vertical SKILL (${getLayerCount("L3")} tools)`
   );
@@ -232,6 +261,22 @@ function renderLayersMarkdown(): string {
     );
   }
   lines.push("");
+  // L2 优先（"L2★ 队副"）映射表
+  const prio = getPriorityTools();
+  lines.push(`**L2 优先 ★ — \`L2★ 队副\`（${prio.length} 个，每 facet 1 个）**`);
+  lines.push("");
+  lines.push(
+    "> Agent 拿到 L1 `_summary` 后若不确定走哪个 L2，默认推对应 facet 的 L2 优先工具。"
+  );
+  lines.push("");
+  lines.push("| facet | L2★ 优先工具 | CLI |");
+  lines.push("|---|---|---|");
+  for (const t of prio) {
+    lines.push(
+      `| ${t.group} | \`${t.name}\` | \`tyc ${t.group} ${t.cliMethod}\` |`
+    );
+  }
+  lines.push("");
   lines.push("**Recommended call order for agents**");
   lines.push("");
   lines.push(
@@ -242,7 +287,7 @@ function renderLayersMarkdown(): string {
   );
   lines.push("2. Read `_summary` + `drill_down` hints in the response.");
   lines.push(
-    `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools).`
+    `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools). Unsure which L2 → default to that facet's L2★ 优先 (table above).`
   );
   lines.push(
     `4. Reach L3 for id-based detail, \`search_*\`, or vertical SKILL tools (${getLayerCount("L3")} tools).`
@@ -267,6 +312,30 @@ function renderLayerListText(spec: LayerSpec, tools: CatalogTool[]): string {
   lines.push(`Trigger: ${spec.trigger}`);
   lines.push("");
 
+  // L2 优先置顶（只在 L2 list 渲染）
+  if (spec.layer === "L2") {
+    const prio = tools.filter((t) => t.priority);
+    if (prio.length > 0) {
+      lines.push(`★ L2 优先（"L2★ 队副"，${prio.length} 个，每 facet 1 个）`);
+      lines.push(
+        "  Agent 拿到 L1 _summary 不确定走哪个 L2 时，默认推这 6 个之一。"
+      );
+      const groupsOrder = getCategories().map((c) => c.group);
+      const orderIdx = new Map<string, number>();
+      groupsOrder.forEach((g, i) => orderIdx.set(g, i));
+      const sortedPrio = [...prio].sort(
+        (a, b) =>
+          (orderIdx.get(a.group) ?? 999) - (orderIdx.get(b.group) ?? 999),
+      );
+      for (const t of sortedPrio) {
+        const cli = `tyc ${t.group} ${t.cliMethod}`;
+        lines.push(`  ★ ${pad(t.group, 22)} ${pad(t.name, 36)}  ${cli}`);
+        lines.push(`      ${oneLine(t.description)}`);
+      }
+      lines.push("");
+    }
+  }
+
   // 按 group 分组打印（按 categories 中声明顺序）
   const groupsOrder = getCategories().map((c) => c.group);
   const grouped = new Map<string, CatalogTool[]>();
@@ -282,7 +351,8 @@ function renderLayerListText(spec: LayerSpec, tools: CatalogTool[]): string {
     lines.push(`── ${g}  (${zh}, ${arr.length}) ──`);
     for (const t of arr) {
       const cli = `tyc ${t.group} ${t.cliMethod}`;
-      lines.push(`  ${pad(t.name, 46)}  ${cli}`);
+      const star = t.priority ? "★ " : "  ";
+      lines.push(`  ${star}${pad(t.name, 46)}  ${cli}`);
       lines.push(`    ${oneLine(t.description)}`);
     }
     lines.push("");
@@ -304,6 +374,36 @@ function renderLayerListMarkdown(
   lines.push(`> **${n} tool${n === 1 ? "" : "s"}** · ${spec.summary}  `);
   lines.push(`> Trigger: ${spec.trigger}`);
   lines.push("");
+
+  // L2 优先置顶（只在 L2 list 渲染）
+  if (spec.layer === "L2") {
+    const prio = tools.filter((t) => t.priority);
+    if (prio.length > 0) {
+      const groupsOrder = getCategories().map((c) => c.group);
+      const orderIdx = new Map<string, number>();
+      groupsOrder.forEach((g, i) => orderIdx.set(g, i));
+      const sortedPrio = [...prio].sort(
+        (a, b) =>
+          (orderIdx.get(a.group) ?? 999) - (orderIdx.get(b.group) ?? 999),
+      );
+      lines.push(`## ★ L2 优先（\`L2★ 队副\`，${prio.length} 个）`);
+      lines.push("");
+      lines.push(
+        "> 每 facet 1 个；Agent 拿到 L1 `_summary` 不确定走哪个 L2 时，默认推这 6 个之一。"
+      );
+      lines.push("");
+      lines.push("| ★ | facet | Tool | CLI | Description |");
+      lines.push("|---|---|---|---|---|");
+      for (const t of sortedPrio) {
+        const cli = `\`tyc ${t.group} ${t.cliMethod}\``;
+        lines.push(
+          `| ★ | ${t.group} | \`${t.name}\` | ${cli} | ${escapeCell(oneLine(t.description))} |`,
+        );
+      }
+      lines.push("");
+    }
+  }
+
   const groupsOrder = getCategories().map((c) => c.group);
   const grouped = new Map<string, CatalogTool[]>();
   for (const t of tools) {
@@ -321,8 +421,9 @@ function renderLayerListMarkdown(
     lines.push("|---|---|---|");
     for (const t of arr) {
       const cli = `\`tyc ${t.group} ${t.cliMethod}\``;
+      const name = t.priority ? `★ \`${t.name}\`` : `\`${t.name}\``;
       lines.push(
-        `| \`${t.name}\` | ${cli} | ${escapeCell(oneLine(t.description))} |`
+        `| ${name} | ${cli} | ${escapeCell(oneLine(t.description))} |`
       );
     }
     lines.push("");

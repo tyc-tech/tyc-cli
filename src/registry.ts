@@ -82,3 +82,17 @@ export function getLayerCount(layer: ToolLayer): number {
 export function getCategoryName(group: string): string {
   return getCategories().find((c) => c.group === group)?.name_zh ?? group;
 }
+
+// 6 个 L2 优先工具（"L2★ 队副"）：每 facet 1 个，Agent 在 L1 _summary 之后
+// 若不确定该往哪个 L2 钻，默认推这 6 个之一。order 与 categories 声明顺序一致。
+export function getPriorityTools(): CatalogTool[] {
+  const groupsOrder = getCategories().map((c) => c.group);
+  const orderIdx = new Map<string, number>();
+  groupsOrder.forEach((g, i) => orderIdx.set(g, i));
+  return load()
+    .tools.filter((t) => t.priority === true)
+    .sort(
+      (a, b) =>
+        (orderIdx.get(a.group) ?? 999) - (orderIdx.get(b.group) ?? 999),
+    );
+}
