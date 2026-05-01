@@ -7,7 +7,7 @@
 ### 架构重构
 
 - **CLI 改为 MCP 客户端**：不再直连 tyc OpenAPI，所有工具调用走天眼查 MCP Server
-  `https://ai-mcp.tianyancha.com/mcp`（默认），`--url` 可覆盖到自建 MCP
+  `https://mcp.tianyancha.com/v1`（默认），`--url` 可覆盖到自建 MCP
 - **移除本地业务逻辑**：多源聚合 / 时间戳格式化 / `_summary` 注入 / 空结果归一化
   全部下沉到 MCP Server 端；CLI 只负责命令树、参数透传、`--md/--pretty` 呈现
 - **Session 管理**：首次调用执行 `initialize` 拿 `Mcp-Session-Id`，缓存在
@@ -20,7 +20,7 @@
 
 ### 新增
 
-- `tyc init --url <url>`：配置 MCP endpoint（默认 `https://ai-mcp.tianyancha.com/mcp`）
+- `tyc init --url <url>`：配置 MCP endpoint（默认 `https://mcp.tianyancha.com/v1`）
 - `tyc init --header K=V`（可重复）：注入自定义 HTTP header
 - `tyc init --clear-session`：显式清理本地 session 缓存
 - `TYC_MCP_ENDPOINT` / `TYC_AUTHORIZATION` 环境变量覆盖

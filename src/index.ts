@@ -74,7 +74,7 @@ OUTPUT FORMATS (mutually exclusive, priority: --md > --pretty > default)
 
 SETUP
 
-  tyc init --authorization <KEY>                        default https://ai-mcp.tianyancha.com/mcp
+  tyc init --authorization <KEY>                        default https://mcp.tianyancha.com/v1
   tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted
 
 Every tool returns tyc OpenAPI native English keys verbatim. The MCP Server
