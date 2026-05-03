@@ -4,12 +4,18 @@
 //   1. 组装 arguments 映射
 //   2. 调 mcpClient.callTool → MCP Server
 //   3. 从 result.content[0].text 解出业务 JSON（已是服务端合并/格式化后的成品）
-//   4. 按 --md / --pretty / 默认 输出到 stdout
+//   4. 按 --md / --compact / --pretty / 默认 输出，再过 --head/--tail/--full
+//      /--threshold/--output-file 截断 & 落盘
 import type { Command } from "commander";
 import { getCategories, getToolsByGroup } from "../registry.js";
 import { resolveConfig } from "../config.js";
 import { callTool } from "../mcpClient.js";
 import { jsonToMarkdown } from "../utils/jsonToMarkdown.js";
+import {
+  applyTruncation,
+  resolveOptionalInt,
+  TRUNCATE_DEFAULTS,
+} from "../utils/truncate.js";
 import type { CatalogTool, McpToolCallResult } from "../types.js";
 
 export function registerCategoryCommands(program: Command): void {
@@ -105,20 +111,50 @@ function emit(
   try {
     payload = JSON.parse(text);
   } catch {
-    // 非 JSON 文本：直接原样输出
-    process.stdout.write(text.endsWith("\n") ? text : text + "\n");
+    // 非 JSON 文本：直接原样输出（仍走截断 / 落盘）
+    emitWithTruncation(text.endsWith("\n") ? text.slice(0, -1) : text, opts);
     return;
   }
 
+  // 输出模式选择（互斥优先级 --md > --compact > --pretty / 默认 = pretty）
   let rendered: string;
   if (opts.md) {
     rendered = jsonToMarkdown(payload as Record<string, unknown>, toolName);
-  } else if (opts.pretty) {
-    rendered = JSON.stringify(payload, null, 2);
-  } else {
+  } else if (opts.compact) {
     rendered = JSON.stringify(payload);
+  } else {
+    // 默认 = pretty（含 --pretty 显式情况）
+    rendered = JSON.stringify(payload, null, 2);
   }
-  console.log(rendered);
+
+  emitWithTruncation(rendered, opts);
+}
+
+function emitWithTruncation(rendered: string, opts: Record<string, unknown>): void {
+  // 解析 head / tail / threshold：commander 对 `[n]` 在未传值时给 true
+  const head = resolveOptionalInt(opts.head, TRUNCATE_DEFAULTS.HEAD);
+  const tail = resolveOptionalInt(opts.tail, TRUNCATE_DEFAULTS.TAIL);
+  const threshold = resolveOptionalInt(
+    opts.threshold,
+    TRUNCATE_DEFAULTS.THRESHOLD,
+  );
+  const outputFile =
+    typeof opts.outputFile === "string" && opts.outputFile.length > 0
+      ? opts.outputFile
+      : undefined;
+
+  const r = applyTruncation(rendered, {
+    full: !!opts.full,
+    head,
+    tail,
+    threshold,
+    outputFile,
+  });
+
+  console.log(r.rendered);
+  for (const n of r.notices) {
+    process.stderr.write(n + "\n");
+  }
 }
 
 function extractText(result: McpToolCallResult): string | null {

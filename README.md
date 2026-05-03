@@ -100,13 +100,58 @@ tyc executive personnel-dishonest "..." --humanName "张三"
 
 ### 全局选项
 
+#### 输出格式（互斥优先级 `--md` > `--compact` > `--pretty` / 默认）
+
 | 选项 | 说明 |
 |------|------|
-| `--pretty` | 缩进 2 空格 JSON 输出（调试友好） |
+| _(默认)_ | 缩进 2 空格 JSON（pretty）—— 人/Agent 都好读，已成默认 |
+| `--pretty` | 同默认；保留 flag 以保持向后兼容 / 显式声明意图 |
+| `--compact` | 紧凑单行 JSON（旧默认行为；管道 / `jq` 场景） |
 | `--md` | Markdown 表格化输出（人类阅读 / Agent 上屏） |
-| `--verbose` | 打印 MCP 请求详情到 stderr（URL / Mcp-Session-Id / 掩码 Authorization / 响应原文） |
+| `--verbose` | 打印 MCP 请求详情到 stderr（与上述输出格式正交） |
 
-三种输出互斥优先级：`--md > --pretty > 默认`。
+#### 输出截断 / 落盘（与上述输出格式正交，可叠加任意子命令）
+
+| 选项 | 默认值 | 说明 |
+|------|-------:|------|
+| `--head [N]` | 50 | 仅打印前 N 行；与 `--tail` 同时给则同时输出两端，否则只输出 head |
+| `--tail [M]` | 20 | 仅打印后 M 行；与 `--head` 同时给则同时输出两端 |
+| `--full` | false | 强制完整输出（最高优先级，覆盖 `--head/--tail/--threshold`） |
+| `--threshold <BYTES>` | 5000 | **字节截断主开关**：超过该字节数则从头按字节截断；**不传则永不截断** |
+| `--output-file <PATH>` | — | 把完整结果写入指定路径；**不传则永不落盘**（无自动落盘） |
+
+> ⚠️ **截断决策树（与 stdout / 落盘行为）**
+>
+> 1. `--output-file` 给了 → 落盘永远写**完整**结果（与 stdout 是否截断无关）
+> 2. `--full` 最高优先级 → stdout 也输出完整
+> 3. 否则若 `--threshold N` 给了：超过 N 字节从头按字节截；**此模式下 `--head/--tail` 被忽略**
+> 4. 否则若 `--head/--tail` 任一给了 → 行级截断
+> 5. 否则 → 无截断、无落盘
+>
+> 截断与落盘的提示信息（"已写入 …"、"输出被 head=5 截断 …"）打到 stderr，stdout 仍为可程序化解析的纯净数据流。
+
+#### 用法示例
+
+```bash
+# 调试时只看头部
+tyc company registration-info "百度" --head            # 默认 50 行
+tyc company registration-info "百度" --head 10         # 自定义 10 行
+
+# 看头看尾，确认数据起止
+tyc company key-personnel "百度" --head 5 --tail 5
+
+# 字节预算控制（适合塞进 LLM context）
+tyc risk overview "百度" --threshold 4000
+
+# stdout 简洁 + 完整结果落盘
+tyc company equity-tree "百度" --head 30 --output-file ./equity-tree.json
+
+# 强制全量（覆盖以上一切截断）
+tyc operation bidding-info "百度" --full
+
+# 管道场景沿用旧紧凑 JSON
+tyc company registration-info "百度" --compact | jq .name
+```
 
 ### 环境变量覆盖
 
@@ -201,7 +246,7 @@ tyc executive person-risk-overview "..." --humanName "张三"
        │                              │
        │                              └─ 多源并发聚合 · 时间戳格式化 · _summary 注入 · 空结果归一化
        │
-       └─ 仅命令树 · 参数透传 · Session 管理 · --md/--pretty 呈现
+       └─ 仅命令树 · 参数透传 · Session 管理 · pretty/--md/--compact 呈现 · --head/--tail/--full/--threshold/--output-file 截断与落盘
 ```
 
 **CLI 的职责**：
@@ -210,7 +255,7 @@ tyc executive person-risk-overview "..." --humanName "张三"
 2. 组装 `tools/call` JSON-RPC 请求，透传 `Authorization` header
 3. Session 管理（`initialize` + 24h 缓存 + 失效重建）
 4. 解析 MCP Streamable HTTP 响应（纯 JSON 或 SSE）
-5. 格式化输出（紧凑 JSON / `--pretty` / `--md`）
+5. 格式化输出（默认 pretty / `--compact` / `--md`），并可叠加 `--head/--tail/--full/--threshold/--output-file` 做截断与落盘
 
 **CLI 不做**：
 
@@ -243,7 +288,8 @@ tyc-cli/
     │   ├── init.ts           # tyc init
     │   └── category.ts       # 动态注册 6 分类 × N 方法
     └── utils/
-        └── jsonToMarkdown.ts # --md 选项的 Markdown 渲染
+        ├── jsonToMarkdown.ts # --md 选项的 Markdown 渲染
+        └── truncate.ts       # --head/--tail/--full/--threshold/--output-file 截断与落盘
 ```
 
 ---

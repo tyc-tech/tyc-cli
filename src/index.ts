@@ -65,12 +65,29 @@ DISCOVER BY CATEGORY (orthogonal to layers, 6 groups)
 
 ${renderCategoryLines()}
 
-OUTPUT FORMATS (mutually exclusive, priority: --md > --pretty > default)
+OUTPUT FORMATS (mutually exclusive, priority: --md > --compact > --pretty / default)
 
-  (default)    compact single-line JSON (pipe-friendly)
-  --pretty     indented JSON (debug)
+  (default)    indented JSON (pretty) — readable for both humans and agents
+  --pretty     same as default (kept for backward compatibility / explicit intent)
+  --compact    compact single-line JSON (pipe / jq friendly; old default behavior)
   --md         Markdown tables (human + agent on-screen)
-  --verbose    also print MCP request details to stderr
+  --verbose    also print MCP request details to stderr (orthogonal to above)
+
+OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
+
+  --head [N]            print only the first N lines  (N defaults to 50 if flag given alone)
+  --tail [M]            print only the last M lines   (M defaults to 20 if flag given alone)
+                          · --head + --tail together: head + "... omitted ..." + tail
+                          · either flag alone: that side only
+  --full                force-print the FULL rendered content (no truncation; highest priority)
+  --threshold <BYTES>   master switch for byte-truncation. Without --threshold there is
+                        NO automatic truncation, regardless of output size.
+                        With --threshold N: when rendered output > N bytes, byte-truncate
+                        from the head; --head / --tail are IGNORED in this mode.
+  --output-file <PATH>  write the FULL rendered content to PATH. **No file is written
+                        unless --output-file is explicitly passed** (no auto-dump).
+                        Combine with --head/--tail/--threshold to keep stdout terse
+                        while preserving the full result on disk.
 
 SETUP
 
@@ -119,10 +136,28 @@ const program = new Command()
       "L3"
     )} · the AI-native gateway (pair with the TA MCP Server)`
   )
-  .version("0.3.0")
-  .option("--pretty", "格式化 JSON 输出（缩进 2 空格）")
+  .version("0.4.0")
+  .option("--pretty", "缩进 JSON 输出（默认行为，flag 保留以保持向后兼容）")
   .option("--md", "Markdown 表格化输出（适合人类阅读 / Agent 上屏）")
+  .option("--compact", "紧凑单行 JSON（管道 / jq 场景；为旧默认行为）")
   .option("--verbose", "打印 MCP 请求详情到 stderr")
+  .option(
+    "--head [n]",
+    "仅输出前 N 行（不传值默认 50；与 --tail 同时给则同时输出两端）",
+  )
+  .option(
+    "--tail [m]",
+    "仅输出后 M 行（不传值默认 20；与 --head 同时给则同时输出两端）",
+  )
+  .option("--full", "强制输出完整内容（最高优先级，覆盖 --head/--tail/--threshold）")
+  .option(
+    "--output-file <path>",
+    "把完整结果写入指定路径（必须显式指定；不传则永不落盘）",
+  )
+  .option(
+    "--threshold <bytes>",
+    "字节截断主开关：超过该字节数则从头按字节截断；不传则永不截断",
+  )
   .addHelpText("after", helpText);
 
 registerInitCommand(program);
