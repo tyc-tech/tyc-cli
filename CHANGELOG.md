@@ -2,6 +2,34 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 规范，版本号遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.4.0] - 2026-05-03
+
+### 新增
+
+- **输出格式三选一**（互斥优先级 `--md` > `--compact` > `--pretty` / 默认）：
+  - `--compact`：紧凑单行 JSON（旧默认行为；管道 / `jq` 场景）
+  - 默认改为缩进 2 空格 JSON（pretty），人/Agent 通用
+  - `--pretty`：同默认；保留 flag 以保持向后兼容 / 显式声明意图
+  - `--md`：Markdown 表格（人类阅读 / Agent 上屏；自动渲染 `_summary` / 元数据 / `items` 表格）
+- **截断与落盘**（与输出格式正交，可叠加任意子命令）：
+  - `--head [N]`（默认 50）：仅打印前 N 行；与 `--tail` 同时给则同时输出两端
+  - `--tail [M]`（默认 20）：仅打印后 M 行
+  - `--full`：强制完整输出（最高优先级，覆盖 `--head/--tail/--threshold`）
+  - `--threshold <BYTES>`（默认 5000）：**字节截断主开关**——超过该字节数从头按字节截断；**不传则永不截断**；与 `--head/--tail` 同时给则按字节截，行参数被忽略
+  - `--output-file <PATH>`：把完整结果写入指定路径；**必须显式指定才落盘**（不传则永不落盘）
+  - 截断/落盘提示打到 stderr，stdout 保持纯净数据流，便于管道与 `jq` 处理
+
+### 变更
+
+- 默认 stdout 由紧凑单行 JSON 改为缩进 2 空格 JSON。需要旧默认行为的脚本请显式加 `--compact`
+
+## [0.3.0] - 2026-04-29
+
+### 新增
+
+- **分层发现入口**：`tyc layers` / `tyc L0 list` / `tyc L1 list` / `tyc L2 list`，支持 `--md` / `--json`
+- 每个 tool 的 `tyc ... --help` 标题带 `[L0]/[L1]/[L2]` 徽章，让 Agent 先看结构、后发一次 `tools/call`
+
 ## [0.2.0] - 2026-04-27
 
 ### 架构重构
