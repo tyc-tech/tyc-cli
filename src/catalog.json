@@ -5,12 +5,12 @@
     {
       "group": "company",
       "name_zh": "企业基础信息",
-      "tool_count": 49
+      "tool_count": 52
     },
     {
       "group": "risk",
       "name_zh": "风险合规",
-      "tool_count": 35
+      "tool_count": 36
     },
     {
       "group": "intellectual_property",
@@ -113,6 +113,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -129,6 +139,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -161,6 +181,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -289,6 +319,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -337,6 +377,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -417,6 +467,16 @@
           "type": "string",
           "required": true,
           "description": "集团 ID"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -433,6 +493,16 @@
           "type": "string",
           "required": true,
           "description": "集团 ID 或企业名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -449,6 +519,16 @@
           "type": "string",
           "required": true,
           "description": "集团 ID"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -497,6 +577,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -540,6 +630,16 @@
           "name": "radius",
           "type": "string",
           "description": "半径（米，可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -572,6 +672,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -642,6 +752,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -658,6 +778,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -665,6 +795,7 @@
       "name": "get_shareholder_info",
       "group": "company",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "shareholder-info",
       "categoryNameZh": "企业基础信息",
       "description": "查询企业股东构成，包括投资人姓名、持股比例、认缴出资额、出资时间等股权结构情况，适用于股权结构分析、实控人识别。",
@@ -674,9 +805,18 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "get_stock_executives",
@@ -691,6 +831,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -723,6 +873,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -739,6 +899,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -755,6 +925,16 @@
           "type": "string",
           "required": true,
           "description": "关键词"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -781,6 +961,16 @@
           "name": "region",
           "type": "string",
           "description": "地区（可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -797,6 +987,16 @@
           "type": "string",
           "required": true,
           "description": "榜单名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -818,6 +1018,16 @@
           "name": "tag",
           "type": "string",
           "description": "标签名称（可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -834,6 +1044,16 @@
           "type": "string",
           "required": true,
           "description": "关键词"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -850,6 +1070,16 @@
           "type": "string",
           "required": true,
           "description": "园区名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -898,6 +1128,16 @@
           "name": "id",
           "type": "string",
           "description": "司法协助 ID（可选；提供后将同步获取详情）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -949,6 +1189,7 @@
       "name": "get_person_risk_overview",
       "group": "executive",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "person-risk-overview",
       "categoryNameZh": "董监高",
       "description": "查询人员相关天眼风险列表（周边/预警风险）。",
@@ -965,8 +1206,7 @@
           "required": true,
           "description": "人员姓名"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "get_personnel_controlled_companies",
@@ -987,6 +1227,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1009,6 +1259,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1031,6 +1291,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1053,6 +1323,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1075,6 +1355,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1097,6 +1387,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1119,6 +1419,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1207,6 +1517,16 @@
           "type": "string",
           "required": true,
           "description": "董监高人员姓名"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1223,6 +1543,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1239,6 +1569,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1255,6 +1595,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1271,6 +1621,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1287,6 +1647,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1303,6 +1673,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1319,6 +1699,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1335,6 +1725,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1351,6 +1751,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1367,6 +1777,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1383,6 +1803,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1399,6 +1829,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1415,6 +1855,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1438,6 +1888,7 @@
       "name": "get_historical_registration",
       "group": "history",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "historical-registration",
       "categoryNameZh": "历史信息",
       "description": "查询企业历史工商登记信息，包括历史登记状态、注册资本变更、法人变更、注册地址变更等快照。",
@@ -1448,8 +1899,7 @@
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "get_historical_shareholders",
@@ -1464,6 +1914,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1480,6 +1940,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1496,6 +1966,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1512,6 +1992,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1528,6 +2018,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1544,6 +2044,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1560,6 +2070,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1576,6 +2096,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1592,6 +2122,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1624,6 +2164,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1640,6 +2190,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1668,6 +2228,7 @@
       "name": "get_trademark_info",
       "group": "intellectual_property",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "trademark-info",
       "categoryNameZh": "知识产权",
       "description": "查询企业商标注册信息，适用于企业品牌资产评估、知识产权布局分析及商标侵权风险核查场景。来源：国家知识产权局商标局。",
@@ -1677,9 +2238,18 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "search_patents",
@@ -1704,6 +2274,16 @@
           "name": "patentType",
           "type": "string",
           "description": "专利类型（可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1730,6 +2310,16 @@
           "name": "intCls",
           "type": "string",
           "description": "国际分类（可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1746,6 +2336,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1753,6 +2353,7 @@
       "name": "get_bidding_info",
       "group": "operation",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "bidding-info",
       "categoryNameZh": "经营与公示",
       "description": "查询企业参与的招投标项目，包括项目名称、中标情况、项目金额、招标单位，适用于企业业务拓展分析、市场份额评估、竞争对手中标分析。",
@@ -1762,9 +2363,18 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "get_bonds",
@@ -1779,6 +2389,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1795,6 +2415,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1811,6 +2441,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1827,6 +2467,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1843,6 +2493,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1859,6 +2519,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1891,6 +2561,16 @@
           "type": "string",
           "required": true,
           "description": "投资机构名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1907,6 +2587,16 @@
           "type": "string",
           "required": true,
           "description": "投资机构名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1923,6 +2613,16 @@
           "type": "string",
           "required": true,
           "description": "投资机构名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1939,6 +2639,16 @@
           "type": "string",
           "required": true,
           "description": "投资机构名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1955,6 +2665,16 @@
           "type": "string",
           "required": true,
           "description": "投资机构名称"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1971,6 +2691,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -1987,6 +2717,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2019,6 +2759,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2051,6 +2801,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2067,6 +2827,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2083,6 +2853,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2099,6 +2879,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2115,6 +2905,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2131,6 +2931,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2163,6 +2973,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2179,6 +2999,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2195,6 +3025,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2211,6 +3051,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2227,6 +3077,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2253,6 +3113,16 @@
           "name": "bidType",
           "type": "string",
           "description": "公告类型（可选）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2269,6 +3139,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2285,6 +3165,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2301,6 +3191,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2317,6 +3217,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2333,6 +3243,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2349,6 +3269,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2365,6 +3295,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2381,6 +3321,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2397,6 +3347,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2413,6 +3373,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2429,6 +3399,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2445,6 +3425,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2461,6 +3451,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2477,6 +3477,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2493,6 +3503,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2509,6 +3529,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2530,6 +3560,16 @@
           "name": "id",
           "type": "string",
           "description": "司法协助 ID（可选；提供后将同步获取详情）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2546,6 +3586,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2553,6 +3603,7 @@
       "name": "get_judicial_case",
       "group": "risk",
       "layer": "L2",
+      "priority": true,
       "cliMethod": "judicial-case",
       "categoryNameZh": "风险合规",
       "description": "查询企业司法解析信息，包括案件名称、案件类型、案件身份、案由、相关案号、最新审理程序、最新结果。",
@@ -2562,9 +3613,18 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
-      ],
-      "priority": true
+      ]
     },
     {
       "name": "get_judicial_documents",
@@ -2579,6 +3639,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2595,6 +3665,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2643,6 +3723,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2659,6 +3749,16 @@
           "type": "string",
           "required": true,
           "description": "风险 ID（从 get_risk_overview 的结果中获取）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2691,6 +3791,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2707,6 +3817,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2755,6 +3875,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2771,6 +3901,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2787,6 +3927,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2803,6 +3953,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
@@ -2819,6 +3979,16 @@
           "type": "string",
           "required": true,
           "description": "企业名称 或 统一社会信用代码"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     }
