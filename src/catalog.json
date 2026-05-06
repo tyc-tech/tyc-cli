@@ -5,12 +5,12 @@
     {
       "group": "company",
       "name_zh": "企业基础信息",
-      "tool_count": 52
+      "tool_count": 49
     },
     {
       "group": "risk",
       "name_zh": "风险合规",
-      "tool_count": 36
+      "tool_count": 35
     },
     {
       "group": "intellectual_property",
