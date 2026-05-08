@@ -12,7 +12,7 @@
 ## 📖 项目简介
 
 `tyc-cli` 是天眼查 MCP Server 的官方命令行客户端。通过 MCP 协议（JSON-RPC 2.0 over
-Streamable HTTP）调用天眼查 163 个业务语义聚合工具，覆盖企业工商、知产、司法风险、
+Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业工商、知产、司法风险、
 董监高等全维度商业数据。
 
 **核心特点**：
@@ -22,7 +22,7 @@ Streamable HTTP）调用天眼查 163 个业务语义聚合工具，覆盖企业
 - 🔌 **即插即用**：默认连接官方 MCP 端点 `https://mcp.tianyancha.com/v1`；
   支持 `--url` 指向私有部署
 - 🔄 **Session 复用**：`Mcp-Session-Id` 本地缓存 24 小时，后续调用零 initialize 开销
-- 🎯 **6 大业务分类 / 163 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
+- 🎯 **6 大业务分类 / 162 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
 - 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳格式化 / `_summary / _empty / _warnings` 元数据
 
 ---
@@ -344,7 +344,7 @@ tyc-cli/
 | 职责 | 命令树 · 参数透传 · 格式化输出 | 多源聚合 · 时间戳格式化 · 元数据注入 · Authorization 透传至 OpenAPI |
 | 运维 | 用户本地安装 | 官方托管 `mcp.tianyancha.com`，或用户自建 |
 
-CLI 和 MCP Server 共享同一 163 工具清单；工具元数据从打包内的 `catalog.json`
+CLI 和 MCP Server 共享同一 162 工具清单；工具元数据从打包内的 `catalog.json`
 读取，保证命令树冷启动零网络开销。
 
 ---

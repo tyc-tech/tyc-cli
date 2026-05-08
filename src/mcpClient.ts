@@ -18,6 +18,7 @@ import type {
 } from "./types.js";
 import { clearSession, isSessionFresh, loadSession, saveSession } from "./session.js";
 import type { ResolvedConfig } from "./config.js";
+import { VERSION } from "./version.js";
 
 export interface CallOptions {
   verbose?: boolean;
@@ -99,7 +100,7 @@ async function doInitialize(
       params: {
         protocolVersion: PROTOCOL_VERSION,
         capabilities: {},
-        clientInfo: { name: "tyc-cli", version: "0.2.0" },
+        clientInfo: { name: "tyc-cli", version: VERSION },
       },
     },
     verbose

@@ -9,6 +9,7 @@ import {
   getPriorityTools,
   getTotalCount,
 } from "./registry.js";
+import { VERSION } from "./version.js";
 
 // 顶层 help：把"最懂 AI 的 CLI"落在 4 层架构 + 调用顺序 + 可发现性上。
 // Agent 看 tyc --help 时应立刻读懂"先 L0 锚定企业，再 L1 概览，再 L2 下钻，最后 L3 详情"这条主线。
@@ -136,7 +137,7 @@ const program = new Command()
       "L3"
     )} · the AI-native gateway (pair with the TA MCP Server)`
   )
-  .version("0.4.0")
+  .version(VERSION)
   .option("--pretty", "缩进 JSON 输出（默认行为，flag 保留以保持向后兼容）")
   .option("--md", "Markdown 表格化输出（适合人类阅读 / Agent 上屏）")
   .option("--compact", "紧凑单行 JSON（管道 / jq 场景；为旧默认行为）")
