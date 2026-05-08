@@ -41,23 +41,14 @@ function logVerbose(cfg: ResolvedConfig, title: string, extra?: string): void {
   if (extra) console.error(extra);
 }
 
-/** 解析 MCP Streamable HTTP 响应：纯 JSON 或 SSE（`event:` + `data:` 行）。 */
+/** 解析 MCP Streamable HTTP 响应——server 端实测固定回 application/json 单包，
+ *  无论 client Accept 头声明什么。SSE 路径不存在，所以只解析 JSON。 */
 function parseJsonRpc<T>(raw: string): JsonRpcResponse<T> {
   const trimmed = raw.trim();
-  if (trimmed.startsWith("{")) {
-    return JSON.parse(trimmed) as JsonRpcResponse<T>;
+  if (!trimmed.startsWith("{")) {
+    throw new Error(`Unparseable MCP response: ${trimmed.slice(0, 200)}`);
   }
-  // SSE 解析：抓第一个解析成功的 data 行
-  for (const line of trimmed.split(/\r?\n/)) {
-    const s = line.trim();
-    if (!s.startsWith("data:")) continue;
-    const body = s.slice(5).trim();
-    if (!body.startsWith("{")) continue;
-    try {
-      return JSON.parse(body) as JsonRpcResponse<T>;
-    } catch { /* try next */ }
-  }
-  throw new Error(`Unparseable MCP response: ${trimmed.slice(0, 200)}`);
+  return JSON.parse(trimmed) as JsonRpcResponse<T>;
 }
 
 async function httpPost(
@@ -68,7 +59,7 @@ async function httpPost(
 ): Promise<{ status: number; text: string; headers: Headers }> {
   const h: Record<string, string> = {
     "Content-Type": "application/json",
-    "Accept": "application/json, text/event-stream",
+    "Accept": "application/json",
     ...headers,
   };
   if (verbose) {
