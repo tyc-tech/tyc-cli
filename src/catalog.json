@@ -918,7 +918,7 @@
       "layer": "L0",
       "cliMethod": "companies",
       "categoryNameZh": "企业基础信息",
-      "description": "通过关键词检索企业列表，返回企业名称、企业 ID、类型、成立日期、经营状态、统一社会信用代码、法定代表人，并为每个候选企业附带 availableTools 工具建议。",
+      "description": "通过关键词检索企业列表，用于从企业名称、简称、统一社会信用代码等关键词中锚定目标企业并获取企业 ID，返回企业名称、企业 ID、类型、成立日期、经营状态、统一社会信用代码、法定代表人，并为每个候选企业附带 availableTools 工具建议。",
       "params": [
         {
           "name": "searchKey",
@@ -2356,7 +2356,7 @@
       "priority": true,
       "cliMethod": "bidding-info",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业参与的招投标项目，包括项目名称、中标情况、项目金额、招标单位，适用于企业业务拓展分析、市场份额评估、竞争对手中标分析。",
+      "description": "查询企业参与的招投标/资产处置相关公告，包括项目名称、中标情况、项目金额、招标单位；也适用于破产重整招募、重整投资人资格拍卖、司法拍卖、资产处置公告。遇到“税务/规划/司法三重关卡”“重整投资人”“接盘风险”等问题时，应重点核验公告中的税费承担、欠税/税收债权、违章建筑或未办产权、土地用途/亩产税收/产业准入、征收收储、租户腾退、查封抵押冻结和破产程序等条款。",
       "params": [
         {
           "name": "searchKey",
@@ -2408,7 +2408,7 @@
       "layer": "L3",
       "cliMethod": "company-announcement",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业公告（包括上市公司公告与一般企业公告）。",
+      "description": "查询企业公告（包括上市公司公告与一般企业公告）。适用于核验上市公司公告、破产重整/清算公告、管理人公告、资产处置公告、投资人招募公告。遇到“税务/规划/司法三重关卡”“资金来源”“交易对价”“股权比例”“担保责任”等问题时，应优先用公告原文核验，并按用户给定框架分别检查税务、规划/政策、司法/执行等维度。",
       "params": [
         {
           "name": "searchKey",
@@ -3096,13 +3096,13 @@
       "layer": "L3",
       "cliMethod": "bids",
       "categoryNameZh": "经营与公示",
-      "description": "通过招投标标题、采购人、公告类型等方式查询招投标信息。",
+      "description": "通过招投标标题、采购人、公告类型等方式跨公司查询招投标和资产处置信息；也适用于搜索破产重整招募公告、重整投资人资格拍卖、司法拍卖、管理人公告、资产处置公告。遇到“税务/规划/司法三重关卡”“重整投资人”“产业协同”“接盘风险”等问题时，可用“公司名 + 重整/招募/竞买/投资人资格/破产/司法拍卖”等关键词组合检索，并按税务、规划/政策、司法/执行三个维度读取公告。",
       "params": [
         {
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "招投标标题、采购人或公告类型关键词"
+          "description": "招投标标题、采购人或公告类型关键词；可使用“公司名 + 重整/招募/竞买/投资人资格/破产/司法拍卖/资产处置”等组合词。"
         },
         {
           "name": "purchaser",
@@ -3112,7 +3112,7 @@
         {
           "name": "bidType",
           "type": "string",
-          "description": "公告类型（可选）"
+          "description": "公告类型（可选；可配合重整、招募、竞买、投资人资格、破产、司法拍卖等关键词检索）"
         },
         {
           "name": "pageNum",
@@ -3309,10 +3309,10 @@
       ]
     },
     {
-      "name": "get_default_info",
+      "name": "get_default_event_info",
       "group": "risk",
       "layer": "L3",
-      "cliMethod": "default-info",
+      "cliMethod": "default-event-info",
       "categoryNameZh": "风险合规",
       "description": "查询企业违约相关事项（聚合失信与被执行人中违约类条目）。",
       "params": [
