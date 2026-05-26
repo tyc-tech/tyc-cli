@@ -3749,16 +3749,6 @@
           "type": "string",
           "required": true,
           "description": "风险 ID（从 get_risk_overview 的结果中获取）"
-        },
-        {
-          "name": "pageNum",
-          "type": "number",
-          "description": "页码（可选，默认 1）"
-        },
-        {
-          "name": "pageSize",
-          "type": "number",
-          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },
