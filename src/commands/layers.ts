@@ -10,8 +10,9 @@
 // 设计哲学：
 //   LLM 工具选择准确率在 10 内 >95%、30 掉到 ~70%、100+ <50%。
 //   tyc 把 L0 剥成"实体锚定"单 tool，L1 收敛为"6 facet × 1 队长"对称结构，
-//   默认推荐给 LLM 的 = L0 + L1 = 7（≤ 15 默认暴露阈值），L2/L3 按 _summary +
-//   drill_down 按需发现。本命令的输出专门面向 Agent：紧凑、可 grep、可 JSON 解析。
+//   默认推荐给 LLM 的 = L0 + L1 = 7（≤ 15 推荐面阈值），L2/L3 按 _summary、
+//   tyc L<N> list 或 MCP get_company_capabilities 按需发现。本命令的输出专门面向 Agent：
+//   紧凑、可 grep、可 JSON 解析。
 //
 //   L2 优先（"L2★ 队副"）：每个 L1 facet 在 L2 内挑 1 个高优先下钻工具
 //   （6 个），Agent 拿到 L1 _summary 后若不确定走哪个 L2，默认推这 6 个之一。
@@ -51,7 +52,7 @@ const LAYER_SPECS: LayerSpec[] = [
     summary:
       "**6 个 facet 队长，每 facet 1 个总览**：company-base / 风险 / 知产 / 经营信用 / 历史 / 董监高 各 1 个 L1 工具，单次调用聚合该 facet 多子维度。",
     trigger: '"这家公司整体怎么样 / 风险如何 / 知产实力 / 经营状况 / 历史变更 / 这个人是谁"',
-    contract: "Agent 按 facet 选 1 个 L1 调用即得 _summary + drill_down 线索；不需要你预先在 facet 内挑子维度。",
+    contract: "Agent 按 facet 选 1 个 L1 调用即得 _summary；下一跳可用 tyc L2 list 或 MCP get_company_capabilities 确认工具。",
   },
   {
     layer: "L2",
@@ -112,7 +113,7 @@ function registerLayers(program: Command): void {
           recommended_call_order: [
             `0. Anchor at L0 — feed the user's raw company name into the ${getLayerCount("L0")} L0 tool (search_companies); lock onto a USCC + official name`,
             `1. Ascend to L1 — pick ONE of the ${getLayerCount("L1")} overview tools with the anchored USCC`,
-            "2. Read _summary + drill_down hints from the response",
+            "2. Read _summary and pick the next dimension via tyc layer lists or MCP get_company_capabilities",
             `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools); when unsure which L2, default to the facet's L2 优先 (★, see l2_priority)`,
             `4. Reach L3 for id-based detail, search_*, or vertical SKILL tools (${getLayerCount("L3")} tools)`,
           ],
@@ -198,7 +199,7 @@ function renderLayersText(): string {
   lines.push(
     `  surface is L0 + L1 = ${defaultSurface} tools (≤ 15-tool exposure limit);`
   );
-  lines.push("  L2/L3 are discovered on demand via _summary / drill_down_tools.");
+  lines.push("  L2/L3 are discovered on demand via _summary, layer lists, or get_company_capabilities.");
   lines.push("");
   for (const s of LAYER_SPECS) {
     const n = getLayerCount(s.layer);
@@ -229,7 +230,7 @@ function renderLayersText(): string {
   lines.push(
     `  1. Ascend to L1 — one of the ${getLayerCount("L1")} overview tools, with the anchored USCC`
   );
-  lines.push("  2. Read _summary + drill_down hints in the response");
+  lines.push("  2. Read _summary, then choose the next dimension via layer lists or get_company_capabilities");
   lines.push(
     `  3. Drill to L2 for a specific dimension (${getLayerCount("L2")} tools); unsure which L2 → default to that facet's L2★ 优先 (see L2 block above)`
   );
@@ -285,7 +286,7 @@ function renderLayersMarkdown(): string {
   lines.push(
     `1. Ascend to L1 — pick ONE of the ${getLayerCount("L1")} overview tools with the anchored USCC.`
   );
-  lines.push("2. Read `_summary` + `drill_down` hints in the response.");
+  lines.push("2. Read `_summary`, then choose the next dimension via layer lists or MCP `get_company_capabilities`.");
   lines.push(
     `3. Drill to L2 for a specific dimension (items + totals; ${getLayerCount("L2")} tools). Unsure which L2 → default to that facet's L2★ 优先 (table above).`
   );

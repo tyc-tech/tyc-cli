@@ -344,7 +344,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "企业 ID"
+          "description": "企业名称 或 公司 ID"
         }
       ]
     },
@@ -713,7 +713,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "企业 ID"
+          "description": "企业名称 或 公司 ID"
         }
       ]
     },
@@ -918,7 +918,7 @@
       "layer": "L0",
       "cliMethod": "companies",
       "categoryNameZh": "企业基础信息",
-      "description": "通过关键词检索企业列表，用于从企业名称、简称、统一社会信用代码等关键词中锚定目标企业并获取企业 ID，返回企业名称、企业 ID、类型、成立日期、经营状态、统一社会信用代码、法定代表人，并为每个候选企业附带 availableTools 工具建议。",
+      "description": "通过关键词检索企业列表，返回企业名称、企业 ID、类型、成立日期、经营状态、统一社会信用代码、法定代表人。MCP 公开入口确定企业 ID 后，用 get_company_capabilities 查询该企业可用内部工具。",
       "params": [
         {
           "name": "searchKey",

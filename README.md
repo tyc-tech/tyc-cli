@@ -15,6 +15,11 @@
 Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业工商、知产、司法风险、
 董监高等全维度商业数据。
 
+当前 MCP Server 的 `tools/list` 默认只公开少量 AI Agent 入口工具
+（搜索、公司画像、能力目录、`call_tool` / `call_tools_batch` 等），但 162 个业务语义
+工具仍注册在服务端并保持 `tools/call` 兼容。CLI 不依赖 `tools/list` 构建命令树，
+而是使用打包内 `catalog.json` 直达这些业务工具。
+
 **核心特点**：
 
 - 🧠 **MCP 客户端架构**：CLI 只做协议转换与参数透传；多源合并、时间戳格式化、
@@ -164,7 +169,7 @@ tyc company registration-info "百度" --compact | jq .name
 
 ## 📚 查询指令手册
 
-### 企业基础信息（company，50）
+### 企业基础信息（company，49）
 
 ```bash
 tyc company registration-info "北京百度网讯科技有限公司"   # 工商登记
@@ -179,7 +184,7 @@ tyc company relation-path "A" --searchKey2 "B"            # 双企业最短路�
 tyc company group-info "..."                              # 集团信息（serial 串行执行）
 ```
 
-### 风险合规（risk，36）
+### 风险合规（risk，35）
 
 ```bash
 tyc risk dishonest-info "..."                  # 失信被执行
@@ -214,7 +219,7 @@ tyc operation invest-agency-profile "红杉资本"         # 投资机构
 tyc operation private-fund-profile "..."               # 私募基金
 ```
 
-### 历史信息（history，18）
+### 历史信息（history，17）
 
 ```bash
 tyc history historical-registration "..."
@@ -254,7 +259,7 @@ tyc executive person-risk-overview "..." --humanName "张三"
 1. 解析命令行（commander）
 2. 组装 `tools/call` JSON-RPC 请求，透传 `Authorization` header
 3. Session 管理（`initialize` + 24h 缓存 + 失效重建）
-4. 解析 MCP Streamable HTTP 响应（纯 JSON 或 SSE）
+4. 解析 MCP Streamable HTTP 响应（当前服务端返回单包 JSON）
 5. 格式化输出（默认 pretty / `--compact` / `--md`），并可叠加 `--head/--tail/--full/--threshold/--output-file` 做截断与落盘
 
 **CLI 不做**：

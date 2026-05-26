@@ -22,7 +22,7 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
   entity-resolution layer:
 
     ┌─ L0  Resolve       ${pad(getLayerCount("L0"), 3)} tool    entity resolution · 简称/曾用名/模糊名 → 精确企业
-    ├─ L1  Overview     ${pad(getLayerCount("L1"), 3)} tools   one captain per facet · returns _summary + drill_down
+    ├─ L1  Overview     ${pad(getLayerCount("L1"), 3)} tools   one captain per facet · returns _summary for routing
     ├─ L2  Drill-down   ${pad(getLayerCount("L2"), 3)} tools   one-hop into a specific data dimension (★ = L2 优先, see below)
     └─ L3  Specialized  ${pad(getLayerCount("L3"), 3)} tools   id-based detail · search_* · vertical SKILLs
 
@@ -32,8 +32,9 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
                         指代) into \`search_companies\`; lock onto one entity
                         with a USCC + official name before anything else.
     1. Ascend to L1.   Pick ONE of the ${getLayerCount("L1")} overview tools with the
-                        anchored USCC. Read the response's _summary + drill_down.
-    2. Descend to L2.  Follow hints to a specific dimension
+                        anchored USCC. Read _summary, then use layer lists or
+                        MCP get_company_capabilities for the next tool.
+    2. Descend to L2.  Pick a specific dimension
                         (shareholders / litigation / patents / annual reports …).
                         If unsure which L2, default to that facet's L2★ 优先 (below).
     3. Land on L3.     When L2 returns a list item with an \`id\`, a \`search_*\`
