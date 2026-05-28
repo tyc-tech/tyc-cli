@@ -944,7 +944,7 @@
       "layer": "L3",
       "cliMethod": "companies-by-industry-region",
       "categoryNameZh": "企业基础信息",
-      "description": "通过行业、地区、关键词查询企业列表。",
+      "description": "通过关键词、国标行业代码、地区代码查询企业列表。",
       "params": [
         {
           "name": "searchKey",
@@ -955,12 +955,12 @@
         {
           "name": "industry",
           "type": "string",
-          "description": "行业（可选）"
+          "description": "行业代码（可选；GB/T 4754 categoryGuobiao）"
         },
         {
           "name": "region",
           "type": "string",
-          "description": "地区（可选）"
+          "description": "地区代码（可选；areaCode）"
         },
         {
           "name": "pageNum",
@@ -980,13 +980,13 @@
       "layer": "L3",
       "cliMethod": "companies-by-ranking",
       "categoryNameZh": "企业基础信息",
-      "description": "通过榜单名称获取企业列表。",
+      "description": "通过公司名称、统一社会信用代码或天眼查企业 ID 查询该公司的上榜榜单。",
       "params": [
         {
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "榜单名称"
+          "description": "企业名称、统一社会信用代码或天眼查企业 ID"
         },
         {
           "name": "pageNum",
@@ -1006,13 +1006,13 @@
       "layer": "L3",
       "cliMethod": "companies-by-tag",
       "categoryNameZh": "企业基础信息",
-      "description": "通过行业、地区、标签名称获取企业列表。",
+      "description": "通过标签名称获取企业列表；未传 tag 时使用 searchKey 作为标签名称。",
       "params": [
         {
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "关键词"
+          "description": "标签名称关键词（未传 tag 时作为 tagName）"
         },
         {
           "name": "tag",
@@ -1037,13 +1037,13 @@
       "layer": "L3",
       "cliMethod": "listed-companies",
       "categoryNameZh": "企业基础信息",
-      "description": "通过搜索关键字获取上市公司信息，返回公司名称、股票名称、股票代码、证券类别、上市状态、上市时间。",
+      "description": "通过公司名称、统一社会信用代码或天眼查企业 ID 搜索上市公司信息，返回公司名称、股票名称、股票代码、证券类别、上市状态、上市时间。",
       "params": [
         {
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "关键词"
+          "description": "企业名称、统一社会信用代码或天眼查企业 ID"
         },
         {
           "name": "pageNum",
@@ -1640,7 +1640,7 @@
       "layer": "L3",
       "cliMethod": "historical-court-notice",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史涉及的法院公告记录（从历史公告中按公告类型=法院公告筛选），包括公告类型、案号、案由、公告人、刊登日期、原被告信息。",
+      "description": "查询企业历史涉及的法院公告记录，包括公告类型、案号、公告内容、公告法院、刊登日期、当事人信息。",
       "params": [
         {
           "name": "searchKey",
@@ -1744,7 +1744,7 @@
       "layer": "L3",
       "cliMethod": "historical-hearing-notice",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史开庭公告记录，包括案号、案由、原告/被告、法院、开庭日期、承办部门、审判长等。",
+      "description": "查询企业历史开庭公告记录，包括案号、案由、原告/被告、法院、开庭日期、法庭、承办人等。",
       "params": [
         {
           "name": "searchKey",
@@ -2268,7 +2268,7 @@
         {
           "name": "applicant",
           "type": "string",
-          "description": "申请人（可选）"
+          "description": "申请人（可选；提供后使用该值作为关键词，并按申请人字段搜索；不是与 searchKey 叠加的二次过滤）"
         },
         {
           "name": "patentType",
@@ -2304,7 +2304,7 @@
         {
           "name": "applicant",
           "type": "string",
-          "description": "申请人（可选）"
+          "description": "申请人（可选；提供后使用该值作为关键词，并按申请人字段搜索；不是与 searchKey 叠加的二次过滤）"
         },
         {
           "name": "intCls",
@@ -3107,12 +3107,12 @@
         {
           "name": "purchaser",
           "type": "string",
-          "description": "采购人（可选）"
+          "description": "采购人（可选；提供后使用该值作为关键词，并按采购人字段搜索；不是与 searchKey 叠加的二次过滤）"
         },
         {
           "name": "bidType",
           "type": "string",
-          "description": "公告类型（可选；可配合重整、招募、竞买、投资人资格、破产、司法拍卖等关键词检索）"
+          "description": "公告类型（可选；支持 1/招标预告、2/招标公告、3/招标变更、4/中标结果）"
         },
         {
           "name": "pageNum",
