@@ -280,13 +280,13 @@
       "layer": "L2",
       "cliMethod": "tags",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业标签，包括领域分类、主营业务、榜单等标签信息。",
+      "description": "按品牌 ID 查询企业标签，包括领域分类、主营业务、榜单等标签信息；该接口不支持直接传企业名称。",
       "params": [
         {
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "企业名称、公司 ID 或品牌 ID"
+          "description": "品牌 ID（来自项目品牌/企业业务等上游结果；不可直接传企业名称）"
         }
       ]
     },
@@ -466,7 +466,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "集团 ID"
+          "description": "集团 UUID（先调用 get_group_info 获取 groupUUID；不可直接传企业名称）"
         },
         {
           "name": "pageNum",
@@ -492,7 +492,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "集团 ID 或企业名称"
+          "description": "集团 UUID（先调用 get_group_info 获取 groupUUID；不可直接传企业名称）"
         },
         {
           "name": "pageNum",
@@ -518,7 +518,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "集团 ID"
+          "description": "集团 UUID（先调用 get_group_info 获取 groupUUID；不可直接传企业名称）"
         },
         {
           "name": "pageNum",
@@ -1006,7 +1006,7 @@
       "layer": "L3",
       "cliMethod": "companies-by-tag",
       "categoryNameZh": "企业基础信息",
-      "description": "通过标签名称获取企业列表；未传 tag 时使用 searchKey 作为标签名称。",
+      "description": "通过标签名称、行业代码和地区代码获取企业列表；未传 tag 时使用 searchKey 作为标签名称，行业代码和地区代码至少提供一个。",
       "params": [
         {
           "name": "searchKey",
@@ -1018,6 +1018,16 @@
           "name": "tag",
           "type": "string",
           "description": "标签名称（可选）"
+        },
+        {
+          "name": "industry",
+          "type": "string",
+          "description": "行业代码（可选；GB/T 4754 categoryGuobiao；与地区代码至少提供一个）"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "地区代码（可选；areaCode；与行业代码至少提供一个）"
         },
         {
           "name": "pageNum",
@@ -3749,6 +3759,22 @@
           "type": "string",
           "required": true,
           "description": "风险 ID（从 get_risk_overview 的结果中获取）"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "required": true,
+          "description": "风险类型 type（使用 get_risk_overview 返回中同一条风险记录的 type 列）"
+        },
+        {
+          "name": "pageNum",
+          "type": "number",
+          "description": "页码（可选，默认 1）"
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "description": "每页大小（可选，默认 20，常见上限 100）"
         }
       ]
     },

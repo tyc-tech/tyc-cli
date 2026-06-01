@@ -1,6 +1,6 @@
 {
   "name": "tyc-cli",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "天眼查 MCP CLI — 162 个业务语义聚合工具 · 命令行直达企业数据 · 通过 MCP Server 调用",
   "main": "dist/index.js",
   "bin": {

@@ -23,6 +23,19 @@
 
 - 默认 stdout 由紧凑单行 JSON 改为缩进 2 空格 JSON。需要旧默认行为的脚本请显式加 `--compact`
 
+## [0.3.4] - 2026-05-28
+
+### 变更
+
+- 更新 CLI catalog 中部分搜索类工具的 help/参数说明，使命令语义与 MCP Server 实际参数映射一致：
+  - `companies-by-industry-region`：明确 `industry` 为国标行业代码，`region` 为地区代码
+  - `companies-by-ranking`：明确按企业名称、统一社会信用代码或天眼查企业 ID 查询企业上榜榜单
+  - `companies-by-tag`：明确未传 `tag` 时使用 `searchKey` 作为标签名称
+  - `listed-companies`：明确按企业名称、统一社会信用代码或天眼查企业 ID 搜索上市公司信息
+  - `search-patents` / `search-trademarks`：说明 `applicant` 会作为关键词按申请人字段搜索，不是与 `searchKey` 叠加的二次过滤
+  - `search-bids`：说明 `purchaser` 的搜索语义，并明确 `bidType` 支持的公告类型枚举
+- 版本号提升至 `0.3.4`。
+
 ## [0.3.0] - 2026-04-29
 
 ### 新增

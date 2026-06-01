@@ -24,8 +24,8 @@ Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业
 
 - 🧠 **MCP 客户端架构**：CLI 只做协议转换与参数透传；多源合并、时间戳格式化、
   空结果归一化、`_summary` 注入等业务逻辑由 MCP Server 完成
-- 🔌 **即插即用**：默认连接官方 MCP 端点 `https://mcp.tianyancha.com/v1`；
-  支持 `--url` 指向私有部署
+- 🔌 **本地优先**：默认连接本地 MCP 端点 `http://localhost:8080/v1`；
+  支持 `--url` 指向官方或私有部署
 - 🔄 **Session 复用**：`Mcp-Session-Id` 本地缓存 24 小时，后续调用零 initialize 开销
 - 🎯 **6 大业务分类 / 162 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
 - 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳格式化 / `_summary / _empty / _warnings` 元数据
@@ -54,8 +54,11 @@ npm install && npm run build && npm link
 ### 3. 初始化配置
 
 ```bash
-# 连接官方 MCP（默认）
+# 连接本地 MCP（默认，需要本机启动 apimcp）
 tyc init --authorization "YOUR_API_TOKEN"
+
+# 连接官方 MCP
+tyc init --authorization "YOUR_API_TOKEN" --url "https://mcp.tianyancha.com/v1"
 
 # 连接自建 MCP
 tyc init --authorization "YOUR_API_TOKEN" --url "http://your-mcp-host:8080/v1"
@@ -71,7 +74,7 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 
 ```json
 {
-  "url": "https://mcp.tianyancha.com/v1",
+  "url": "http://localhost:8080/v1",
   "headers": {
     "Authorization": "YOUR_API_TOKEN"
   }
@@ -246,7 +249,7 @@ tyc executive person-risk-overview "..." --humanName "张三"
 ```
 ┌─────────────┐         ┌─────────────────────────────┐         ┌─────────────────┐
 │   tyc-cli   │ ──JSON──▶│  天眼查 MCP Server           │ ──HTTP──▶│ tyc OpenAPI     │
-│ (npm / TS)  │ ◀───RPC──│  (mcp.tianyancha.com/v1) │ ◀───────│                 │
+│ (npm / TS)  │ ◀───RPC──│  (localhost:8080/v1)     │ ◀───────│                 │
 └─────────────┘         └─────────────────────────────┘         └─────────────────┘
        │                              │
        │                              └─ 多源并发聚合 · 时间戳格式化 · _summary 注入 · 空结果归一化
@@ -313,7 +316,7 @@ tyc-cli/
 
 ```json
 {
-  "url": "https://mcp.tianyancha.com/v1",
+  "url": "http://localhost:8080/v1",
   "sessionId": "mcp-session-xxx",
   "initializedAt": 1777272039739,
   "protocolVersion": "2024-11-05"
@@ -347,7 +350,7 @@ tyc-cli/
 | 协议 | MCP client（JSON-RPC over Streamable HTTP） | MCP server |
 | 实现 | TypeScript | Go |
 | 职责 | 命令树 · 参数透传 · 格式化输出 | 多源聚合 · 时间戳格式化 · 元数据注入 · Authorization 透传至 OpenAPI |
-| 运维 | 用户本地安装 | 官方托管 `mcp.tianyancha.com`，或用户自建 |
+| 运维 | 用户本地安装 | 默认连接本机 apimcp，也可切到官方托管 `mcp.tianyancha.com` 或用户自建 |
 
 CLI 和 MCP Server 共享同一 162 工具清单；工具元数据从打包内的 `catalog.json`
 读取，保证命令树冷启动零网络开销。
