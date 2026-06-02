@@ -3769,7 +3769,6 @@
         {
           "name": "type",
           "type": "string",
-          "required": true,
           "description": "风险类型 type（使用 get_risk_overview 返回中同一条风险记录的 type 列）"
         },
         {
