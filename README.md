@@ -181,7 +181,7 @@ tyc company beneficial-owners "..."                       # UBO
 tyc company key-personnel "..."                           # 主要人员
 tyc company annual-reports "..."                          # 企业年报
 tyc company financial-data "..."                          # 财务数据（上市/非上市自动回退）
-tyc company accuracy "..." --legalPersonName "梁志祥"     # 三要素核验
+tyc company accuracy "北京百度网讯科技有限公司" --companyCode "91110000802100433B" --legalPersonName "梁志祥"  # 三要素核验
 tyc company equity-tree "..."                             # 股权图谱
 tyc company relation-path "A" --searchKey2 "B"            # 双企业最短路径
 tyc company group-info "..."                              # 集团信息（serial 串行执行）

@@ -1099,18 +1099,24 @@
       "layer": "L2",
       "cliMethod": "accuracy",
       "categoryNameZh": "企业基础信息",
-      "description": "核实企业名称、法定代表人与统一社会信用代码的匹配性，适用于企业实名认证、准入资质初审及基础信息准确性校验。",
+      "description": "验证企业名称与企业编号是否匹配；企业编号支持统一社会信用代码、注册号或组织机构代码。提供法定代表人姓名时，将进一步验证企业名称、企业编号、法定代表人三要素是否一致。",
       "params": [
         {
-          "name": "searchKey",
+          "name": "companyName",
           "type": "string",
           "required": true,
-          "description": "企业名称、统一社会信用代码或天眼查企业 ID"
+          "description": "企业完整名称"
+        },
+        {
+          "name": "companyCode",
+          "type": "string",
+          "required": true,
+          "description": "企业编号，支持统一社会信用代码、注册号或组织机构代码"
         },
         {
           "name": "legalPersonName",
           "type": "string",
-          "description": "法定代表人姓名（可选；提供后会调用三要素校验）"
+          "description": "法定代表人姓名（可选；提供后会调用三要素核验）"
         }
       ]
     },
