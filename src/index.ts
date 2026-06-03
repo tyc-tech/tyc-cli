@@ -93,8 +93,8 @@ OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
 
 SETUP
 
-  tyc init --authorization <KEY>                        default http://localhost:8080/v1
-  tyc init --url <MCP_URL> --authorization <KEY>        official / self-hosted
+  tyc init --authorization <KEY>                        default https://mcp.tianyancha.com/v1
+  tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted
 
 Every tool returns tyc OpenAPI native English keys verbatim. The MCP Server
 handles multi-source merge, Asia/Shanghai timestamp formatting, _summary
