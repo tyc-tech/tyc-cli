@@ -248,7 +248,7 @@
       "layer": "L1",
       "cliMethod": "registration-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业核心登记信息：法定代表人、注册资本、成立日期、登记状态、注册地址等，支持企业名称或统一社会信用代码精确查询。",
+      "description": "查询企业核心登记信息与企业属性，包含企业基本信息（含企业联系方式）和企业属性查询，支持企业名称或统一社会信用代码精确查询。",
       "params": [
         {
           "name": "searchKey",
@@ -396,7 +396,7 @@
       "layer": "L2",
       "cliMethod": "financial-data",
       "categoryNameZh": "企业基础信息",
-      "description": "检索指定企业的核心财务数据，涵盖资产负债、利润表现、营运能力、偿还能力、成长能力及关键财务比率（上市公司使用 stock/* 精准数据，非上市公司回退到年报 ic/annualreport）。",
+      "description": "查询企业财务数据，包含上市公司财务简析、利润表、资产负债表、现金流量表及企业年报财务信息。",
       "params": [
         {
           "name": "searchKey",
@@ -412,7 +412,7 @@
       "layer": "L3",
       "cliMethod": "financial-main-indicators",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司年度与季度主要指标数据，包括基本每股收益、扣非每股收益、稀释每股收益、每股净资产。",
+      "description": "查询上市公司主要指标数据，包含主要指标-年度和主要指标-季度，包括基本每股收益、扣非每股收益、稀释每股收益、每股净资产。",
       "params": [
         {
           "name": "searchKey",
@@ -596,7 +596,7 @@
       "layer": "L2",
       "cliMethod": "listing-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业上市信息，包括上市日期、股票简称、股票代码、上市交易所、总市值、总股本、发行日期，适用于投资分析。",
+      "description": "查询企业上市信息，包含上市公司企业简介、证券信息和发行相关信息，适用于上市状态、股票代码、交易所、发行日期等投资分析。",
       "params": [
         {
           "name": "searchKey",
@@ -745,7 +745,7 @@
       "layer": "L3",
       "cliMethod": "share-structure",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司股本结构、股本变动、分红、配股等股权演化信息。",
+      "description": "查询上市公司股权演化信息，包含股本结构、股本变动、分红情况和配股情况。",
       "params": [
         {
           "name": "searchKey",
@@ -798,7 +798,7 @@
       "priority": true,
       "cliMethod": "shareholder-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业股东构成，包括投资人姓名、持股比例、认缴出资额、出资时间等股权结构情况，适用于股权结构分析、实控人识别。",
+      "description": "查询企业股东信息，包含公司公示-股东出资、企业年报股东信息和企业股东列表，适用于股权结构分析、实控人识别。",
       "params": [
         {
           "name": "searchKey",
@@ -824,7 +824,7 @@
       "layer": "L3",
       "cliMethod": "stock-executives",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司董监高、重要人员与联系方式。",
+      "description": "查询上市公司人员和联系方式，包含董监高信息、重要人员和联系信息。",
       "params": [
         {
           "name": "searchKey",
@@ -866,7 +866,7 @@
       "layer": "L3",
       "cliMethod": "stock-shareholders",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司十大股东、十大流通股东、参股控股股东。",
+      "description": "查询上市公司股东信息，包含十大股东（十大流通股东）和参股控股。",
       "params": [
         {
           "name": "searchKey",
@@ -1099,7 +1099,7 @@
       "layer": "L2",
       "cliMethod": "accuracy",
       "categoryNameZh": "企业基础信息",
-      "description": "验证企业名称与企业编号是否匹配；企业编号支持统一社会信用代码、注册号或组织机构代码。提供法定代表人姓名时，将进一步验证企业名称、企业编号、法定代表人三要素是否一致。",
+      "description": "验证企业名称与企业编号是否匹配，包含验证企业（二要素）和企业三要素验证；提供法定代表人姓名时进一步验证企业名称、企业编号、法定代表人三要素是否一致。",
       "params": [
         {
           "name": "companyName",
@@ -1185,7 +1185,7 @@
       "layer": "L1",
       "cliMethod": "person-profile",
       "categoryNameZh": "董监高",
-      "description": "查询人员画像，聚合简介、商业角色与相关公司。",
+      "description": "查询人员画像，包含企业人员简介、人员所有角色和人员所有公司。",
       "params": [
         {
           "name": "searchKey",
@@ -1907,7 +1907,7 @@
       "priority": true,
       "cliMethod": "historical-registration",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史工商登记信息，包括历史登记状态、注册资本变更、法人变更、注册地址变更等快照。",
+      "description": "查询企业历史工商登记信息，包含历史工商信息和工商信息，包括历史登记状态、注册资本变更、法人变更、注册地址变更等快照。",
       "params": [
         {
           "name": "searchKey",
@@ -2105,7 +2105,7 @@
       "layer": "L2",
       "cliMethod": "internet-service-info",
       "categoryNameZh": "知识产权",
-      "description": "查询企业网站 ICP 备案及官方公众号信息，包括网站名称、网站首页、域名、备案号、公众号名称、微信号、二维码、功能介绍。",
+      "description": "查询企业互联网公开信息，包含 ICP 备案和企业微信公众号，包括网站名称、网站首页、域名、备案号、公众号名称、微信号、二维码、功能介绍。",
       "params": [
         {
           "name": "searchKey",
@@ -2345,7 +2345,7 @@
       "layer": "L2",
       "cliMethod": "administrative-license",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业行政许可信息，包括许可决定文书号、许可内容、许可机关、有效期。",
+      "description": "查询企业行政许可信息，包含行政许可、行政许可-其他来源、行政许可-工商局，包括许可决定文书号、许可内容、许可机关、有效期。",
       "params": [
         {
           "name": "searchKey",
@@ -2424,7 +2424,7 @@
       "layer": "L3",
       "cliMethod": "company-announcement",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业公告（包括上市公司公告与一般企业公告）。适用于核验上市公司公告、破产重整/清算公告、管理人公告、资产处置公告、投资人招募公告。遇到“税务/规划/司法三重关卡”“资金来源”“交易对价”“股权比例”“担保责任”等问题时，应优先用公告原文核验，并按用户给定框架分别检查税务、规划/政策、司法/执行等维度。",
+      "description": "查询企业公告信息，包含上市公告和公告研报。适用于核验上市公司公告、破产重整/清算公告、管理人公告、资产处置公告、投资人招募公告。遇到“税务/规划/司法三重关卡”“资金来源”“交易对价”“股权比例”“担保责任”等问题时，应优先用公告原文核验，并按用户给定框架分别检查税务、规划/政策、司法/执行等维度。",
       "params": [
         {
           "name": "searchKey",
@@ -2476,7 +2476,7 @@
       "layer": "L1",
       "cliMethod": "credit-evaluation",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业信用评价信息（纳税信用等级 + 债券主体评级）。",
+      "description": "查询企业信用评价信息，包含税务评级和企业信用评级。",
       "params": [
         {
           "name": "searchKey",
@@ -2502,7 +2502,7 @@
       "layer": "L2",
       "cliMethod": "financing-records",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业融资信息，包括融资轮次、交易金额、估值、投资方。",
+      "description": "查询企业融资与投资事件信息，包含融资历史（融资轮次、交易金额、估值、投资方）和投资事件（投资方、被投产品/企业、轮次、金额、行业/业务等）。",
       "params": [
         {
           "name": "searchKey",
@@ -2596,7 +2596,7 @@
       "layer": "L3",
       "cliMethod": "invest-agency-funds",
       "categoryNameZh": "经营与公示",
-      "description": "查询投资机构管理的基金公司、对外投资基金与基金管理人。",
+      "description": "查询投资机构基金信息，包含基金管理公司、对外投资基金和基金管理人。",
       "params": [
         {
           "name": "searchKey",
@@ -2648,7 +2648,7 @@
       "layer": "L3",
       "cliMethod": "invest-agency-profile",
       "categoryNameZh": "经营与公示",
-      "description": "查询投资机构画像，聚合被投企业、机构团队、投资统计分析。",
+      "description": "查询投资机构画像，包含工商追踪、机构成员和统计分析。",
       "params": [
         {
           "name": "searchKey",
@@ -2674,7 +2674,7 @@
       "layer": "L3",
       "cliMethod": "invest-agency-public-investments",
       "categoryNameZh": "经营与公示",
-      "description": "查询投资机构的公开与未公开投资产品/企业。",
+      "description": "查询投资机构投资信息，包含公开投资事件和未公开投资。",
       "params": [
         {
           "name": "searchKey",
@@ -2700,7 +2700,7 @@
       "layer": "L3",
       "cliMethod": "land-transactions",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业土地交易信息（购地信息、地块公示、土地转让）。",
+      "description": "查询企业土地交易信息，包含购地信息、地块公示和土地转让。",
       "params": [
         {
           "name": "searchKey",
@@ -2752,7 +2752,7 @@
       "layer": "L3",
       "cliMethod": "private-fund-executives",
       "categoryNameZh": "经营与公示",
-      "description": "查询私募基金机构的法定代表人与高管从业资格信息。",
+      "description": "查询私募基金机构高管信息，包含高管信息和高管情况。",
       "params": [
         {
           "name": "searchKey",
@@ -2794,7 +2794,7 @@
       "layer": "L3",
       "cliMethod": "private-fund-profile",
       "categoryNameZh": "经营与公示",
-      "description": "查询私募基金机构画像，聚合登记、会员、诚信、法律意见书状态。",
+      "description": "查询私募基金机构画像，包含机构信息、会员信息、诚信信息和法律意见书信息。",
       "params": [
         {
           "name": "searchKey",
@@ -2836,7 +2836,7 @@
       "layer": "L2",
       "cliMethod": "products-info",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业产品/业务信息，包括主要产品、产品分类、产品介绍。",
+      "description": "查询企业产品/业务信息，包含企业业务和产品信息，包括主要产品、产品分类、产品介绍。",
       "params": [
         {
           "name": "searchKey",
@@ -2862,7 +2862,7 @@
       "layer": "L2",
       "cliMethod": "qualifications",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业获得的各类资质证书，包括证书类型、等级、有效期、证书状态，适用于企业专业能力评估、行业准入资格确认、资质有效性检查。",
+      "description": "查询企业资质信息，包含资质证书和建筑资质-资质资格，包括证书类型、等级、有效期、证书状态，适用于企业专业能力评估、行业准入资格确认。",
       "params": [
         {
           "name": "searchKey",
@@ -2982,7 +2982,7 @@
       "layer": "L2",
       "cliMethod": "suppliers-and-customers",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业供应商与客户信息，包括供应商/客户名称、采购/销售占比、采购/销售金额、报告期。",
+      "description": "查询企业供应商与客户信息，包含供应商和客户，包括供应商/客户名称、采购/销售占比、采购/销售金额、报告期。",
       "params": [
         {
           "name": "searchKey",
@@ -3226,7 +3226,7 @@
       "layer": "L3",
       "cliMethod": "cancellation-record-info",
       "categoryNameZh": "风险合规",
-      "description": "查询企业注销备案记录（由工商登记状态与变更记录聚合判定）。",
+      "description": "查询企业注销备案相关信息，包含企业基本信息（含企业联系方式）和变更记录，用于结合登记状态与变更事项判断注销备案情况。",
       "params": [
         {
           "name": "searchKey",
@@ -3330,7 +3330,7 @@
       "layer": "L3",
       "cliMethod": "default-event-info",
       "categoryNameZh": "风险合规",
-      "description": "查询企业违约相关事项（聚合失信与被执行人中违约类条目）。",
+      "description": "查询企业失信人和被执行人信息，包含失信被执行记录、执行案号、执行法院、执行标的等，不等同于单一违约事项。",
       "params": [
         {
           "name": "searchKey",
@@ -3889,7 +3889,7 @@
       "layer": "L3",
       "cliMethod": "stock-pledge-info",
       "categoryNameZh": "风险合规",
-      "description": "查询上市公司股权质押明细与比例，包括股东名称、质押股份数量、质押股份市值、占所持股份比例、质押机构、质押日期。",
+      "description": "查询上市公司股权质押信息，包含质押明细和质押比例，包括股东名称、质押股份数量、质押市值、占所持股份比例、质押机构、质押日期。",
       "params": [
         {
           "name": "searchKey",
