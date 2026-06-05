@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { registerInitCommand } from "./commands/init.js";
+import { registerLoginCommand } from "./commands/login.js";
 import { registerCategoryCommands } from "./commands/category.js";
 import { registerLayerCommands } from "./commands/layers.js";
 import {
@@ -93,8 +94,10 @@ OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
 
 SETUP
 
-  tyc init --authorization <KEY>                        default https://mcp.tianyancha.com/v1
-  tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted
+  tyc login                                             OAuth browser login
+  tyc login --url <MCP_URL>                             OAuth for local / pre / self-hosted
+  tyc init --authorization <KEY>                        API-key compatibility path
+  tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted API-key path
 
 Every tool returns tyc OpenAPI native English keys verbatim. The MCP Server
 handles multi-source merge, Asia/Shanghai timestamp formatting, _summary
@@ -163,6 +166,7 @@ const program = new Command()
   .addHelpText("after", helpText);
 
 registerInitCommand(program);
+registerLoginCommand(program);
 registerLayerCommands(program);
 registerCategoryCommands(program);
 

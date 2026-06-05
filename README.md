@@ -54,19 +54,23 @@ npm install && npm run build && npm link
 ### 3. 初始化配置
 
 ```bash
-# 连接官方 MCP（默认）
+# 连接官方 MCP（默认）：浏览器 OAuth 登录
+tyc login
+
+# 连接预发 / 本地 / 自建 MCP
+tyc login --url "https://ai-mcp-pre.tianyancha.com/mcp"
+tyc login --url "http://localhost:8080/mcp" --issuer "http://localhost:8080/oauth"
+
+# API key 兼容路径：已有天眼查 OpenAPI token 时可直接写入
 tyc init --authorization "YOUR_API_TOKEN"
-
-# 连接本地 MCP（需要本机启动 apimcp）
-tyc init --authorization "YOUR_API_TOKEN" --url "http://localhost:8080/v1"
-
-# 连接自建 MCP
-tyc init --authorization "YOUR_API_TOKEN" --url "http://your-mcp-host:8080/v1"
 
 # 仅写配置、不校验（离线环境或先配好稍后上线）
 tyc init --authorization "YOUR_API_TOKEN" --no-verify
 ```
 
+> `tyc login` 会从 MCP protected-resource metadata 发现 OAuth 授权服务器，启动本地
+> loopback 回调，使用 PKCE 授权码流程打开浏览器登录；成功后自动把
+> `Authorization: Bearer <access_token>` 写入 `~/.tyc/config.json`。
 > `tyc init` 保存配置后会立即向 MCP 发一次 `initialize`：成功则打印 `已建立 MCP session`，
 > 失败则退出码 1 并提示连通性问题。加 `--no-verify` 可跳过校验。
 
@@ -76,7 +80,7 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 {
   "url": "https://mcp.tianyancha.com/v1",
   "headers": {
-    "Authorization": "YOUR_API_TOKEN"
+    "Authorization": "Bearer <OAuth_ACCESS_TOKEN>"
   }
 }
 ```
@@ -97,6 +101,8 @@ tyc executive personnel-dishonest "..." --humanName "张三"
 
 | 命令 | 说明 |
 |------|------|
+| `tyc login` | 浏览器 OAuth 登录；自动发现 metadata、使用 PKCE 获取 access token 并写入配置 |
+| `tyc login --url <url>` | 对指定 MCP endpoint 发起 OAuth 登录 |
 | `tyc init --authorization <token>` | 写入 `headers.Authorization`；保存后会立即向 MCP 发一次 `initialize` 校验连通性 |
 | `tyc init --url <url>` | 设置 MCP endpoint |
 | `tyc init --header K=V` | 注入自定义 header（可重复）；值留空则删除该 key |
@@ -290,10 +296,12 @@ tyc-cli/
     ├── config.ts             # ~/.tyc/config.json 读写 · 环境变量兜底
     ├── session.ts            # ~/.tyc/session.json 读写 · 24h TTL
     ├── mcpClient.ts          # MCP JSON-RPC client · SSE 解析 · 失效重建
+    ├── oauth.ts              # OAuth metadata discovery · PKCE · loopback callback
     ├── registry.ts           # 读取打包内 catalog.json（命令树元数据）
     ├── catalog.json          # 命令元数据：name / group / cliMethod / params
     ├── commands/
     │   ├── init.ts           # tyc init
+    │   ├── login.ts          # tyc login
     │   └── category.ts       # 动态注册 6 分类 × N 方法
     └── utils/
         ├── jsonToMarkdown.ts # --md 选项的 Markdown 渲染
