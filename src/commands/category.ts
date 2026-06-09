@@ -9,6 +9,7 @@
 import type { Command } from "commander";
 import { getCategories, getToolsByGroup } from "../registry.js";
 import { resolveConfig } from "../config.js";
+import { callCoreTool } from "../coreClient.js";
 import { callTool } from "../mcpClient.js";
 import { jsonToMarkdown } from "../utils/jsonToMarkdown.js";
 import {
@@ -77,7 +78,10 @@ function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void 
     const verbose = !!opts.verbose;
 
     try {
-      const result = await callTool(cfg, tool.name, args, { verbose });
+      const result =
+        cfg.transport === "mcp"
+          ? await callTool(cfg, tool.name, args, { verbose })
+          : await callCoreTool(cfg, tool.name, args, { verbose });
       emit(result, opts, tool.name);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);

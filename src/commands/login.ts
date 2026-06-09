@@ -1,10 +1,12 @@
 import type { Command } from "commander";
 import {
   DEFAULT_MCP_URL,
+  defaultCoreURL,
   loadConfig,
   resolveConfig,
   saveConfig,
 } from "../config.js";
+import { verifyCoreEndpoint } from "../coreClient.js";
 import { clearSession } from "../session.js";
 import { ensureSession } from "../mcpClient.js";
 import {
@@ -18,6 +20,7 @@ import {
   randomState,
   startCallbackServer,
 } from "../oauth.js";
+import { printLoginSuccessBanner } from "../logo.js";
 
 interface LoginOptions {
   url?: string;
@@ -162,6 +165,8 @@ export function registerLoginCommand(program: Command): void {
 
       const cfg = loadConfig() || {};
       cfg.url = mcpURL;
+      if (!cfg.transport) cfg.transport = "core";
+      if (!cfg.coreUrl) cfg.coreUrl = defaultCoreURL(mcpURL);
       cfg.headers = { ...(cfg.headers || {}) };
       cfg.headers.Authorization = `${normalizeTokenType(token.token_type)} ${token.access_token}`;
       saveConfig(cfg);
@@ -169,11 +174,18 @@ export function registerLoginCommand(program: Command): void {
       console.log(`已保存 OAuth 登录态到 ~/.tyc/config.json  (url=${cfg.url})`);
 
       if (opts.verify === false) {
+        printLoginSuccessBanner();
         return;
       }
 
       const resolved = resolveConfig();
-      const sess = await ensureSession(resolved, { verbose });
-      console.log(`已建立 MCP session（sessionId=${sess.sessionId.slice(0, 16)}…）`);
+      if (resolved.transport === "mcp") {
+        const sess = await ensureSession(resolved, { verbose });
+        console.log(`已建立 MCP session（sessionId=${sess.sessionId.slice(0, 16)}…）`);
+      } else {
+        await verifyCoreEndpoint(resolved, verbose);
+        console.log("Shared Core endpoint 校验通过");
+      }
+      printLoginSuccessBanner();
     });
 }

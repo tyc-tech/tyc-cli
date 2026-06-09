@@ -74,7 +74,7 @@ OUTPUT FORMATS (mutually exclusive, priority: --md > --compact > --pretty / defa
   --pretty     same as default (kept for backward compatibility / explicit intent)
   --compact    compact single-line JSON (pipe / jq friendly; old default behavior)
   --md         Markdown tables (human + agent on-screen)
-  --verbose    also print MCP request details to stderr (orthogonal to above)
+  --verbose    also print core/MCP request details to stderr (orthogonal to above)
 
 OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
 
@@ -96,8 +96,9 @@ SETUP
 
   tyc login                                             OAuth browser login
   tyc login --url <MCP_URL>                             OAuth for local / pre / self-hosted
-  tyc init --authorization <KEY>                        API-key compatibility path
-  tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted API-key path
+  tyc init --authorization <KEY>                        API-key compatibility path (default transport: core)
+  tyc init --transport mcp --authorization <KEY>        legacy MCP session transport
+  tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted service
 
 Every tool returns tyc OpenAPI native English keys verbatim. The MCP Server
 handles multi-source merge, Asia/Shanghai timestamp formatting, _summary
@@ -145,7 +146,7 @@ const program = new Command()
   .option("--pretty", "缩进 JSON 输出（默认行为，flag 保留以保持向后兼容）")
   .option("--md", "Markdown 表格化输出（适合人类阅读 / Agent 上屏）")
   .option("--compact", "紧凑单行 JSON（管道 / jq 场景；为旧默认行为）")
-  .option("--verbose", "打印 MCP 请求详情到 stderr")
+  .option("--verbose", "打印 core/MCP 请求详情到 stderr")
   .option(
     "--head [n]",
     "仅输出前 N 行（不传值默认 50；与 --tail 同时给则同时输出两端）",

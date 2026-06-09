@@ -56,6 +56,8 @@ export interface Catalog {
 // ~/.tyc/config.json
 export interface TycConfig {
   url?: string;
+  coreUrl?: string;
+  transport?: "core" | "mcp";
   headers?: Record<string, string>;
 }
 

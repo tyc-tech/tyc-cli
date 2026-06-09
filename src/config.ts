@@ -2,7 +2,9 @@
 //
 // 配置文件格式与通用 MCP 客户端保持一致：
 //   { "url": "https://mcp.tianyancha.com/v1",
-//     "headers": { "Authorization": "xxxx" } }
+//     "headers": { "Authorization": "xxxx" },
+//     "transport": "core",
+//     "coreUrl": "https://mcp.tianyancha.com/v1/core/tools/call" }
 //
 // 默认端点指向天眼查公网 MCP Server；连接本地或私有环境可通过
 //   tyc init --url http://localhost:8080/v1 或 TYC_MCP_ENDPOINT 环境变量覆盖。
@@ -15,6 +17,7 @@ const CONFIG_DIR = join(homedir(), ".tyc");
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 
 export const DEFAULT_MCP_URL = "https://mcp.tianyancha.com/v1";
+export type Transport = "core" | "mcp";
 
 export function loadConfig(): TycConfig | null {
   if (!existsSync(CONFIG_FILE)) return null;
@@ -35,12 +38,35 @@ export function saveConfig(config: TycConfig): void {
 /** 解析后的配置：url 有默认值兜底 + headers 合并环境变量 */
 export interface ResolvedConfig {
   url: string;
+  coreUrl: string;
+  transport: Transport;
   headers: Record<string, string>;
+}
+
+function normalizeTransport(raw: string | undefined): Transport {
+  const v = (raw || "").trim().toLowerCase();
+  if (v === "mcp") return "mcp";
+  return "core";
+}
+
+export function defaultCoreURL(mcpURL: string): string {
+  const u = new URL(mcpURL);
+  const path = u.pathname.replace(/\/+$/, "");
+  if (path === "" || path === "/v1" || path === "/mcp") {
+    u.pathname = "/v1/core/tools/call";
+  } else if (!path.endsWith("/core/tools/call")) {
+    u.pathname = `${path}/core/tools/call`;
+  }
+  u.search = "";
+  u.hash = "";
+  return u.toString();
 }
 
 export function resolveConfig(): ResolvedConfig {
   const cfg = loadConfig() || {};
   const url = process.env.TYC_MCP_ENDPOINT || cfg.url || DEFAULT_MCP_URL;
+  const transport = normalizeTransport(process.env.TYC_TRANSPORT || cfg.transport);
+  const coreUrl = process.env.TYC_CORE_ENDPOINT || cfg.coreUrl || defaultCoreURL(url);
   const headers: Record<string, string> = { ...(cfg.headers || {}) };
   if (!headers.Authorization && process.env.TYC_AUTHORIZATION) {
     headers.Authorization = process.env.TYC_AUTHORIZATION;
@@ -51,5 +77,5 @@ export function resolveConfig(): ResolvedConfig {
     );
     process.exit(1);
   }
-  return { url, headers };
+  return { url, coreUrl, transport, headers };
 }
