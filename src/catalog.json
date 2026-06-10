@@ -2190,6 +2190,31 @@
           "name": "pageSize",
           "type": "number",
           "description": "每页大小（可选，默认 20，常见上限 100）"
+        },
+        {
+          "name": "appDateBegin",
+          "type": "string",
+          "description": "申请开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "appDateEnd",
+          "type": "string",
+          "description": "申请结束日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "pubDateBegin",
+          "type": "string",
+          "description": "公开/发布开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "pubDateEnd",
+          "type": "string",
+          "description": "公开/发布结束日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "patentType",
+          "type": "string",
+          "description": "专利类型（可选；1-发明专利、2-实用新型、3-外观专利）"
         }
       ]
     },
@@ -2264,6 +2289,21 @@
           "name": "pageSize",
           "type": "number",
           "description": "每页大小（可选，默认 20，常见上限 100）"
+        },
+        {
+          "name": "appDateBegin",
+          "type": "string",
+          "description": "申请开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "appDateEnd",
+          "type": "string",
+          "description": "申请结束日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "商标状态（可选；1-已注册、2-无效、3-初审公告、4-等待实质审查、5-申请中等）"
         }
       ]
     },
@@ -2290,6 +2330,26 @@
           "name": "patentType",
           "type": "string",
           "description": "专利类型（可选）"
+        },
+        {
+          "name": "appDateBegin",
+          "type": "string",
+          "description": "申请开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "appDateEnd",
+          "type": "string",
+          "description": "申请结束日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "pubDateBegin",
+          "type": "string",
+          "description": "公开/发布开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "pubDateEnd",
+          "type": "string",
+          "description": "公开/发布结束日期（可选，格式 YYYY-MM-DD）"
         },
         {
           "name": "pageNum",
@@ -2326,6 +2386,21 @@
           "name": "intCls",
           "type": "string",
           "description": "国际分类（可选）"
+        },
+        {
+          "name": "appDateBegin",
+          "type": "string",
+          "description": "申请开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "appDateEnd",
+          "type": "string",
+          "description": "申请结束日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "商标状态（可选；1-已注册、2-无效、3-初审公告、4-等待实质审查、5-申请中等）"
         },
         {
           "name": "pageNum",
@@ -2389,6 +2464,21 @@
           "name": "pageSize",
           "type": "number",
           "description": "每页大小（可选，默认 20，常见上限 100）"
+        },
+        {
+          "name": "publishStartTime",
+          "type": "string",
+          "description": "发布开始日期（可选，格式 YYYY-MM-DD；例如查询近一年时传一年前日期）"
+        },
+        {
+          "name": "publishEndTime",
+          "type": "string",
+          "description": "发布结束日期（可选，格式 YYYY-MM-DD；例如查询近一年时传今天日期）"
+        },
+        {
+          "name": "bidType",
+          "type": "string",
+          "description": "公告类型（可选；支持 1/招标预告、2/招标公告、3/招标变更、4/中标结果）"
         }
       ]
     },
@@ -2743,6 +2833,16 @@
           "name": "pageSize",
           "type": "number",
           "description": "每页大小（可选，默认 10，常见上限 100）"
+        },
+        {
+          "name": "startTime",
+          "type": "string",
+          "description": "开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "endTime",
+          "type": "string",
+          "description": "结束日期（可选，格式 YYYY-MM-DD）"
         }
       ]
     },
@@ -2999,6 +3099,11 @@
           "name": "pageSize",
           "type": "number",
           "description": "每页大小（可选，默认 10，常见上限 100）"
+        },
+        {
+          "name": "year",
+          "type": "string",
+          "description": "报告年份（可选，格式 YYYY；默认所有年份）"
         }
       ]
     },
@@ -3129,6 +3234,16 @@
           "name": "bidType",
           "type": "string",
           "description": "公告类型（可选；支持 1/招标预告、2/招标公告、3/招标变更、4/中标结果）"
+        },
+        {
+          "name": "publishStartTime",
+          "type": "string",
+          "description": "发布开始日期（可选，格式 YYYY-MM-DD）"
+        },
+        {
+          "name": "publishEndTime",
+          "type": "string",
+          "description": "发布结束日期（可选，格式 YYYY-MM-DD）"
         },
         {
           "name": "pageNum",
