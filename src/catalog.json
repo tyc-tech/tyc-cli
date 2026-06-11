@@ -132,7 +132,7 @@
       "layer": "L2",
       "cliMethod": "branches",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业的分支机构信息，包括名称、负责人、地区、成立日期、登记状态，适用于了解企业组织架构。",
+      "description": "查询企业的分支机构信息，包括名称、负责人、成立日期、登记状态等，适用于了解企业组织架构。",
       "params": [
         {
           "name": "searchKey",
@@ -264,7 +264,7 @@
       "layer": "L2",
       "cliMethod": "scale",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业规模相关指标，包括人员规模、参保人数、分支机构数量、对外投资数量等。",
+      "description": "查询企业规模等级。",
       "params": [
         {
           "name": "searchKey",
@@ -286,7 +286,7 @@
           "name": "searchKey",
           "type": "string",
           "required": true,
-          "description": "品牌 ID（来自项目品牌/企业业务等上游结果；不可直接传企业名称）"
+          "description": "品牌 ID（来自项目品牌/企业业务等前置结果；不可直接传企业名称）"
         }
       ]
     },
@@ -296,7 +296,7 @@
       "layer": "L2",
       "cliMethod": "contact-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业联系方式，包括电话号码、用途标签、邮箱、企业网站、是否官网、ICP备案，适用于拓客、获取联系方式场景。",
+      "description": "查询企业联系方式，包括电话号码、用途标签、邮箱、企业网站、注册地址，适用于拓客、获取联系方式场景。",
       "params": [
         {
           "name": "searchKey",
@@ -354,7 +354,7 @@
       "layer": "L2",
       "cliMethod": "equity-tree",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业上下游对外投资关系，包含直接与间接投资企业的层级结构。",
+      "description": "查询企业对外投资关系，包含直接与间接投资企业的层级结构。",
       "params": [
         {
           "name": "searchKey",
@@ -412,7 +412,7 @@
       "layer": "L3",
       "cliMethod": "financial-main-indicators",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司主要指标数据，包含主要指标-年度和主要指标-季度，包括基本每股收益、扣非每股收益、稀释每股收益、每股净资产。",
+      "description": "查询上市公司主要指标数据，包含主要指标-年度和主要指标-季度，包括基本每股收益、扣非每股收益、稀释每股收益、每股未分配利润、净资产收益率、资产负债率。",
       "params": [
         {
           "name": "searchKey",
@@ -428,7 +428,7 @@
       "layer": "L2",
       "cliMethod": "financial-summary",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司财务简析数据，包括营业收入、净利润、总资产、净资产、净利率、毛利率、资产负债率。",
+      "description": "查询上市公司财务简析数据，包括营业收入、净利润、总资产、净资产、净利率、毛利率。",
       "params": [
         {
           "name": "searchKey",
@@ -460,7 +460,7 @@
       "layer": "L3",
       "cliMethod": "group-investors",
       "categoryNameZh": "企业基础信息",
-      "description": "查询集团对外投资企业信息，包括企业名称、法定代表人、登记状态、注册资本、集团内参与投资该企业的成员列表。",
+      "description": "查询集团对外投资企业信息，包括企业名称、登记状态、注册资本、成立日期、集团内参与投资成员数量。",
       "params": [
         {
           "name": "searchKey",
@@ -512,7 +512,7 @@
       "layer": "L3",
       "cliMethod": "group-shareholders",
       "categoryNameZh": "企业基础信息",
-      "description": "查询集团投资方信息，包括投资方名称、类型、法定代表人、登记状态、集团内被该投资方投资的成员列表。",
+      "description": "查询集团投资方信息，包括投资方名称、类型、登记状态、注册资本、成立日期、集团内被该投资方投资的成员数量。",
       "params": [
         {
           "name": "searchKey",
@@ -596,7 +596,7 @@
       "layer": "L2",
       "cliMethod": "listing-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业上市信息，包含上市公司企业简介、证券信息和发行相关信息，适用于上市状态、股票代码、交易所、发行日期等投资分析。",
+      "description": "查询企业上市信息，包括上市公司简介、股票简称、股票代码、证券类型、发行日期、上市日期、发行价格、发行数量和募集资金，适用于投资分析。",
       "params": [
         {
           "name": "searchKey",
@@ -665,7 +665,7 @@
       "layer": "L3",
       "cliMethod": "park-info",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业所在园区信息，包括园区名称、园区面积、主管单位、所属地区。",
+      "description": "查询企业所在园区信息，包括园区名称、园区面积、省市区和经纬度。",
       "params": [
         {
           "name": "searchKey",
@@ -1143,7 +1143,7 @@
         {
           "name": "id",
           "type": "string",
-          "description": "司法协助 ID（可选；提供后将同步获取详情）"
+          "description": "司法协助 assId（可选；从列表返回的 assId 取值，提供后将同步获取详情）"
         },
         {
           "name": "pageNum",
@@ -1208,7 +1208,7 @@
       "priority": true,
       "cliMethod": "person-risk-overview",
       "categoryNameZh": "董监高",
-      "description": "查询人员相关天眼风险列表（周边/预警风险）。",
+      "description": "查询人员相关天眼风险总览，包括自身风险、周边风险、预警提醒和历史风险。",
       "params": [
         {
           "name": "searchKey",
@@ -1230,7 +1230,7 @@
       "layer": "L3",
       "cliMethod": "personnel-controlled-companies",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员当前实际控制的企业列表，包括控制企业名称、登记状态、成立日期、所属地区、所属行业及投资比例。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员当前实际控制的企业列表，包括控制企业名称、法定代表人、登记状态、注册资本、投资比例和控制链。",
       "params": [
         {
           "name": "searchKey",
@@ -1262,7 +1262,7 @@
       "layer": "L3",
       "cliMethod": "personnel-dishonest",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员当前是否存在失信被执行人记录，包括案号、执行法院、涉案金额等。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员当前失信被执行人记录，包括案号、执行法院、被执行人、履行情况、发布日期、失信行为和法律文书义务。",
       "params": [
         {
           "name": "searchKey",
@@ -1294,7 +1294,7 @@
       "layer": "L3",
       "cliMethod": "personnel-high-consumption-ban",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员限制消费令信息，包括执行法院、案件内容、被执行人名称。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员限制消费令信息，包括案号、立案日期、发布日期、申请人、被限制人、涉案金额和关联公司。",
       "params": [
         {
           "name": "searchKey",
@@ -1326,7 +1326,7 @@
       "layer": "L3",
       "cliMethod": "personnel-historical-dishonest",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员历史失信被执行人记录。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员历史失信被执行人记录，包括案号、执行法院、被执行人、履行情况、发布日期、失信行为和法律文书义务。",
       "params": [
         {
           "name": "searchKey",
@@ -1358,7 +1358,7 @@
       "layer": "L3",
       "cliMethod": "personnel-historical-high-consumption-ban",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员历史限制消费令记录。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员历史限制消费令记录，包括案号、立案日期、发布日期、申请人、被限制人、涉案金额和关联公司。",
       "params": [
         {
           "name": "searchKey",
@@ -1422,7 +1422,7 @@
       "layer": "L3",
       "cliMethod": "personnel-judgment-debtor",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员被执行人信息，包括执行法院、案件内容、执行标的、被执行人名称、组织机构代码。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员被执行人信息，包括案号、立案时间、执行法院、执行标的、被执行人名称和脱敏证件号。",
       "params": [
         {
           "name": "searchKey",
@@ -1578,7 +1578,7 @@
       "layer": "L2",
       "cliMethod": "historical-admin-penalty",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史行政处罚记录，包括处罚结果、处罚单位、处罚日期和处罚金额，用于企业合规历史深度排查。",
+      "description": "查询企业历史行政处罚记录，包括处罚内容、处罚单位、处罚日期和处罚文号，用于企业合规历史深度排查。",
       "params": [
         {
           "name": "searchKey",
@@ -1708,7 +1708,7 @@
       "layer": "L3",
       "cliMethod": "historical-equity-freeze",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史股权被司法冻结的记录（从历史司法协助中按冻结类型筛选），包括被执行人、股权数额、执行法院、冻结起止日期等。",
+      "description": "查询企业历史股权被司法冻结的记录（从历史司法协助中按冻结类型筛选），包括被执行人、股权数额、执行法院、公示日期、状态等。",
       "params": [
         {
           "name": "searchKey",
@@ -1786,7 +1786,7 @@
       "layer": "L3",
       "cliMethod": "historical-internet-service",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史 ICP 备案网站记录，包括网站名称、网站首页、域名、备案号、审核日期、网站类型。",
+      "description": "查询企业历史 ICP 备案网站记录，包括网站名称、网站首页、域名、备案号、审核日期、主办单位类型。",
       "params": [
         {
           "name": "searchKey",
@@ -1812,7 +1812,7 @@
       "layer": "L2",
       "cliMethod": "historical-investments",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史对外投资记录，包括被投资企业名称、投资状态、成立日期、持股比例、认缴出资额。",
+      "description": "查询企业历史对外投资记录，包括被投资企业名称、投资状态、成立日期、持股比例、认缴出资额、退出时间。",
       "params": [
         {
           "name": "searchKey",
@@ -1949,7 +1949,7 @@
       "layer": "L3",
       "cliMethod": "historical-trademark",
       "categoryNameZh": "历史信息",
-      "description": "查询企业历史商标注册信息（已过期或已失效的商标），包括商标名称、申请/注册号、国际分类、商标状态。",
+      "description": "查询企业历史商标注册信息，包括商标名称、申请/注册号、国际分类、申请日期、申请人和商标状态。",
       "params": [
         {
           "name": "searchKey",
@@ -2001,7 +2001,7 @@
       "layer": "L3",
       "cliMethod": "construction-projects",
       "categoryNameZh": "知识产权",
-      "description": "查询企业建筑资质工程项目，包括项目编号、项目名称、项目属地、项目类别、建设单位、中标日期、合同金额。",
+      "description": "查询企业建筑资质工程项目，包括项目编号、项目名称、项目属地、项目类别、建设单位。",
       "params": [
         {
           "name": "searchKey",
@@ -2053,7 +2053,7 @@
       "layer": "L3",
       "cliMethod": "construction-registered-personnel",
       "categoryNameZh": "知识产权",
-      "description": "查询企业建筑资质注册人员，包括姓名、注册类别、注册号（执业印章号）、注册专业、证书编号。",
+      "description": "查询企业建筑资质注册人员，包括姓名、注册类别、注册号（执业印章号）、注册专业。",
       "params": [
         {
           "name": "searchKey",
@@ -2131,7 +2131,7 @@
       "layer": "L3",
       "cliMethod": "ipr-pledge",
       "categoryNameZh": "知识产权",
-      "description": "查询企业知识产权出质信息，包括质权人名称、知识产权登记证号、出质人、登记日期。",
+      "description": "查询企业知识产权出质信息，包括知识产权名称、类型、登记证号、出质人、质权人、出质登记期限和状态。",
       "params": [
         {
           "name": "searchKey",
@@ -2554,7 +2554,7 @@
       "layer": "L3",
       "cliMethod": "import-export-credit",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业进出口信用信息，包括海关注册编码、注册海关、经营类别。",
+      "description": "查询企业进出口信用信息，包括海关注册编码、信用等级、注册海关、经营类别和有效期。",
       "params": [
         {
           "name": "searchKey",
@@ -2726,7 +2726,7 @@
       "layer": "L2",
       "cliMethod": "news-sentiment",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业相关新闻舆情信息，包括发稿媒体、新闻标题、发布时间、网址链接、情感倾向。",
+      "description": "查询企业相关新闻舆情信息，包括发稿媒体、新闻标题、发布时间、情感倾向和舆情标签。",
       "params": [
         {
           "name": "searchKey",
@@ -3330,7 +3330,7 @@
       "layer": "L3",
       "cliMethod": "default-event-info",
       "categoryNameZh": "风险合规",
-      "description": "查询企业失信人和被执行人信息，包含失信被执行记录、执行案号、执行法院、执行标的等，不等同于单一违约事项。",
+      "description": "查询企业失信人和被执行人信息，包含失信被执行记录、执行案号、执行法院、执行标的等，区别于单一违约事项。",
       "params": [
         {
           "name": "searchKey",
@@ -3408,7 +3408,7 @@
       "layer": "L2",
       "cliMethod": "equity-freeze",
       "categoryNameZh": "风险合规",
-      "description": "查询企业股权冻结情况，包括执行法院、股权数额、冻结起始日期、状态（从司法协助接口按冻结类型筛选）。",
+      "description": "查询企业股权冻结情况，包括执行法院、股权数额、公示日期、状态（从司法协助接口按冻结类型筛选）。",
       "params": [
         {
           "name": "searchKey",
@@ -3622,7 +3622,7 @@
       "priority": true,
       "cliMethod": "judicial-case",
       "categoryNameZh": "风险合规",
-      "description": "查询企业司法解析信息，包括案件名称、案件类型、案件身份、案由、相关案号、最新审理程序、最新结果。",
+      "description": "查询企业司法解析信息，包括案件名称、案件类型、案件身份、案由、相关案号、审理程序和审理时间。",
       "params": [
         {
           "name": "searchKey",
@@ -3648,7 +3648,7 @@
       "layer": "L2",
       "cliMethod": "judicial-documents",
       "categoryNameZh": "风险合规",
-      "description": "查询企业涉及的法院判决文书，包括案件案由、裁判结果、涉案金额、当事人信息，适用于法律纠纷历史分析、诉讼风险评估。",
+      "description": "查询企业涉及的法院裁判文书，包括案号、案由、文书标题、文书类型、裁判日期、当事人信息和裁判结果，适用于法律纠纷历史分析、诉讼风险评估。",
       "params": [
         {
           "name": "searchKey",
@@ -3674,7 +3674,7 @@
       "layer": "L3",
       "cliMethod": "land-mortgage-info",
       "categoryNameZh": "风险合规",
-      "description": "查询企业土地抵押信息，包括土地坐落、抵押面积、抵押土地用途、评估金额、抵押金额。",
+      "description": "查询企业土地抵押信息，包括土地坐落、抵押面积、抵押土地用途、土地行政区、抵押起止日期。",
       "params": [
         {
           "name": "searchKey",
