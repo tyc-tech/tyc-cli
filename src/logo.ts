@@ -17,9 +17,9 @@ export const TY_LOGO = `\x1b[38;2;22;135;245m           ▄▄▄█████
        ▀▀█████████▄ ▀██████▀▀
            ▀▀▀██████  ▀▀▀\x1b[0m`;
 
-export const LOGIN_SUCCESS_BANNER = `${TY_LOGO}
-天眼查 CLI
-使用 tyc --help 查看命令`;
+export const LOGIN_SUCCESS_BANNER = `登录成功
+${TY_LOGO}
+公平看清世界`;
 
 export function printLoginSuccessBanner(): void {
   console.log(LOGIN_SUCCESS_BANNER);
