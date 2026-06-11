@@ -2105,7 +2105,7 @@
       "layer": "L2",
       "cliMethod": "internet-service-info",
       "categoryNameZh": "知识产权",
-      "description": "查询企业互联网公开信息，包含 ICP 备案和企业微信公众号，包括网站名称、网站首页、域名、备案号、公众号名称、微信号、二维码、功能介绍。",
+      "description": "查询企业互联网公开信息，包含 ICP 备案和企业微信公众号，包括域名、备案号、审核日期、备案主体、公众号名称、微信号、二维码、头像和功能介绍。",
       "params": [
         {
           "name": "searchKey",
