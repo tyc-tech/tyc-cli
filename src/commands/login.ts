@@ -18,7 +18,9 @@ import {
   knownOAuthDefaultsForMcpURL,
   openBrowser,
   randomState,
+  registerDynamicOAuthClient,
   startCallbackServer,
+  type OAuthEndpoints,
 } from "../oauth.js";
 import { printLoginSuccessBanner } from "../logo.js";
 
@@ -59,7 +61,7 @@ export function registerLoginCommand(program: Command): void {
     .description("通过 OAuth 浏览器登录并自动写入 ~/.tyc/config.json")
     .option("--url <url>", `MCP endpoint（默认 ${DEFAULT_MCP_URL}，或沿用当前配置）`)
     .option("--issuer <url>", "OAuth authorization server issuer（默认从 MCP metadata 发现）")
-    .option("--client-id <id>", "OAuth client_id（默认 TYC_OAUTH_CLIENT_ID 或 tyc-local-dev）")
+    .option("--client-id <id>", "OAuth client_id（默认通过 DCR 自动注册）")
     .option("--client-secret <secret>", "OAuth client_secret（默认 TYC_OAUTH_CLIENT_SECRET；公共 CLI 通常不需要）")
     .option("--scope <scope>", "OAuth scope（默认 mcp:tools.call）")
     .option("--resource <url>", "OAuth resource/audience（默认从 MCP metadata 发现）")
@@ -75,17 +77,17 @@ export function registerLoginCommand(program: Command): void {
       const current = loadConfig() || {};
       const mcpURL = opts.url || process.env.TYC_MCP_ENDPOINT || current.url || DEFAULT_MCP_URL;
       const knownDefaults = knownOAuthDefaultsForMcpURL(mcpURL);
-      const clientId = opts.clientId || process.env.TYC_OAUTH_CLIENT_ID || "tyc-local-dev";
-      const clientSecret = opts.clientSecret || process.env.TYC_OAUTH_CLIENT_SECRET;
+      let clientId = opts.clientId || process.env.TYC_OAUTH_CLIENT_ID || "";
+      let clientSecret = opts.clientSecret || process.env.TYC_OAUTH_CLIENT_SECRET;
       const scope = opts.scope || "mcp:tools.call";
       const redirectHost = opts.redirectHost || "localhost";
       const redirectPort = parsePort(opts.redirectPort || "7078");
       const callbackPath = opts.callbackPath || "/oauth/callback";
       const verbose = !!program.opts().verbose;
 
-      let issuer = opts.issuer || knownDefaults.issuer;
-      let resource = opts.resource || knownDefaults.resource;
-      if (!issuer || !resource) {
+      let issuer = opts.issuer || "";
+      let resource = opts.resource || "";
+      if (!opts.issuer || !opts.resource) {
         console.error(`发现 MCP OAuth metadata：${mcpURL}`);
         try {
           const protectedResource = await discoverProtectedResourceMetadata(
@@ -95,10 +97,15 @@ export function registerLoginCommand(program: Command): void {
           if (verbose) {
             console.error(`> protected resource metadata: ${protectedResource.metadataURL}`);
           }
-          issuer ||= protectedResource.metadata.authorization_servers?.[0];
+          const metadataIssuer = protectedResource.metadata.authorization_servers?.[0];
+          if (!issuer && metadataIssuer) {
+            issuer = metadataIssuer;
+          }
           resource ||= protectedResource.metadata.resource || mcpURL;
         } catch (err) {
-          if (!knownDefaults.issuer || !knownDefaults.resource) {
+          issuer ||= knownDefaults.issuer || "";
+          resource ||= knownDefaults.resource || "";
+          if (!issuer || !resource) {
             throw err;
           }
           if (verbose) {
@@ -113,14 +120,28 @@ export function registerLoginCommand(program: Command): void {
       if (!issuer) {
         throw new Error("MCP metadata 未提供 authorization_servers，请用 --issuer 指定。");
       }
-      const endpoints = await discoverAuthorizationServer(issuer);
-      endpoints.authorizationEndpoint =
-        opts.authorizationEndpoint || endpoints.authorizationEndpoint;
-      endpoints.tokenEndpoint = opts.tokenEndpoint || endpoints.tokenEndpoint;
+      // 双端点都手动指定时跳过自动发现；否则 metadata 发现失败会直接报错
+      // （discovery 不再猜测端点，见 discoverAuthorizationServer）。
+      let endpoints: OAuthEndpoints;
+      if (opts.authorizationEndpoint && opts.tokenEndpoint) {
+        endpoints = {
+          authorizationEndpoint: opts.authorizationEndpoint,
+          tokenEndpoint: opts.tokenEndpoint,
+          issuer,
+        };
+      } else {
+        endpoints = await discoverAuthorizationServer(issuer);
+        endpoints.authorizationEndpoint =
+          opts.authorizationEndpoint || endpoints.authorizationEndpoint;
+        endpoints.tokenEndpoint = opts.tokenEndpoint || endpoints.tokenEndpoint;
+      }
       resource ||= endpoints.resourceDocumentation || mcpURL;
       if (verbose) {
         console.error(`> authorization endpoint: ${endpoints.authorizationEndpoint}`);
         console.error(`> token endpoint: ${endpoints.tokenEndpoint}`);
+        if (endpoints.registrationEndpoint) {
+          console.error(`> registration endpoint: ${endpoints.registrationEndpoint}`);
+        }
       }
 
       const state = randomState();
@@ -132,6 +153,32 @@ export function registerLoginCommand(program: Command): void {
         state,
         timeoutMs: 5 * 60 * 1000,
       });
+      if (!clientId) {
+        if (!endpoints.registrationEndpoint) {
+          callback.close();
+          throw new Error(
+            "OAuth metadata 未提供 registration_endpoint，请用 --client-id 指定预注册客户端。",
+          );
+        }
+        console.error("正在通过 Dynamic Client Registration 注册 OAuth client...");
+        let registeredClient: Awaited<ReturnType<typeof registerDynamicOAuthClient>>;
+        try {
+          registeredClient = await registerDynamicOAuthClient({
+            registrationEndpoint: endpoints.registrationEndpoint,
+            clientName: "tyc-cli",
+            redirectUris: [callback.redirectUri],
+            tokenEndpointAuthMethod: "none",
+          });
+        } catch (err) {
+          callback.close();
+          throw err;
+        }
+        clientId = registeredClient.clientId;
+        clientSecret ||= registeredClient.clientSecret;
+        if (verbose) {
+          console.error(`> registered client_id: ${clientId}`);
+        }
+      }
       const authorizationURL = buildAuthorizationURL({
         authorizationEndpoint: endpoints.authorizationEndpoint,
         clientId,

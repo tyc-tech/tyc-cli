@@ -1,13 +1,14 @@
 // ~/.tyc/config.json 读写
 //
 // 配置文件格式与通用 MCP 客户端保持一致：
-//   { "url": "https://mcp.tianyancha.com/v1",
+//   { "url": "https://mcp.tianyancha.com/mcp",
 //     "headers": { "Authorization": "xxxx" },
 //     "transport": "core",
 //     "coreUrl": "https://mcp.tianyancha.com/v1/core/tools/call" }
 //
-// 默认端点指向天眼查公网 MCP Server；连接本地或私有环境可通过
-//   tyc init --url http://localhost:8080/v1 或 TYC_MCP_ENDPOINT 环境变量覆盖。
+// 默认端点指向天眼查公网 MCP Server 的 canonical 入口 /mcp（/v1 是兼容别名，
+// coreUrl 的 REST 端点仍只挂在 /v1/core 下）；连接本地或私有环境可通过
+//   tyc init --url http://localhost:8080/mcp 或 TYC_MCP_ENDPOINT 环境变量覆盖。
 import { readFileSync, writeFileSync, mkdirSync, existsSync, chmodSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
@@ -16,7 +17,7 @@ import type { TycConfig } from "./types.js";
 const CONFIG_DIR = join(homedir(), ".tyc");
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 
-export const DEFAULT_MCP_URL = "https://mcp.tianyancha.com/v1";
+export const DEFAULT_MCP_URL = "https://mcp.tianyancha.com/mcp";
 export type Transport = "core" | "mcp";
 
 export function loadConfig(): TycConfig | null {

@@ -14,6 +14,7 @@ export interface AuthorizationServerMetadata {
   issuer?: string;
   authorization_endpoint?: string;
   token_endpoint?: string;
+  registration_endpoint?: string;
   scopes_supported?: string[];
   code_challenge_methods_supported?: string[];
   [k: string]: unknown;
@@ -31,13 +32,26 @@ export interface OAuthTokenResponse {
 export interface OAuthEndpoints {
   authorizationEndpoint: string;
   tokenEndpoint: string;
+  registrationEndpoint?: string;
   issuer: string;
   resourceDocumentation?: string;
+}
+
+export interface OAuthClientRegistrationResponse {
+  client_id: string;
+  client_secret?: string;
+  client_name?: string;
+  redirect_uris?: string[];
+  grant_types?: string[];
+  response_types?: string[];
+  token_endpoint_auth_method?: string;
+  [k: string]: unknown;
 }
 
 export interface CallbackServer {
   redirectUri: string;
   waitForCode(): Promise<string>;
+  close(): void;
 }
 
 export interface KnownOAuthDefaults {
@@ -165,11 +179,25 @@ export async function discoverAuthorizationServer(
   for (const url of authServerMetadataCandidates(issuer)) {
     try {
       const metadata = await fetchJSON<AuthorizationServerMetadata>(url);
+      // RFC 8414 §3.3：metadata 的 issuer 必须与发现所用 issuer 一致，
+      // 不一致说明文档不属于这个授权服务器，不能采信。
+      if (trimRightSlash(metadata.issuer || "") !== trimRightSlash(issuer)) {
+        errors.push(`metadata issuer mismatch: got ${metadata.issuer || "(empty)"} from ${url}`);
+        continue;
+      }
       if (metadata.authorization_endpoint && metadata.token_endpoint) {
+        if (!metadata.code_challenge_methods_supported?.includes("S256")) {
+          errors.push(`metadata missing PKCE S256 support: ${url}`);
+          continue;
+        }
         return {
           authorizationEndpoint: metadata.authorization_endpoint,
           tokenEndpoint: metadata.token_endpoint,
-          issuer: metadata.issuer || issuer,
+          registrationEndpoint:
+            typeof metadata.registration_endpoint === "string"
+              ? metadata.registration_endpoint
+              : undefined,
+          issuer,
           resourceDocumentation:
             typeof metadata.resource_documentation === "string"
               ? metadata.resource_documentation
@@ -182,11 +210,12 @@ export async function discoverAuthorizationServer(
     }
   }
 
-  return {
-    authorizationEndpoint: joinURL(issuer, "authorize"),
-    tokenEndpoint: joinURL(issuer, "token"),
-    issuer,
-  };
+  // MCP 2025-11-25：metadata 不可用或缺 PKCE 声明时必须拒绝继续，
+  // 不允许猜测端点。可用 --authorization-endpoint/--token-endpoint 手动指定。
+  throw new Error(
+    `无法发现可信的 authorization server metadata（issuer=${issuer}）。` +
+      `如需绕过自动发现，请同时指定 --authorization-endpoint 与 --token-endpoint。\n${errors.join("\n")}`,
+  );
 }
 
 export function knownOAuthDefaultsForMcpURL(mcpURL: string): KnownOAuthDefaults {
@@ -320,6 +349,10 @@ export async function startCallbackServer(opts: {
   const redirectUri = `http://${opts.host}:${address.port}${opts.path}`;
   return {
     redirectUri,
+    close: () => {
+      if (timer) clearTimeout(timer);
+      server?.close();
+    },
     waitForCode: async () => {
       try {
         return await codePromise;
@@ -350,6 +383,38 @@ export function buildAuthorizationURL(opts: {
   url.searchParams.set("code_challenge_method", "S256");
   if (opts.resource) url.searchParams.set("resource", opts.resource);
   return url.toString();
+}
+
+export async function registerDynamicOAuthClient(opts: {
+  registrationEndpoint: string;
+  clientName: string;
+  redirectUris: string[];
+  grantTypes?: string[];
+  responseTypes?: string[];
+  tokenEndpointAuthMethod?: "none" | "client_secret_post" | "client_secret_basic";
+}): Promise<{ clientId: string; clientSecret?: string }> {
+  const registered = await fetchJSON<OAuthClientRegistrationResponse>(
+    opts.registrationEndpoint,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_name: opts.clientName,
+        redirect_uris: opts.redirectUris,
+        grant_types: opts.grantTypes || ["authorization_code", "refresh_token"],
+        response_types: opts.responseTypes || ["code"],
+        token_endpoint_auth_method: opts.tokenEndpointAuthMethod || "none",
+        application_type: "native",
+      }),
+    },
+  );
+  if (!registered.client_id) {
+    throw new Error("DCR response missing client_id");
+  }
+  return {
+    clientId: registered.client_id,
+    clientSecret: registered.client_secret,
+  };
 }
 
 export async function exchangeAuthorizationCode(opts: {

@@ -24,7 +24,7 @@ Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业
 
 - 🧠 **MCP 客户端架构**：CLI 只做协议转换与参数透传；多源合并、时间戳格式化、
   空结果归一化、`_summary` 注入等业务逻辑由 MCP Server 完成
-- 🔌 **公网优先**：默认连接天眼查 MCP 端点 `https://mcp.tianyancha.com/v1`；
+- 🔌 **公网优先**：默认连接天眼查 MCP 端点 `https://mcp.tianyancha.com/mcp`；
   支持 `--url` 指向本地或私有部署
 - 🔄 **Session 复用**：`Mcp-Session-Id` 本地缓存 24 小时，后续调用零 initialize 开销
 - 🎯 **6 大业务分类 / 162 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
@@ -78,7 +78,7 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 
 ```json
 {
-  "url": "https://mcp.tianyancha.com/v1",
+  "url": "https://mcp.tianyancha.com/mcp",
   "headers": {
     "Authorization": "Bearer <OAuth_ACCESS_TOKEN>"
   }
@@ -255,7 +255,7 @@ tyc executive person-risk-overview "..." --humanName "张三"
 ```
 ┌─────────────┐         ┌─────────────────────────────┐         ┌─────────────────┐
 │   tyc-cli   │ ──JSON──▶│  天眼查 MCP Server           │ ──HTTP──▶│ tyc OpenAPI     │
-│ (npm / TS)  │ ◀───RPC──│  (mcp.tianyancha.com/v1) │ ◀───────│                 │
+│ (npm / TS)  │ ◀───RPC──│  (mcp.tianyancha.com/mcp) │ ◀───────│                 │
 └─────────────┘         └─────────────────────────────┘         └─────────────────┘
        │                              │
        │                              └─ 多源并发聚合 · 时间戳格式化 · _summary 注入 · 空结果归一化
@@ -324,7 +324,7 @@ tyc-cli/
 
 ```json
 {
-  "url": "https://mcp.tianyancha.com/v1",
+  "url": "https://mcp.tianyancha.com/mcp",
   "sessionId": "mcp-session-xxx",
   "initializedAt": 1777272039739,
   "protocolVersion": "2024-11-05"
@@ -383,7 +383,7 @@ bash test/t1_1/cli/run_t1_1.sh -o -v
 MCP_URL=https://my-mcp.example.com/mcp AUTH_TOKEN=xxx bash test/t1_1/cli/run_t1_1.sh
 ```
 
-`-o` = `--online`，切到 `https://mcp.tianyancha.com/v1`；`-v` = `--verbose`。
+`-o` = `--online`，切到 `https://mcp.tianyancha.com/mcp`；`-v` = `--verbose`。
 单分类脚本加 `-p` 可独立触发 preflight：`bash test/t1_1/cli/test_company.sh -p -o`。
 
 ---
