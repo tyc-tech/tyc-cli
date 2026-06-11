@@ -554,7 +554,7 @@
       "layer": "L3",
       "cliMethod": "income-statement",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司利润表数据，包括营业总收入、营业总成本、其他经营收益、营业利润、利润总额、净利润。",
+      "description": "查询上市公司利润表数据，包括营业总收入、营业总成本、营业利润、利润总额、净利润和每股收益。",
       "params": [
         {
           "name": "searchKey",
