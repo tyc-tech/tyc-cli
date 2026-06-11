@@ -74,7 +74,7 @@
       "layer": "L2",
       "cliMethod": "annual-reports",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业年度报告，包括报告年度、经营状态、从业人数、股东股权转让、投资信息等，数据每年公示后同步（通常6月前）。",
+      "description": "查询企业年报摘要列表，包括年报年度、企业名称、经营状态、从业人数、通信地址、股东数量和变更记录数量。",
       "params": [
         {
           "name": "searchKey",
@@ -232,7 +232,7 @@
       "layer": "L2",
       "cliMethod": "profile",
       "categoryNameZh": "企业基础信息",
-      "description": "查询企业的简介信息，包括企业名称、简介，适用于企业画像构建、企业业务分析场景。",
+      "description": "查询企业简介文本，适用于企业画像构建、企业业务分析场景。",
       "params": [
         {
           "name": "searchKey",
@@ -2079,7 +2079,7 @@
       "layer": "L2",
       "cliMethod": "copyright-work-info",
       "categoryNameZh": "知识产权",
-      "description": "查询企业作品著作权信息，包括作品名称、登记号、登记类别、创作完成日期、首次发表日期。",
+      "description": "查询企业作品著作权信息，包括作品名称、登记号、登记类别、登记日期和著作权人。",
       "params": [
         {
           "name": "searchKey",
