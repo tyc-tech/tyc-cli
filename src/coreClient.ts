@@ -20,12 +20,25 @@ function maskToken(v: string): string {
   return v.slice(0, 4) + "****" + v.slice(-4);
 }
 
-function readyURL(coreUrl: string): string {
+function coreSiblingURL(coreUrl: string, siblingPath: string): string {
   const u = new URL(coreUrl);
-  u.pathname = u.pathname.replace(/\/tools\/call\/?$/, "/ready");
+  const path = u.pathname.replace(/\/+$/, "");
+  if (path.endsWith("/tools/call")) {
+    u.pathname = path.slice(0, -"/tools/call".length) + siblingPath;
+  } else {
+    u.pathname = path + siblingPath;
+  }
   u.search = "";
   u.hash = "";
   return u.toString();
+}
+
+function readyURL(coreUrl: string): string {
+  return coreSiblingURL(coreUrl, "/ready");
+}
+
+function authReadyURL(coreUrl: string): string {
+  return coreSiblingURL(coreUrl, "/auth/ready");
 }
 
 export async function verifyCoreEndpoint(cfg: ResolvedConfig, verbose = false): Promise<void> {
@@ -42,6 +55,34 @@ export async function verifyCoreEndpoint(cfg: ResolvedConfig, verbose = false): 
   }
   if (resp.status < 200 || resp.status >= 300) {
     throw new Error(`core endpoint 校验失败：HTTP ${resp.status}\n${text.slice(0, 500)}`);
+  }
+}
+
+export async function verifyCoreAuthEndpoint(cfg: ResolvedConfig, verbose = false): Promise<void> {
+  const url = authReadyURL(cfg.coreUrl);
+  if (verbose) console.error(`> GET ${url}`);
+  const headers: Record<string, string> = {
+    Accept: "application/json, text/plain",
+    ...cfg.headers,
+  };
+  const resp = await fetch(url, {
+    method: "GET",
+    headers,
+  });
+  const text = await resp.text();
+  if (verbose) {
+    console.error(`< ${resp.status} ${resp.statusText}`);
+    console.error(`< body: ${text.slice(0, 500)}`);
+  }
+  if (resp.status < 200 || resp.status >= 300) {
+    let desc = text.slice(0, 500);
+    try {
+      const parsed = JSON.parse(text) as CoreCallResponse;
+      desc = String(parsed.error_description || parsed.error || desc);
+    } catch {
+      // keep raw text
+    }
+    throw new Error(`core/auth/ready HTTP ${resp.status}\n${desc}`);
   }
 }
 

@@ -6,7 +6,7 @@ import {
   resolveConfig,
   saveConfig,
 } from "../config.js";
-import { verifyCoreEndpoint } from "../coreClient.js";
+import { verifyCoreAuthEndpoint } from "../coreClient.js";
 import { clearSession } from "../session.js";
 import { ensureSession } from "../mcpClient.js";
 import {
@@ -230,8 +230,8 @@ export function registerLoginCommand(program: Command): void {
         const sess = await ensureSession(resolved, { verbose });
         console.log(`已建立 MCP session（sessionId=${sess.sessionId.slice(0, 16)}…）`);
       } else {
-        await verifyCoreEndpoint(resolved, verbose);
-        console.log("Shared Core endpoint 校验通过");
+        await verifyCoreAuthEndpoint(resolved, verbose);
+        console.log("Shared Core auth 校验通过");
       }
       printLoginSuccessBanner();
     });
