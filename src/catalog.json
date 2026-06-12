@@ -850,7 +850,7 @@
       "layer": "L3",
       "cliMethod": "stock-prospectus",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司招股书信息，包括招股书标题、股票名称、招股书内容、发布日期。",
+      "description": "查询上市公司招股书信息，包括招股书标题、股票名称和 PDF 链接。",
       "params": [
         {
           "name": "searchKey",
@@ -892,7 +892,7 @@
       "layer": "L3",
       "cliMethod": "stock-violations",
       "categoryNameZh": "企业基础信息",
-      "description": "查询上市公司违规处理信息，包括公告日期、处罚对象、处罚类型、处罚金额、处理人。",
+      "description": "查询上市公司违规处理信息，包括公告日期、违规类型、违规行为、处罚说明、处罚对象、处罚类型、罚款金额和处理机构。",
       "params": [
         {
           "name": "searchKey",
@@ -960,7 +960,7 @@
         {
           "name": "region",
           "type": "string",
-          "description": "地区代码（可选；areaCode）"
+          "description": "地区代码（可选；areaCode，例如 00110101）"
         },
         {
           "name": "pageNum",
@@ -1027,7 +1027,7 @@
         {
           "name": "region",
           "type": "string",
-          "description": "地区代码（可选；areaCode；与行业代码至少提供一个）"
+          "description": "地区代码（可选；areaCode，例如 00110101；与行业代码至少提供一个）"
         },
         {
           "name": "pageNum",
@@ -1047,7 +1047,7 @@
       "layer": "L3",
       "cliMethod": "listed-companies",
       "categoryNameZh": "企业基础信息",
-      "description": "通过公司名称、统一社会信用代码或天眼查企业 ID 搜索上市公司信息，返回公司名称、股票名称、股票代码、证券类别、上市状态、上市时间。",
+      "description": "通过公司名称、统一社会信用代码或天眼查企业 ID 搜索上市公司信息，返回公司名称、股票名称、股票代码、股票类型、交易市场、上市状态、上市时间。",
       "params": [
         {
           "name": "searchKey",
@@ -1143,7 +1143,7 @@
         {
           "name": "id",
           "type": "string",
-          "description": "司法协助 assId（可选；从列表返回的 assId 取值，提供后将同步获取详情）"
+          "description": "司法协助 ID（可选；提供后将同步获取详情）"
         },
         {
           "name": "pageNum",
@@ -1520,7 +1520,7 @@
       "layer": "L3",
       "cliMethod": "personnel-terminated-cases",
       "categoryNameZh": "董监高",
-      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员终本案件信息，包括执行法院、案件内容、被执行人名称。",
+      "description": "以企业名称+人员姓名双参数实体强锚定，查询目标人员终本案件信息，包括执行法院、案号、立案日期、终本日期、执行标的、未履行金额和被执行人名称。",
       "params": [
         {
           "name": "searchKey",
@@ -2225,7 +2225,7 @@
       "layer": "L3",
       "cliMethod": "trademark-detail",
       "categoryNameZh": "知识产权",
-      "description": "通过注册号或国际分类获取商标详情，包括国际分类、商标名称、申请日期、申请人、注册地址、使用范围、流程。",
+      "description": "通过注册号和国际分类获取商标详情，包括国际分类、商标名称、申请日期、申请人、注册地址、专用权期限、使用范围和流程。",
       "params": [
         {
           "name": "regNo",
@@ -2236,7 +2236,8 @@
         {
           "name": "intCls",
           "type": "string",
-          "description": "国际分类（可选）"
+          "required": true,
+          "description": "国际分类，例如 29-食品"
         }
       ]
     },
@@ -2888,7 +2889,7 @@
       "layer": "L3",
       "cliMethod": "random-check",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业双随机抽查信息，包括抽查类型、结果、实施机关、检查日期、检查事项。",
+      "description": "查询企业双随机抽查信息，包括抽查计划、检查任务、检查类型、实施机关和检查日期。",
       "params": [
         {
           "name": "searchKey",
@@ -2940,7 +2941,7 @@
       "layer": "L2",
       "cliMethod": "recruitment-info",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业招聘信息，包括发布日期、招聘职位、薪资、学历、地区、工作经验。",
+      "description": "查询企业招聘信息，包括发布日期、招聘职位、薪资、学历、工作经验、招聘来源和招聘链接。",
       "params": [
         {
           "name": "searchKey",
@@ -2982,7 +2983,7 @@
       "layer": "L2",
       "cliMethod": "suppliers-and-customers",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业供应商与客户信息，包含供应商和客户，包括供应商/客户名称、采购/销售占比、采购/销售金额、报告期。",
+      "description": "查询企业供应商与客户信息，包含供应商和客户，包括供应商/客户名称、简称、采购/销售金额、占比、公告日期、数据来源和关联关系。",
       "params": [
         {
           "name": "searchKey",
@@ -3008,7 +3009,7 @@
       "layer": "L3",
       "cliMethod": "taxpayer-info",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业一般纳税人信息，包括纳税人名称、纳税人识别号、纳税人资格类型、主管税务机关、有效日期。",
+      "description": "查询企业一般纳税人信息，包括纳税人名称、简称、纳税人识别号、纳税人资格类型、识别状态、起始日期和结束日期。",
       "params": [
         {
           "name": "searchKey",
@@ -3060,7 +3061,7 @@
       "layer": "L3",
       "cliMethod": "telecom-license",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业电信许可信息，包括许可证编号、业务类别、业务范围、发证日期、有效期。",
+      "description": "查询企业电信许可信息，包括许可证编号、许可业务类型、业务范围、是否有效、企业类型、注册资本、注册地址、投诉量和投诉回复率。",
       "params": [
         {
           "name": "searchKey",
@@ -3086,7 +3087,7 @@
       "layer": "L3",
       "cliMethod": "weibo",
       "categoryNameZh": "经营与公示",
-      "description": "查询企业微博信息，包括企业微博名称、行业类别、简介。",
+      "description": "查询企业微博信息，包括微博名称、微博链接、账号简介、标签和头像图。",
       "params": [
         {
           "name": "searchKey",
@@ -3575,7 +3576,7 @@
         {
           "name": "id",
           "type": "string",
-          "description": "司法协助 ID（可选；提供后将同步获取详情）"
+          "description": "司法协助 assId（可选；从列表返回的 assId 取值，提供后将同步获取详情）"
         },
         {
           "name": "pageNum",
@@ -3941,7 +3942,7 @@
       "layer": "L3",
       "cliMethod": "tax-violation",
       "categoryNameZh": "风险合规",
-      "description": "查询企业税收违法信息，包括纳税人名称、案件性质、违法事实、财务负责人信息、负有责任的中介机构。",
+      "description": "查询企业税收违法信息，包括纳税人名称、案件性质、所属税务机关、发布日期、违法事实、注册地址、纳税人识别号和法定代表人信息。",
       "params": [
         {
           "name": "searchKey",
@@ -3967,7 +3968,7 @@
       "layer": "L3",
       "cliMethod": "terminated-cases",
       "categoryNameZh": "风险合规",
-      "description": "查询企业全量终本案件（含历史），包括执行法院、案件内容、被执行人名称、执行标的、终本日期、未履行金额。",
+      "description": "查询企业全量终本案件（含历史），包括案号、执行法院、被执行人名称、立案日期、终本日期、执行标的、未履行金额和案件状态。",
       "params": [
         {
           "name": "searchKey",
@@ -3993,7 +3994,7 @@
       "layer": "L3",
       "cliMethod": "valuation-inquiry",
       "categoryNameZh": "风险合规",
-      "description": "查询询价评估信息，包括标的物名称、当事人姓名、评估机构名称、评估日期、评估价。",
+      "description": "查询询价评估信息，包括标的物名称、当事人名称、案号、执行法院、评估机构、评估日期和标的类型。",
       "params": [
         {
           "name": "searchKey",
