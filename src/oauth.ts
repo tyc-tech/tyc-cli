@@ -220,16 +220,18 @@ export async function discoverAuthorizationServer(
 
 export function knownOAuthDefaultsForMcpURL(mcpURL: string): KnownOAuthDefaults {
   const u = new URL(mcpURL);
+  const path = trimRightSlash(u.pathname);
+  const resourcePath = path === "/v1" ? "/v1" : "/mcp";
   switch (u.hostname) {
     case "ai-mcp-pre.tianyancha.com":
       return {
         issuer: "https://ai-pre.tianyancha.com/oauth",
-        resource: "https://ai-mcp-pre.tianyancha.com/mcp",
+        resource: `https://ai-mcp-pre.tianyancha.com${resourcePath}`,
       };
     case "mcp.tianyancha.com":
       return {
         issuer: "https://ai.tianyancha.com/oauth",
-        resource: "https://mcp.tianyancha.com/mcp",
+        resource: `https://mcp.tianyancha.com${resourcePath}`,
       };
     default:
       return {};
