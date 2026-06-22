@@ -88,7 +88,9 @@ export function registerLoginCommand(program: Command): void {
       let issuer = opts.issuer || "";
       let resource = opts.resource || "";
       if (!opts.issuer || !opts.resource) {
-        console.error(`发现 MCP OAuth metadata：${mcpURL}`);
+        if (verbose) {
+          console.error(`> discovering MCP OAuth metadata: ${mcpURL}`);
+        }
         try {
           const protectedResource = await discoverProtectedResourceMetadata(
             mcpURL,
@@ -160,7 +162,9 @@ export function registerLoginCommand(program: Command): void {
             "OAuth metadata 未提供 registration_endpoint，请用 --client-id 指定预注册客户端。",
           );
         }
-        console.error("正在通过 Dynamic Client Registration 注册 OAuth client...");
+        if (verbose) {
+          console.error("> registering OAuth client via Dynamic Client Registration");
+        }
         let registeredClient: Awaited<ReturnType<typeof registerDynamicOAuthClient>>;
         try {
           registeredClient = await registerDynamicOAuthClient({
@@ -189,7 +193,9 @@ export function registerLoginCommand(program: Command): void {
         resource,
       });
 
-      console.error(`OAuth 回调地址：${callback.redirectUri}`);
+      if (verbose) {
+        console.error(`> OAuth callback: ${callback.redirectUri}`);
+      }
       if (opts.open === false) {
         console.error("请在浏览器打开以下 URL 完成登录：");
         console.error(authorizationURL);
@@ -199,7 +205,9 @@ export function registerLoginCommand(program: Command): void {
       }
 
       const code = await callback.waitForCode();
-      console.error("已收到授权码，正在换取 access token...");
+      if (verbose) {
+        console.error("> authorization code received; exchanging access token");
+      }
       const token = await exchangeAuthorizationCode({
         tokenEndpoint: endpoints.tokenEndpoint,
         clientId,
@@ -218,7 +226,9 @@ export function registerLoginCommand(program: Command): void {
       cfg.headers.Authorization = `${normalizeTokenType(token.token_type)} ${token.access_token}`;
       saveConfig(cfg);
       clearSession();
-      console.log(`已保存 OAuth 登录态到 ~/.tyc/config.json  (url=${cfg.url})`);
+      if (verbose) {
+        console.error(`> OAuth login state saved to ~/.tyc/config.json (url=${cfg.url})`);
+      }
 
       if (opts.verify === false) {
         printLoginSuccessBanner();
@@ -228,10 +238,14 @@ export function registerLoginCommand(program: Command): void {
       const resolved = resolveConfig();
       if (resolved.transport === "mcp") {
         const sess = await ensureSession(resolved, { verbose });
-        console.log(`已建立 MCP session（sessionId=${sess.sessionId.slice(0, 16)}…）`);
+        if (verbose) {
+          console.error(`> MCP session initialized (sessionId=${sess.sessionId.slice(0, 16)}...)`);
+        }
       } else {
         await verifyCoreAuthEndpoint(resolved, verbose);
-        console.log("Shared Core auth 校验通过");
+        if (verbose) {
+          console.error("> Shared Core auth check passed");
+        }
       }
       printLoginSuccessBanner();
     });
