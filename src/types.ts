@@ -5,7 +5,7 @@
 //  - MCP 层类型：JSON-RPC 请求/响应、tools/call 结果
 //  - Session：本地缓存的 MCP 会话状态（~/.tyc/session.json）
 //  - Config：CLI 配置（~/.tyc/config.json），与主流 MCP 客户端配置风格一致
-//    { url, headers }
+//    { url, headers }；OAuth 登录会额外保存 oauth 刷新上下文
 
 export interface CatalogParam {
   name: string;
@@ -54,11 +54,24 @@ export interface Catalog {
 }
 
 // ~/.tyc/config.json
+export interface TycOAuthConfig {
+  tokenEndpoint: string;
+  clientId: string;
+  clientSecret?: string;
+  refreshToken?: string;
+  resource?: string;
+  scope?: string;
+  tokenType?: string;
+  accessTokenExpiresAt?: number; // epoch ms
+  updatedAt?: number;            // epoch ms
+}
+
 export interface TycConfig {
   url?: string;
   coreUrl?: string;
   transport?: "core" | "mcp";
   headers?: Record<string, string>;
+  oauth?: TycOAuthConfig;
 }
 
 // ~/.tyc/session.json

@@ -456,6 +456,78 @@ export async function exchangeAuthorizationCode(opts: {
   return token as OAuthTokenResponse;
 }
 
+export async function exchangeRefreshToken(opts: {
+  tokenEndpoint: string;
+  clientId: string;
+  clientSecret?: string;
+  refreshToken: string;
+  resource?: string;
+}): Promise<OAuthTokenResponse> {
+  const body = new URLSearchParams();
+  body.set("grant_type", "refresh_token");
+  body.set("client_id", opts.clientId);
+  body.set("refresh_token", opts.refreshToken);
+  if (opts.clientSecret) body.set("client_secret", opts.clientSecret);
+  if (opts.resource) body.set("resource", opts.resource);
+
+  const resp = await fetch(opts.tokenEndpoint, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  const text = await resp.text();
+  if (resp.status < 200 || resp.status >= 300) {
+    throw new Error(`token refresh HTTP ${resp.status}: ${text.slice(0, 500)}`);
+  }
+  const token = JSON.parse(text) as Partial<OAuthTokenResponse>;
+  if (!token.access_token) {
+    throw new Error("token refresh response missing access_token");
+  }
+  return token as OAuthTokenResponse;
+}
+
+function callbackSearchParams(raw: string): URLSearchParams | null {
+  try {
+    const url = new URL(raw);
+    if (url.search) return url.searchParams;
+    if (url.hash.includes("=")) return new URLSearchParams(url.hash.replace(/^#/, ""));
+    return null;
+  } catch {
+    if (raw.startsWith("?") || raw.includes("code=") || raw.includes("error=")) {
+      return new URLSearchParams(raw.replace(/^[?#]/, ""));
+    }
+    return null;
+  }
+}
+
+export function parseAuthorizationCallbackCode(raw: string, expectedState?: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    throw new Error("empty callback token");
+  }
+  const params = callbackSearchParams(trimmed);
+  if (!params) {
+    return trimmed;
+  }
+
+  const error = params.get("error");
+  if (error) {
+    throw new Error(`OAuth error: ${params.get("error_description") || error}`);
+  }
+  const state = params.get("state");
+  if (expectedState && state && state !== expectedState) {
+    throw new Error("OAuth state mismatch");
+  }
+  const code = params.get("code") || params.get("token") || params.get("callback_token");
+  if (!code) {
+    throw new Error("callback URL missing code/token");
+  }
+  return code;
+}
+
 export function openBrowser(url: string): void {
   const platform = process.platform;
   let command: string;

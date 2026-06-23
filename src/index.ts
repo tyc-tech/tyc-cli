@@ -95,6 +95,8 @@ OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
 SETUP
 
   tyc login                                             OAuth browser login
+  tyc login --no-open --no-block                       print OAuth URL and exit; complete manually
+  tyc login --callback-token <CODE_OR_CALLBACK_URL>    complete a non-blocking OAuth login
   tyc login --url <MCP_URL>                             OAuth for local / pre / self-hosted
   tyc init --authorization <KEY>                        API-key compatibility path (default transport: core)
   tyc init --transport mcp --authorization <KEY>        legacy MCP session transport

@@ -8,7 +8,11 @@
 //      /--threshold/--output-file 截断 & 落盘
 import type { Command } from "commander";
 import { getCategories, getToolsByGroup } from "../registry.js";
-import { resolveConfig } from "../config.js";
+import {
+  refreshResolvedConfigOAuth,
+  resolveConfigWithFreshOAuth,
+  type ResolvedConfig,
+} from "../config.js";
 import { callCoreTool } from "../coreClient.js";
 import { callTool } from "../mcpClient.js";
 import { jsonToMarkdown } from "../utils/jsonToMarkdown.js";
@@ -73,15 +77,11 @@ function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void 
       if (options[p.name] !== undefined) args[p.name] = options[p.name];
     }
 
-    const cfg = resolveConfig();
     const opts = program.opts();
     const verbose = !!opts.verbose;
 
     try {
-      const result =
-        cfg.transport === "mcp"
-          ? await callTool(cfg, tool.name, args, { verbose })
-          : await callCoreTool(cfg, tool.name, args, { verbose });
+      const result = await callToolWithOAuthRefresh(tool.name, args, verbose);
       emit(result, opts, tool.name);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -89,6 +89,41 @@ function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void 
       process.exit(1);
     }
   });
+}
+
+async function callConfiguredTool(
+  cfg: ResolvedConfig,
+  name: string,
+  args: Record<string, unknown>,
+  verbose: boolean,
+): Promise<McpToolCallResult> {
+  return cfg.transport === "mcp"
+    ? callTool(cfg, name, args, { verbose })
+    : callCoreTool(cfg, name, args, { verbose });
+}
+
+function isUnauthorizedError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return /\bHTTP 401\b/i.test(msg) || /invalid_token|expired_token|token expired/i.test(msg);
+}
+
+async function callToolWithOAuthRefresh(
+  name: string,
+  args: Record<string, unknown>,
+  verbose: boolean,
+): Promise<McpToolCallResult> {
+  let refreshResult = await resolveConfigWithFreshOAuth({ verbose });
+  try {
+    return await callConfiguredTool(refreshResult.config, name, args, verbose);
+  } catch (err) {
+    if (!isUnauthorizedError(err)) throw err;
+    refreshResult = await refreshResolvedConfigOAuth(refreshResult.config, {
+      force: true,
+      verbose,
+    });
+    if (!refreshResult.refreshed) throw err;
+    return callConfiguredTool(refreshResult.config, name, args, verbose);
+  }
 }
 
 function emit(

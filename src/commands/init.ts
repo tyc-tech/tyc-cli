@@ -52,7 +52,11 @@ export function registerInitCommand(program: Command): void {
       const cfg = loadConfig() || {};
       if (!cfg.headers) cfg.headers = {};
 
-      if (opts.url) cfg.url = opts.url;
+      let resetOAuth = false;
+      if (opts.url) {
+        cfg.url = opts.url;
+        resetOAuth = true;
+      }
       if (!cfg.url) cfg.url = DEFAULT_MCP_URL;
       const transport = parseTransport(opts.transport);
       if (transport) cfg.transport = transport;
@@ -60,7 +64,10 @@ export function registerInitCommand(program: Command): void {
       if (opts.coreUrl) cfg.coreUrl = opts.coreUrl;
       if (!cfg.coreUrl) cfg.coreUrl = defaultCoreURL(cfg.url);
 
-      if (opts.authorization) cfg.headers.Authorization = opts.authorization;
+      if (opts.authorization) {
+        cfg.headers.Authorization = opts.authorization;
+        resetOAuth = true;
+      }
 
       if (opts.header && opts.header.length > 0) {
         for (const kv of opts.header) {
@@ -72,10 +79,13 @@ export function registerInitCommand(program: Command): void {
           const k = kv.slice(0, idx).trim();
           const v = kv.slice(idx + 1);
           if (!k) continue;
+          if (k.toLowerCase() === "authorization") resetOAuth = true;
           if (v === "") delete cfg.headers[k];
           else cfg.headers[k] = v;
         }
       }
+
+      if (resetOAuth) delete cfg.oauth;
 
       saveConfig(cfg);
       // 任何配置变更都清掉 session 缓存，避免 endpoint/鉴权切换后复用旧 sessionId
