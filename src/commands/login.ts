@@ -9,8 +9,6 @@ import {
   type OAuthTokenStoreOptions,
 } from "../config.js";
 import { verifyCoreAuthEndpoint } from "../coreClient.js";
-import { clearSession } from "../session.js";
-import { ensureSession } from "../mcpClient.js";
 import {
   buildAuthorizationURL,
   type CallbackServer,
@@ -90,11 +88,10 @@ function saveOAuthTokenConfig(
 ): void {
   const cfg = loadConfig() || {};
   cfg.url = mcpURL;
-  if (!cfg.transport) cfg.transport = "core";
-  if (!cfg.coreUrl) cfg.coreUrl = defaultCoreURL(mcpURL);
+  delete (cfg as Record<string, unknown>).transport;
+  cfg.coreUrl = defaultCoreURL(mcpURL);
   applyOAuthTokenToConfig(cfg, token, oauth);
   saveConfig(cfg);
-  clearSession();
   if (verbose) {
     console.error(`> OAuth login state saved to ~/.tyc/config.json (url=${cfg.url})`);
   }
@@ -107,16 +104,9 @@ async function verifySavedOAuthLogin(verify: boolean, verbose: boolean): Promise
   }
 
   const resolved = resolveConfig();
-  if (resolved.transport === "mcp") {
-    const sess = await ensureSession(resolved, { verbose });
-    if (verbose) {
-      console.error(`> MCP session initialized (sessionId=${sess.sessionId.slice(0, 16)}...)`);
-    }
-  } else {
-    await verifyCoreAuthEndpoint(resolved, verbose);
-    if (verbose) {
-      console.error("> Shared Core auth check passed");
-    }
+  await verifyCoreAuthEndpoint(resolved, verbose);
+  if (verbose) {
+    console.error("> Shared Core auth check passed");
   }
   printLoginSuccessBanner();
 }
@@ -175,7 +165,7 @@ export function registerLoginCommand(program: Command): void {
     .option("--token <code-or-url>", "同 --callback-token，用于手动传入授权回调 code/token")
     .option("--no-open", "不自动打开浏览器，只打印授权 URL")
     .option("--no-block", "配合 --no-open：打印授权 URL 并保存 pending 状态后立即退出")
-    .option("--no-verify", "保存 token 后跳过 initialize 连通性校验")
+    .option("--no-verify", "保存 token 后跳过 shared core 鉴权校验")
     .action(async (opts: LoginOptions) => {
       const verbose = !!program.opts().verbose;
       const callbackToken = pickCallbackToken(opts);

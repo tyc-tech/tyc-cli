@@ -1,7 +1,7 @@
 // Stateless apimcp shared-core HTTP client.
 //
-// It intentionally returns the same McpToolCallResult shape as mcpClient so
-// command output code can stay transport-agnostic.
+// It intentionally returns the MCP content shape so command output code can be
+// shared by normal JSON tools and markdown capability discovery.
 import type { ResolvedConfig } from "./config.js";
 import type { McpToolCallResult } from "./types.js";
 
@@ -12,6 +12,13 @@ export interface CoreCallResponse {
   error?: string;
   error_description?: string;
   [k: string]: unknown;
+}
+
+export type CoreOutputFormat = "json" | "markdown";
+
+export interface CoreCallOptions {
+  verbose?: boolean;
+  format?: CoreOutputFormat;
 }
 
 function maskToken(v: string): string {
@@ -90,9 +97,10 @@ export async function callCoreTool(
   cfg: ResolvedConfig,
   name: string,
   args: Record<string, unknown>,
-  opts?: { verbose?: boolean },
+  opts?: CoreCallOptions,
 ): Promise<McpToolCallResult> {
   const verbose = !!opts?.verbose;
+  const format = opts?.format || "json";
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -101,7 +109,7 @@ export async function callCoreTool(
   const body = {
     tool_name: name,
     arguments: args,
-    format: "json",
+    format,
   };
   if (verbose) {
     const masked: Record<string, string> = {};
@@ -109,7 +117,6 @@ export async function callCoreTool(
       masked[k] = k.toLowerCase() === "authorization" ? maskToken(v) : v;
     }
     console.error(`> POST ${cfg.coreUrl}`);
-    console.error(`> transport: core`);
     console.error(`> headers: ${JSON.stringify(masked)}`);
     console.error(`> body: ${JSON.stringify(body)}`);
   }

@@ -2,10 +2,9 @@
 //
 // CLI 运行时模型：
 //  - Catalog：构建时由 apimcp 主仓生成，打包在 src/catalog.json，用于构建命令树
-//  - MCP 层类型：JSON-RPC 请求/响应、tools/call 结果
-//  - Session：本地缓存的 MCP 会话状态（~/.tyc/session.json）
-//  - Config：CLI 配置（~/.tyc/config.json），与主流 MCP 客户端配置风格一致
-//    { url, headers }；OAuth 登录会额外保存 oauth 刷新上下文
+//  - Tool call 结果：沿用 MCP content shape，便于共享输出逻辑
+//  - Config：CLI 配置（~/.tyc/config.json），{ url, coreUrl, headers }；
+//    OAuth 登录会额外保存 oauth 刷新上下文
 
 export interface CatalogParam {
   name: string;
@@ -69,17 +68,8 @@ export interface TycOAuthConfig {
 export interface TycConfig {
   url?: string;
   coreUrl?: string;
-  transport?: "core" | "mcp";
   headers?: Record<string, string>;
   oauth?: TycOAuthConfig;
-}
-
-// ~/.tyc/session.json
-export interface TycSession {
-  url: string;                  // 对应 config.url；变化即失效
-  sessionId: string;            // Mcp-Session-Id
-  initializedAt: number;        // epoch ms
-  protocolVersion?: string;
 }
 
 // MCP JSON-RPC 相关

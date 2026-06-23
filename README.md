@@ -11,9 +11,9 @@
 
 ## 📖 项目简介
 
-`tyc-cli` 是天眼查 MCP Server 的官方命令行客户端。通过 MCP 协议（JSON-RPC 2.0 over
-Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业工商、知产、司法风险、
-董监高等全维度商业数据。
+`tyc-cli` 是天眼查 MCP Server 的官方命令行客户端。CLI 通过 shared core HTTP 入口
+调用天眼查 162 个业务语义聚合工具，覆盖企业工商、知产、司法风险、董监高等全维度
+商业数据。
 
 当前 MCP Server 的 `tools/list` 默认只公开少量 AI Agent 入口工具
 （搜索、公司画像、能力目录、`call_tool` / `call_tools_batch` 等），但 162 个业务语义
@@ -22,11 +22,11 @@ Streamable HTTP）调用天眼查 162 个业务语义聚合工具，覆盖企业
 
 **核心特点**：
 
-- 🧠 **MCP 客户端架构**：CLI 只做协议转换与参数透传；多源合并、时间戳格式化、
+- 🧠 **Shared Core 客户端架构**：CLI 只做命令解析与参数透传；多源合并、时间戳格式化、
   空结果归一化、`_summary` 注入等业务逻辑由 MCP Server 完成
 - 🔌 **公网优先**：默认连接天眼查 MCP 端点 `https://mcp.tianyancha.com/mcp`；
   支持 `--url` 指向本地或私有部署
-- 🔄 **Session 复用**：`Mcp-Session-Id` 本地缓存 24 小时，后续调用零 initialize 开销
+- 🔄 **无本地 MCP Session**：CLI 调用 stateless shared core endpoint，不缓存 `Mcp-Session-Id`
 - 🎯 **6 大业务分类 / 162 个工具**：企业基础信息 · 风险合规 · 知识产权 · 经营与公示 · 历史信息 · 董监高
 - 🤖 **AI Agent 友好**：tyc 英文 key 透传 / 时间戳格式化 / `_summary / _empty / _warnings` 元数据
 
@@ -81,8 +81,8 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 > 保存到 `~/.tyc/oauth_pending.json`；完成浏览器授权后，复制回调 URL 中的 `code` /
 > `token` / `callback_token` 参数或完整 callback URL，执行
 > `tyc login --callback-token "<...>"` 完成换 token。
-> `tyc init` 保存配置后会立即向 MCP 发一次 `initialize`：成功则打印 `已建立 MCP session`，
-> 失败则退出码 1 并提示连通性问题。加 `--no-verify` 可跳过校验。
+> `tyc init` 保存配置后会立即校验 shared core endpoint；失败则退出码 1 并提示连通性问题。
+> 加 `--no-verify` 可跳过校验。
 
 配置存于 `~/.tyc/config.json`（权限 600）：
 
@@ -107,6 +107,8 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 ### 4. 开始查询
 
 ```bash
+tyc company companies "北京百度网讯科技有限公司" --head 40
+tyc company capabilities 2319755677 --company-name "北京百度网讯科技有限公司"
 tyc company registration-info "北京百度网讯科技有限公司"
 tyc risk dishonest-info "..." --md
 tyc executive personnel-dishonest "..." --humanName "张三"
@@ -124,11 +126,10 @@ tyc executive personnel-dishonest "..." --humanName "张三"
 | `tyc login --no-open --no-block` | 打印 OAuth 授权 URL 并立即退出，等待后续手动完成 |
 | `tyc login --callback-token <code-or-url>` | 使用上一步保存的 PKCE 上下文，把回调 code/token 换成 access token |
 | `tyc login --url <url>` | 对指定 MCP endpoint 发起 OAuth 登录 |
-| `tyc init --authorization <token>` | 写入 `headers.Authorization`；保存后会立即向 MCP 发一次 `initialize` 校验连通性 |
+| `tyc init --authorization <token>` | 写入 `headers.Authorization`；保存后会立即校验 shared core 连通性 |
 | `tyc init --url <url>` | 设置 MCP endpoint |
 | `tyc init --header K=V` | 注入自定义 header（可重复）；值留空则删除该 key |
 | `tyc init --no-verify` | 仅写配置，跳过连通性校验（离线配置场景） |
-| `tyc init --clear-session` | 清除本地 session 缓存 |
 | `tyc --help` | 显示 6 个分类总览 |
 | `tyc <category> --help` | 显示某分类下全部命令 |
 | `tyc <category> <method> --help` | 显示具体命令的入参说明 |
@@ -143,7 +144,7 @@ tyc executive personnel-dishonest "..." --humanName "张三"
 | `--pretty` | 同默认；保留 flag 以保持向后兼容 / 显式声明意图 |
 | `--compact` | 紧凑单行 JSON（旧默认行为；管道 / `jq` 场景） |
 | `--md` | Markdown 表格化输出（人类阅读 / Agent 上屏） |
-| `--verbose` | 打印 MCP 请求详情到 stderr（与上述输出格式正交） |
+| `--verbose` | 打印 shared core 请求详情到 stderr（与上述输出格式正交） |
 
 #### 输出截断 / 落盘（与上述输出格式正交，可叠加任意子命令）
 
@@ -202,6 +203,8 @@ tyc company registration-info "百度" --compact | jq .name
 ### 企业基础信息（company，49）
 
 ```bash
+tyc company companies "北京百度网讯科技有限公司"            # 先锚定主体，复制返回 items[*].id
+tyc company capabilities 2319755677 --company-name "北京百度网讯科技有限公司"  # 获取可调用 tool_name 白名单
 tyc company registration-info "北京百度网讯科技有限公司"   # 工商登记
 tyc company actual-controller "..."                       # 实际控制人
 tyc company beneficial-owners "..."                       # UBO
@@ -275,22 +278,21 @@ tyc executive person-risk-overview "..." --humanName "张三"
 
 ```
 ┌─────────────┐         ┌─────────────────────────────┐         ┌─────────────────┐
-│   tyc-cli   │ ──JSON──▶│  天眼查 MCP Server           │ ──HTTP──▶│ tyc OpenAPI     │
-│ (npm / TS)  │ ◀───RPC──│  (mcp.tianyancha.com/mcp) │ ◀───────│                 │
+│   tyc-cli   │ ──HTTP──▶│  天眼查 MCP Server           │ ──HTTP──▶│ tyc OpenAPI     │
+│ (npm / TS)  │ ◀──JSON──│  (/v1/core/tools/call)       │ ◀───────│                 │
 └─────────────┘         └─────────────────────────────┘         └─────────────────┘
        │                              │
        │                              └─ 多源并发聚合 · 时间戳格式化 · _summary 注入 · 空结果归一化
        │
-       └─ 仅命令树 · 参数透传 · Session 管理 · pretty/--md/--compact 呈现 · --head/--tail/--full/--threshold/--output-file 截断与落盘
+       └─ 仅命令树 · 参数透传 · pretty/--md/--compact 呈现 · --head/--tail/--full/--threshold/--output-file 截断与落盘
 ```
 
 **CLI 的职责**：
 
 1. 解析命令行（commander）
-2. 组装 `tools/call` JSON-RPC 请求，透传 `Authorization` header
-3. Session 管理（`initialize` + 24h 缓存 + 失效重建）
-4. 解析 MCP Streamable HTTP 响应（当前服务端返回单包 JSON）
-5. 格式化输出（默认 pretty / `--compact` / `--md`），并可叠加 `--head/--tail/--full/--threshold/--output-file` 做截断与落盘
+2. 组装 shared core `/v1/core/tools/call` 请求，透传 `Authorization` header
+3. 解析 shared core 响应并包装成统一输出结构
+4. 格式化输出（默认 pretty / `--compact` / `--md`），并可叠加 `--head/--tail/--full/--threshold/--output-file` 做截断与落盘
 
 **CLI 不做**：
 
@@ -313,10 +315,9 @@ tyc-cli/
 │
 └── src/
     ├── index.ts              # CLI 入口（commander 注册）
-    ├── types.ts              # Catalog / Session / MCP 类型
+    ├── types.ts              # Catalog / tool result 类型
     ├── config.ts             # ~/.tyc/config.json 读写 · 环境变量兜底
-    ├── session.ts            # ~/.tyc/session.json 读写 · 24h TTL
-    ├── mcpClient.ts          # MCP JSON-RPC client · SSE 解析 · 失效重建
+    ├── coreClient.ts         # Shared Core HTTP client · ready/auth 校验 · tools/call
     ├── oauth.ts              # OAuth metadata discovery · PKCE · loopback callback
     ├── registry.ts           # 读取打包内 catalog.json（命令树元数据）
     ├── catalog.json          # 命令元数据：name / group / cliMethod / params
@@ -331,26 +332,11 @@ tyc-cli/
 
 ---
 
-## ⚙️ Session 管理
+## ⚙️ Shared Core 调用
 
-| 场景 | 行为 |
-|------|------|
-| 首次调用 | `initialize` → 读 `Mcp-Session-Id` header → 存 `~/.tyc/session.json` |
-| 24h 内复用 | 直接用缓存 `sessionId`，跳过 `initialize` |
-| 缓存过期（>24h） | 自动 re-initialize，用户无感 |
-| 服务端主动失效（404/410/"session not found"） | 删缓存 → 重建 → 重试 1 次 |
-| `tyc init` 变更 url / Authorization | 配置写入后自动清掉旧 session |
-
-`~/.tyc/session.json` 示例：
-
-```json
-{
-  "url": "https://mcp.tianyancha.com/mcp",
-  "sessionId": "mcp-session-xxx",
-  "initializedAt": 1777272039739,
-  "protocolVersion": "2024-11-05"
-}
-```
+CLI 不直接维护 MCP session，也不会写 `~/.tyc/session.json`。所有业务命令统一调用
+`/v1/core/tools/call`；`tyc init` 用 `/v1/core/ready` 做连通性校验，`tyc login`
+用 `/v1/core/auth/ready` 做鉴权校验。
 
 ---
 
@@ -376,7 +362,7 @@ tyc-cli/
 
 | 维度 | `tyc-cli` | 天眼查 MCP Server |
 |-----|---------|-------------------|
-| 协议 | MCP client（JSON-RPC over Streamable HTTP） | MCP server |
+| 协议 | Shared Core HTTP client | MCP server |
 | 实现 | TypeScript | Go |
 | 职责 | 命令树 · 参数透传 · 格式化输出 | 多源聚合 · 时间戳格式化 · 元数据注入 · Authorization 透传至 OpenAPI |
 | 运维 | 用户本地安装 | 默认连接官方托管 `mcp.tianyancha.com`，也可切到本机 apimcp 或用户自建 |

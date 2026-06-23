@@ -34,7 +34,8 @@ ARCHITECTURE — Layered Tool Discovery for LLM Agents
                         with a USCC + official name before anything else.
     1. Ascend to L1.   Pick ONE of the ${getLayerCount("L1")} overview tools with the
                         anchored USCC. Read _summary, then use layer lists or
-                        MCP get_company_capabilities for the next tool.
+                        \`tyc company capabilities <company_id>\` / MCP
+                        get_company_capabilities for the next tool.
     2. Descend to L2.  Pick a specific dimension
                         (shareholders / litigation / patents / annual reports …).
                         If unsure which L2, default to that facet's L2★ 优先 (below).
@@ -63,6 +64,9 @@ DISCOVER BY LAYER
   tyc L3 list             list all ${getLayerCount("L3")} L3 tools (specialized, grouped)
   tyc L0 list --md        Markdown tables (agent on-screen)
   tyc L0 list --json      machine-readable JSON (id · cli · params · description · priority)
+  tyc company capabilities <company_id> --company-name <name>
+                         print a CLI-oriented capabilities guide with direct
+                         tyc commands derived from MCP get_company_capabilities
 
 DISCOVER BY CATEGORY (orthogonal to layers, 6 groups)
 
@@ -74,7 +78,7 @@ OUTPUT FORMATS (mutually exclusive, priority: --md > --compact > --pretty / defa
   --pretty     same as default (kept for backward compatibility / explicit intent)
   --compact    compact single-line JSON (pipe / jq friendly; old default behavior)
   --md         Markdown tables (human + agent on-screen)
-  --verbose    also print core/MCP request details to stderr (orthogonal to above)
+  --verbose    also print shared core request details to stderr (orthogonal to above)
 
 OUTPUT TRUNCATION & DUMP  (orthogonal — apply to any sub-command)
 
@@ -98,8 +102,7 @@ SETUP
   tyc login --no-open --no-block                       print OAuth URL and exit; complete manually
   tyc login --callback-token <CODE_OR_CALLBACK_URL>    complete a non-blocking OAuth login
   tyc login --url <MCP_URL>                             OAuth for local / pre / self-hosted
-  tyc init --authorization <KEY>                        API-key compatibility path (default transport: core)
-  tyc init --transport mcp --authorization <KEY>        legacy MCP session transport
+  tyc init --authorization <KEY>                        API-key compatibility path
   tyc init --url <MCP_URL> --authorization <KEY>        local / self-hosted service
 
 Every tool returns tyc OpenAPI native English keys verbatim. The MCP Server
@@ -148,7 +151,7 @@ const program = new Command()
   .option("--pretty", "缩进 JSON 输出（默认行为，flag 保留以保持向后兼容）")
   .option("--md", "Markdown 表格化输出（适合人类阅读 / Agent 上屏）")
   .option("--compact", "紧凑单行 JSON（管道 / jq 场景；为旧默认行为）")
-  .option("--verbose", "打印 core/MCP 请求详情到 stderr")
+  .option("--verbose", "打印 shared core 请求详情到 stderr")
   .option(
     "--head [n]",
     "仅输出前 N 行（不传值默认 50；与 --tail 同时给则同时输出两端）",

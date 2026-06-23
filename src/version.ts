@@ -1,6 +1,6 @@
 // CLI 版本号单一来源：从 package.json 读取
 //
-// 历史上 index.ts 与 mcpClient.ts 各自硬编码版本字符串，多处漂移。
+// 历史上 index.ts 与 client 实现各自硬编码版本字符串，多处漂移。
 // 收敛到 package.json 一处后，bump 版本只需 npm version <x>。
 // 运行时 fs 读：dev (`tsx src/version.ts`) 与 dist (`dist/version.js`) 与
 // package.json 都同级 (cli/t1_1/{src,dist} ↔ cli/t1_1/package.json)，

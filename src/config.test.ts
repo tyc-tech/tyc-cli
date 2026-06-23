@@ -49,7 +49,6 @@ describe("OAuth refresh config", () => {
     saveConfig({
       url: "https://mcp.example/mcp",
       coreUrl: "https://mcp.example/v1/core/tools/call",
-      transport: "core",
       headers: { Authorization: "Bearer old-access-token" },
       oauth: {
         tokenEndpoint: "https://issuer.example/oauth/token",

@@ -1,26 +1,23 @@
 // ~/.tyc/config.json 读写
 //
-// 配置文件格式与通用 MCP 客户端保持一致：
+// 配置文件格式：
 //   { "url": "https://mcp.tianyancha.com/mcp",
 //     "headers": { "Authorization": "xxxx" },
-//     "transport": "core",
 //     "coreUrl": "https://mcp.tianyancha.com/v1/core/tools/call" }
 //
-// 默认端点指向天眼查公网 MCP Server 的 canonical 入口 /mcp（/v1 是兼容别名，
-// coreUrl 的 REST 端点仍只挂在 /v1/core 下）；连接本地或私有环境可通过
+// 默认端点指向天眼查公网 MCP Server 的 canonical 入口 /mcp，CLI 实际调用
+// shared core REST 端点；连接本地或私有环境可通过
 //   tyc init --url http://localhost:8080/mcp 或 TYC_MCP_ENDPOINT 环境变量覆盖。
 import { readFileSync, writeFileSync, mkdirSync, existsSync, chmodSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 import { exchangeRefreshToken, type OAuthTokenResponse } from "./oauth.js";
-import { clearSession } from "./session.js";
 import type { TycConfig, TycOAuthConfig } from "./types.js";
 
 const CONFIG_DIR = join(homedir(), ".tyc");
 const CONFIG_FILE = join(CONFIG_DIR, "config.json");
 
 export const DEFAULT_MCP_URL = "https://mcp.tianyancha.com/mcp";
-export type Transport = "core" | "mcp";
 
 export function loadConfig(): TycConfig | null {
   if (!existsSync(CONFIG_FILE)) return null;
@@ -42,7 +39,6 @@ export function saveConfig(config: TycConfig): void {
 export interface ResolvedConfig {
   url: string;
   coreUrl: string;
-  transport: Transport;
   headers: Record<string, string>;
   oauth?: TycOAuthConfig;
 }
@@ -69,12 +65,6 @@ export interface OAuthRefreshResult {
 }
 
 const OAUTH_REFRESH_SKEW_MS = 60 * 1000;
-
-function normalizeTransport(raw: string | undefined): Transport {
-  const v = (raw || "").trim().toLowerCase();
-  if (v === "mcp") return "mcp";
-  return "core";
-}
 
 function normalizeTokenType(raw: string | undefined): string {
   if (!raw) return "Bearer";
@@ -152,7 +142,6 @@ export function defaultCoreURL(mcpURL: string): string {
 export function resolveConfig(): ResolvedConfig {
   const cfg = loadConfig() || {};
   const url = process.env.TYC_MCP_ENDPOINT || cfg.url || DEFAULT_MCP_URL;
-  const transport = normalizeTransport(process.env.TYC_TRANSPORT || cfg.transport);
   const coreUrl = process.env.TYC_CORE_ENDPOINT || cfg.coreUrl || defaultCoreURL(url);
   const headers: Record<string, string> = { ...(cfg.headers || {}) };
   if (!headers.Authorization && process.env.TYC_AUTHORIZATION) {
@@ -164,7 +153,7 @@ export function resolveConfig(): ResolvedConfig {
     );
     process.exit(1);
   }
-  return { url, coreUrl, transport, headers, oauth: cfg.oauth ? { ...cfg.oauth } : undefined };
+  return { url, coreUrl, headers, oauth: cfg.oauth ? { ...cfg.oauth } : undefined };
 }
 
 function hasBearerAuthorization(config: ResolvedConfig): boolean {
@@ -217,7 +206,6 @@ export async function refreshResolvedConfigOAuth(
     scope: oauth.scope,
   });
   saveConfig(stored);
-  clearSession();
   if (opts.verbose) {
     console.error("> OAuth access token refreshed");
   }
