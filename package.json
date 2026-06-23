@@ -1,6 +1,6 @@
 {
   "name": "tyc-cli",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "天眼查 AI CLI — 162 个业务语义聚合工具 · 默认 Shared Core 调用 · 兼容 MCP transport",
   "main": "dist/index.js",
   "bin": {
