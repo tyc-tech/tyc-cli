@@ -56,15 +56,15 @@ ${renderPriorityLines()}
 
 ${renderCategoryLines()}
 
-输出格式
+全局输出选项（所有工具命令均可使用）
+
+  以下选项可用于所有工具调用；具体工具 help 不重复展开完整列表。
 
   默认        缩进 JSON，兼顾人类阅读和 Agent 解析
   --pretty    同默认输出，保留用于显式声明意图
   --compact   单行紧凑 JSON，适合管道和 jq
   --md        Markdown 表格，适合终端阅读或粘贴给 Agent
   --verbose   额外把 shared core 请求详情打印到 stderr
-
-输出截断与落盘
 
   --head [N]            只输出前 N 行；只写 flag 时默认 50 行
   --tail [M]            只输出后 M 行；只写 flag 时默认 20 行
@@ -80,9 +80,6 @@ ${renderCategoryLines()}
   tyc login --url <MCP_URL>                             登录本地、预发或自托管 MCP
   tyc init --authorization <KEY>                        使用 API Key 兼容路径
   tyc init --url <MCP_URL> --authorization <KEY>        配置本地或自托管服务
-
-说明：工具结果保留天眼查 OpenAPI 原生英文字段；MCP Server 负责多源合并、
-Asia/Shanghai 时间格式化、_summary 注入和空结果归一化。
 `;
 
 function pad(n: number, width: number): string {
