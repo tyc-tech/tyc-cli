@@ -133,9 +133,7 @@ function registerLayerCmd(program: Command, spec: LayerSpec): void {
   const layer = spec.layer;
   const cmd = program
     .command(layer)
-    .description(
-      `${spec.title}（${getLayerCount(layer)} 个）— ${spec.summary}`
-    );
+    .description(layerCommandDescription(spec));
 
   cmd
     .command("list")
@@ -176,6 +174,19 @@ function registerLayerCmd(program: Command, spec: LayerSpec): void {
       }
       console.log(renderLayerListText(spec, tools));
     });
+}
+
+function layerCommandDescription(spec: LayerSpec): string {
+  switch (spec.layer) {
+    case "L0":
+      return `实体锚定层（${getLayerCount("L0")} 个）— 把简称、曾用名或模糊指代解析成精确企业。`;
+    case "L1":
+      return `概要总览层（${getLayerCount("L1")} 个）— 每个业务面 1 个总览工具，用 _summary 指引下一跳。`;
+    case "L2":
+      return `维度下钻层（${getLayerCount("L2")} 个）— 股权、诉讼、招投标、年报、知识产权等明细维度。`;
+    case "L3":
+      return `专项工具层（${getLayerCount("L3")} 个）— id 详情、search_*、垂直场景和专业查询。`;
+  }
 }
 
 // ─────────────────────────── 渲染：tyc layers ───────────────────────────

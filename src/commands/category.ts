@@ -13,6 +13,20 @@ import { registerCompanyCapabilitiesCommand } from "./capabilities.js";
 import { callCoreToolWithOAuthRefresh } from "./coreCall.js";
 import { emitToolResult } from "./output.js";
 
+const GLOBAL_OUTPUT_HELP = `
+全局输出选项（所有工具命令均可使用）
+
+  --md                  Markdown 表格化输出
+  --compact             紧凑单行 JSON
+  --pretty              缩进 JSON 输出（默认行为）
+  --head [N]            只输出前 N 行（不传值默认 50）
+  --tail [M]            只输出后 M 行（不传值默认 20）
+  --full                强制输出完整内容
+  --threshold <BYTES>   超过指定字节数时从头截断；不传则不自动截断
+  --output-file <PATH>  把完整结果写入文件；必须显式指定才会落盘
+  --verbose             打印 shared core 请求详情到 stderr
+`;
+
 export function registerCategoryCommands(program: Command): void {
   for (const cat of getCategories()) {
     const tools = getToolsByGroup(cat.group);
@@ -58,11 +72,16 @@ function bindMethod(catCmd: Command, tool: CatalogTool, program: Command): void 
     methodCmd = methodCmd.argument(`<${positional.name}>`, positional.description);
   }
   for (const p of remainingRequired) {
-    methodCmd = methodCmd.requiredOption(`--${p.name} <value>`, p.description);
+    methodCmd = methodCmd.requiredOption(
+      `--${p.name} <value>`,
+      `必填；${p.description}`,
+    );
   }
   for (const p of optionalParams) {
     methodCmd = methodCmd.option(`--${p.name} <value>`, p.description);
   }
+
+  methodCmd.addHelpText("after", GLOBAL_OUTPUT_HELP);
 
   methodCmd.action(async (posVal: string | undefined, options: Record<string, string>) => {
     const args: Record<string, string> = {};
