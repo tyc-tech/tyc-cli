@@ -7,7 +7,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 
 const PENDING_DIR = join(homedir(), ".tyc");
-const PENDING_FILE = join(PENDING_DIR, "oauth_pending.json");
+export const PENDING_FILE = join(PENDING_DIR, "oauth_pending.json");
 
 export interface PendingOAuthLogin {
   version: 1;
@@ -28,8 +28,9 @@ export function loadPendingOAuthLogin(): PendingOAuthLogin | null {
   try {
     const raw = readFileSync(PENDING_FILE, "utf-8");
     return JSON.parse(raw) as PendingOAuthLogin;
-  } catch {
-    return null;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`读取 OAuth pending 状态失败：${PENDING_FILE}：${msg}`);
   }
 }
 
@@ -39,6 +40,13 @@ export function savePendingOAuthLogin(pending: PendingOAuthLogin): void {
   try { chmodSync(PENDING_FILE, 0o600); } catch { /* best effort */ }
 }
 
-export function clearPendingOAuthLogin(): void {
-  try { rmSync(PENDING_FILE, { force: true }); } catch { /* ignore */ }
+export function clearPendingOAuthLogin(verbose = false): void {
+  try {
+    rmSync(PENDING_FILE, { force: true });
+  } catch (err) {
+    if (verbose) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`> 清理 OAuth pending 状态失败（忽略）：${PENDING_FILE}：${msg}`);
+    }
+  }
 }

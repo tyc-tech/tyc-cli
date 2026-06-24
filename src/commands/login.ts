@@ -141,7 +141,7 @@ async function completePendingOAuthLogin(
     },
     verbose,
   );
-  clearPendingOAuthLogin();
+  clearPendingOAuthLogin(verbose);
   await verifySavedOAuthLogin(verify, verbose);
 }
 
@@ -374,7 +374,7 @@ export function registerLoginCommand(program: Command): void {
         },
         verbose,
       );
-      clearPendingOAuthLogin();
+      clearPendingOAuthLogin(verbose);
       await verifySavedOAuthLogin(opts.verify !== false, verbose);
     });
 }
