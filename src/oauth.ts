@@ -521,9 +521,9 @@ export function parseAuthorizationCallbackCode(raw: string, expectedState?: stri
   if (expectedState && state && state !== expectedState) {
     throw new Error("OAuth state mismatch");
   }
-  const code = params.get("code") || params.get("token") || params.get("callback_token");
+  const code = params.get("code");
   if (!code) {
-    throw new Error("callback URL missing code/token");
+    throw new Error("callback URL missing code");
   }
   return code;
 }

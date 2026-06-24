@@ -46,13 +46,13 @@ describe("parseAuthorizationCallbackCode", () => {
     );
   });
 
-  it("accepts token-style callback parameter aliases", () => {
-    expect(parseAuthorizationCallbackCode("?token=abc123&state=state-1", "state-1")).toBe(
-      "abc123",
-    );
+  it("rejects token-style callback parameter aliases", () => {
+    expect(() =>
+      parseAuthorizationCallbackCode("?token=abc123&state=state-1", "state-1"),
+    ).toThrow("callback URL missing code");
     expect(
-      parseAuthorizationCallbackCode("?callback_token=def456&state=state-1", "state-1"),
-    ).toBe("def456");
+      () => parseAuthorizationCallbackCode("?callback_token=def456&state=state-1", "state-1"),
+    ).toThrow("callback URL missing code");
   });
 
   it("rejects a callback URL with mismatched state", () => {

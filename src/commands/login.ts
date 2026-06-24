@@ -161,8 +161,8 @@ export function registerLoginCommand(program: Command): void {
     .option("--redirect-host <host>", "本地回调 host（默认 localhost）")
     .option("--redirect-port <port>", "本地回调端口（默认 7078）")
     .option("--callback-path <path>", "本地回调路径（默认 /oauth/callback）")
-    .option("--callback-token <code-or-url>", "继续非阻塞登录：传入授权回调 code/token 或完整 callback URL")
-    .option("--token <code-or-url>", "同 --callback-token，用于手动传入授权回调 code/token")
+    .option("--callback-token <code-or-url>", "继续非阻塞登录：传入授权回调 code 或包含 code 的完整 callback URL")
+    .option("--token <code-or-url>", "同 --callback-token（兼容别名；仍需传授权回调 code）")
     .option("--no-open", "不自动打开浏览器，只打印授权 URL")
     .option("--no-block", "配合 --no-open：打印授权 URL 并保存 pending 状态后立即退出")
     .option("--no-verify", "保存 token 后跳过 shared core 鉴权校验")
@@ -332,8 +332,8 @@ export function registerLoginCommand(program: Command): void {
         console.error("请在浏览器打开以下 URL 完成登录：");
         console.error(authorizationURL);
         console.error("");
-        console.error("完成授权后，复制回调 URL 中的 code/token 参数，然后运行：");
-        console.error("tyc login --callback-token <code_or_token>");
+        console.error("完成授权后，复制回调 URL 中的 code 参数，然后运行：");
+        console.error("tyc login --callback-token <code_or_callback_url>");
         console.error("也可以传完整 callback URL：tyc login --callback-token \"http://localhost:7078/oauth/callback?code=...&state=...\"");
         return;
       }
