@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  buildCliCallbackRedirectUri,
   exchangeRefreshToken,
   knownOAuthDefaultsForMcpURL,
   parseAuthorizationCallbackCode,
@@ -23,6 +24,17 @@ describe("knownOAuthDefaultsForMcpURL", () => {
       issuer: "https://ai.tianyancha.com/oauth",
       resource: "https://mcp.tianyancha.com/mcp",
     });
+  });
+});
+
+describe("buildCliCallbackRedirectUri", () => {
+  it("derives the CLI callback page from the authorization issuer", () => {
+    expect(buildCliCallbackRedirectUri("https://ai.tianyancha.com/oauth")).toBe(
+      "https://ai.tianyancha.com/oauth/cli/callback",
+    );
+    expect(buildCliCallbackRedirectUri("https://ai-pre.tianyancha.com/oauth/")).toBe(
+      "https://ai-pre.tianyancha.com/oauth/cli/callback",
+    );
   });
 });
 

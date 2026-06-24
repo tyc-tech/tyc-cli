@@ -11,6 +11,7 @@ import {
 import { verifyCoreAuthEndpoint } from "../coreClient.js";
 import {
   buildAuthorizationURL,
+  buildCliCallbackRedirectUri,
   type CallbackServer,
   createPKCE,
   discoverAuthorizationServer,
@@ -64,13 +65,6 @@ function parsePort(raw: string | undefined): number {
 function normalizeCallbackPath(raw: string | undefined): string {
   const path = raw || "/oauth/callback";
   return path.startsWith("/") ? path : `/${path}`;
-}
-
-function buildLoopbackRedirectUri(host: string, port: number, path: string): string {
-  if (port === 0) {
-    throw new Error("--no-block 不能与 --redirect-port 0 同时使用，请指定固定回调端口。");
-  }
-  return `http://${host}:${port}${path}`;
 }
 
 function pickCallbackToken(opts: LoginOptions): string | undefined {
@@ -266,7 +260,7 @@ export function registerLoginCommand(program: Command): void {
       const pkce = createPKCE();
       let callback: CallbackServer | undefined;
       const redirectUri = noBlock
-        ? buildLoopbackRedirectUri(redirectHost, redirectPort, callbackPath)
+        ? buildCliCallbackRedirectUri(issuer)
         : (callback = await startCallbackServer({
             host: redirectHost,
             port: redirectPort,
@@ -332,9 +326,9 @@ export function registerLoginCommand(program: Command): void {
         console.error("请在浏览器打开以下 URL 完成登录：");
         console.error(authorizationURL);
         console.error("");
-        console.error("完成授权后，复制回调 URL 中的 code 参数，然后运行：");
-        console.error("tyc login --callback-token <code_or_callback_url>");
-        console.error("也可以传完整 callback URL：tyc login --callback-token \"http://localhost:7078/oauth/callback?code=...&state=...\"");
+        console.error("完成授权后，浏览器会打开天眼查 CLI 回调页。请按页面提示复制命令到终端执行。");
+        console.error("也可以复制完整回调 URL 后运行：");
+        console.error(`tyc login --callback-token "${redirectUri}?code=...&state=..."`);
         return;
       }
 

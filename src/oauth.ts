@@ -250,6 +250,11 @@ export function randomState(): string {
   return randomBytes(24).toString("base64url");
 }
 
+export function buildCliCallbackRedirectUri(issuer: string): string {
+  const url = new URL(issuer);
+  return `${trimRightSlash(url.toString())}/cli/callback`;
+}
+
 function callbackHTML(title: string, body: string): string {
   return `<!doctype html>
 <meta charset="utf-8">
