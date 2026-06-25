@@ -4,7 +4,7 @@
   "description": "天眼查 AI CLI — 162 个业务语义聚合工具 · 默认 Shared Core 调用 · 兼容 MCP transport",
   "main": "dist/index.js",
   "bin": {
-    "tyc": "./dist/index.js"
+    "tyc": "dist/index.js"
   },
   "scripts": {
     "build": "tsc && cp src/catalog.json dist/catalog.json",
