@@ -2,7 +2,7 @@
 //
 // 行为：
 //   1. 写入 ~/.tyc/config.json
-//   2. 立即向 shared core /ready 验证连通性
+//   2. 立即校验配置：带 Authorization 时检查 /auth/ready，否则检查 /ready
 //      —— 失败即退出非 0，让调用方（含测试 preflight）能明确感知
 //
 // 特殊选项：
@@ -12,15 +12,15 @@ import {
   DEFAULT_MCP_URL,
   defaultCoreURL,
   loadConfig,
-  resolveConfig,
   saveConfig,
 } from "../config.js";
-import { verifyCoreEndpoint } from "../coreClient.js";
+import { verifyCoreAuthEndpoint, verifyCoreEndpoint } from "../coreClient.js";
+import { printLoginSuccessBanner } from "../logo.js";
 
 export function registerInitCommand(program: Command): void {
   program
     .command("init")
-    .description("配置 endpoint / Authorization（保存到 ~/.tyc/config.json，并校验 shared core 连通性）")
+    .description("配置 endpoint / Authorization（保存到 ~/.tyc/config.json，并校验配置）")
     .option("--authorization <token>", "tyc OpenAPI Authorization（写入 headers.Authorization）")
     .option("--url <url>", `MCP endpoint（默认 ${DEFAULT_MCP_URL}）`)
     .option("--core-url <url>", "Shared Core HTTP endpoint（默认从 --url 推导 /v1/core/tools/call）")
@@ -73,21 +73,40 @@ export function registerInitCommand(program: Command): void {
       if (resetOAuth) delete cfg.oauth;
 
       saveConfig(cfg);
-      console.log(`已保存 ~/.tyc/config.json  (url=${cfg.url}, coreUrl=${cfg.coreUrl})`);
+      const verbose = !!program.opts().verbose;
+      if (verbose) {
+        console.error(`> config saved to ~/.tyc/config.json (url=${cfg.url}, coreUrl=${cfg.coreUrl})`);
+      }
 
       if (opts.verify === false) {
+        console.log(`已保存 ~/.tyc/config.json  (url=${cfg.url}, coreUrl=${cfg.coreUrl})`);
         return;
       }
 
       try {
-        const resolved = resolveConfig();
-        const verbose = !!program.opts().verbose;
-        await verifyCoreEndpoint(resolved, verbose);
-        console.log("Shared Core endpoint 校验通过");
+        const verifyConfig = {
+          url: cfg.url,
+          coreUrl: cfg.coreUrl || defaultCoreURL(cfg.url),
+          headers: { ...(cfg.headers || {}) },
+        };
+        if (!verifyConfig.headers.Authorization && process.env.TYC_AUTHORIZATION) {
+          verifyConfig.headers.Authorization = process.env.TYC_AUTHORIZATION;
+        }
+
+        if (verifyConfig.headers.Authorization?.trim()) {
+          await verifyCoreAuthEndpoint(verifyConfig, verbose);
+          if (verbose) {
+            console.error("> Shared Core auth check passed");
+          }
+          printLoginSuccessBanner();
+        } else {
+          await verifyCoreEndpoint(verifyConfig, verbose);
+          console.log("Shared Core endpoint 校验通过");
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        console.error(`连通性校验失败：${msg}`);
-        console.error("配置已保存；确认 --url 可达后重新运行 tyc init，或加 --no-verify 跳过校验。");
+        console.error(`配置校验失败：${msg}`);
+        console.error("配置已保存；确认 --url 可达且 Authorization 有效后重新运行 tyc init，或加 --no-verify 跳过校验。");
         process.exit(1);
       }
     });

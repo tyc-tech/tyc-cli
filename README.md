@@ -80,7 +80,8 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 > `tyc login --no-block` 使用 OAuth Device Flow，打印授权 URL 和 6 位验证码后立即退出，
 > 并把一次性 `device_code` 保存到 `~/.tyc/oauth_pending.json`。在网页输入验证码并确认授权后，
 > 执行 `tyc login --resume` 完成换 token。旧版 `tyc login --callback-token "<...>"` 仍保留作兼容入口。
-> `tyc init` 保存配置后会立即校验 shared core endpoint；失败则退出码 1 并提示连通性问题。
+> `tyc init --authorization` 保存配置后会立即校验 shared core auth ready；通过后输出与
+> OAuth 登录一致的登录成功提示。失败则退出码 1 并提示配置校验问题。
 > 加 `--no-verify` 可跳过校验。
 
 配置存于 `~/.tyc/config.json`（权限 600）：
