@@ -14,7 +14,9 @@ export interface AuthorizationServerMetadata {
   issuer?: string;
   authorization_endpoint?: string;
   token_endpoint?: string;
+  device_authorization_endpoint?: string;
   registration_endpoint?: string;
+  grant_types_supported?: string[];
   scopes_supported?: string[];
   code_challenge_methods_supported?: string[];
   [k: string]: unknown;
@@ -32,10 +34,14 @@ export interface OAuthTokenResponse {
 export interface OAuthEndpoints {
   authorizationEndpoint: string;
   tokenEndpoint: string;
+  deviceAuthorizationEndpoint?: string;
   registrationEndpoint?: string;
   issuer: string;
   resourceDocumentation?: string;
+  grantTypesSupported?: string[];
 }
+
+export const DEVICE_CODE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code";
 
 export interface OAuthClientRegistrationResponse {
   client_id: string;
@@ -46,6 +52,30 @@ export interface OAuthClientRegistrationResponse {
   response_types?: string[];
   token_endpoint_auth_method?: string;
   [k: string]: unknown;
+}
+
+export interface OAuthDeviceAuthorizationResponse {
+  device_code: string;
+  user_code: string;
+  verification_uri: string;
+  verification_uri_complete?: string;
+  expires_in: number;
+  interval?: number;
+  [k: string]: unknown;
+}
+
+export class OAuthTokenEndpointError extends Error {
+  status: number;
+  error: string;
+  errorDescription?: string;
+
+  constructor(status: number, error: string, errorDescription?: string) {
+    super(errorDescription ? `${error}: ${errorDescription}` : error);
+    this.name = "OAuthTokenEndpointError";
+    this.status = status;
+    this.error = error;
+    this.errorDescription = errorDescription;
+  }
 }
 
 export interface CallbackServer {
@@ -193,11 +223,18 @@ export async function discoverAuthorizationServer(
         return {
           authorizationEndpoint: metadata.authorization_endpoint,
           tokenEndpoint: metadata.token_endpoint,
+          deviceAuthorizationEndpoint:
+            typeof metadata.device_authorization_endpoint === "string"
+              ? metadata.device_authorization_endpoint
+              : undefined,
           registrationEndpoint:
             typeof metadata.registration_endpoint === "string"
               ? metadata.registration_endpoint
               : undefined,
           issuer,
+          grantTypesSupported: Array.isArray(metadata.grant_types_supported)
+            ? metadata.grant_types_supported.filter((v): v is string => typeof v === "string")
+            : undefined,
           resourceDocumentation:
             typeof metadata.resource_documentation === "string"
               ? metadata.resource_documentation
@@ -424,6 +461,60 @@ export async function registerDynamicOAuthClient(opts: {
   };
 }
 
+export async function requestDeviceAuthorization(opts: {
+  deviceAuthorizationEndpoint: string;
+  clientId: string;
+  clientSecret?: string;
+  scope: string;
+  resource?: string;
+}): Promise<OAuthDeviceAuthorizationResponse> {
+  const body = new URLSearchParams();
+  body.set("client_id", opts.clientId);
+  body.set("scope", opts.scope);
+  if (opts.clientSecret) body.set("client_secret", opts.clientSecret);
+  if (opts.resource) body.set("resource", opts.resource);
+
+  const resp = await fetch(opts.deviceAuthorizationEndpoint, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  const text = await resp.text();
+  if (resp.status < 200 || resp.status >= 300) {
+    throw new Error(`device authorization HTTP ${resp.status}: ${text.slice(0, 500)}`);
+  }
+  const payload = JSON.parse(text) as Partial<OAuthDeviceAuthorizationResponse>;
+  if (!payload.device_code || !payload.user_code || !payload.verification_uri) {
+    throw new Error("device authorization response missing required fields");
+  }
+  return {
+    ...payload,
+    device_code: payload.device_code,
+    user_code: payload.user_code,
+    verification_uri: payload.verification_uri,
+    expires_in: Number(payload.expires_in) > 0 ? Number(payload.expires_in) : 600,
+    interval: Number(payload.interval) > 0 ? Number(payload.interval) : 5,
+  };
+}
+
+function parseOAuthTokenError(status: number, text: string): OAuthTokenEndpointError {
+  try {
+    const payload = JSON.parse(text) as { error?: unknown; error_description?: unknown };
+    const error = typeof payload.error === "string" && payload.error
+      ? payload.error
+      : `token endpoint HTTP ${status}`;
+    const description = typeof payload.error_description === "string"
+      ? payload.error_description
+      : undefined;
+    return new OAuthTokenEndpointError(status, error, description);
+  } catch {
+    return new OAuthTokenEndpointError(status, `token endpoint HTTP ${status}`, text.slice(0, 500));
+  }
+}
+
 export async function exchangeAuthorizationCode(opts: {
   tokenEndpoint: string;
   clientId: string;
@@ -453,6 +544,39 @@ export async function exchangeAuthorizationCode(opts: {
   const text = await resp.text();
   if (resp.status < 200 || resp.status >= 300) {
     throw new Error(`token endpoint HTTP ${resp.status}: ${text.slice(0, 500)}`);
+  }
+  const token = JSON.parse(text) as Partial<OAuthTokenResponse>;
+  if (!token.access_token) {
+    throw new Error("token endpoint response missing access_token");
+  }
+  return token as OAuthTokenResponse;
+}
+
+export async function exchangeDeviceCode(opts: {
+  tokenEndpoint: string;
+  clientId: string;
+  clientSecret?: string;
+  deviceCode: string;
+  resource?: string;
+}): Promise<OAuthTokenResponse> {
+  const body = new URLSearchParams();
+  body.set("grant_type", DEVICE_CODE_GRANT_TYPE);
+  body.set("client_id", opts.clientId);
+  body.set("device_code", opts.deviceCode);
+  if (opts.clientSecret) body.set("client_secret", opts.clientSecret);
+  if (opts.resource) body.set("resource", opts.resource);
+
+  const resp = await fetch(opts.tokenEndpoint, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  const text = await resp.text();
+  if (resp.status < 200 || resp.status >= 300) {
+    throw parseOAuthTokenError(resp.status, text);
   }
   const token = JSON.parse(text) as Partial<OAuthTokenResponse>;
   if (!token.access_token) {

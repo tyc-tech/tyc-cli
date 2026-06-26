@@ -1,7 +1,8 @@
 // ~/.tyc/oauth_pending.json 读写
 //
-// 非阻塞 OAuth 登录会先保存 PKCE code_verifier、state、client_id 等一次性上下文；
-// 用户完成浏览器授权后，再用 tyc login --callback-token <code_or_callback_url> 继续换取 access token。
+// 非阻塞 OAuth 登录会保存一次性上下文：
+// - legacy PKCE 模式保存 code_verifier/state，靠 --callback-token 续接；
+// - RFC 8628 device flow 保存 device_code，靠 --resume 续接。
 import { chmodSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -9,8 +10,9 @@ import { join } from "node:path";
 const PENDING_DIR = join(homedir(), ".tyc");
 export const PENDING_FILE = join(PENDING_DIR, "oauth_pending.json");
 
-export interface PendingOAuthLogin {
+export interface PendingOAuthPKCELogin {
   version: 1;
+  flow?: "pkce";
   createdAt: number;
   mcpURL: string;
   tokenEndpoint: string;
@@ -22,6 +24,26 @@ export interface PendingOAuthLogin {
   state: string;
   verify: boolean;
 }
+
+export interface PendingOAuthDeviceLogin {
+  version: 2;
+  flow: "device";
+  createdAt: number;
+  mcpURL: string;
+  tokenEndpoint: string;
+  clientId: string;
+  clientSecret?: string;
+  deviceCode: string;
+  userCode: string;
+  verificationUri: string;
+  expiresAt: number;
+  interval: number;
+  resource?: string;
+  scope?: string;
+  verify: boolean;
+}
+
+export type PendingOAuthLogin = PendingOAuthPKCELogin | PendingOAuthDeviceLogin;
 
 export function loadPendingOAuthLogin(): PendingOAuthLogin | null {
   if (!existsSync(PENDING_FILE)) return null;

@@ -61,9 +61,9 @@ tyc login
 tyc login --url "https://ai-mcp-pre.tianyancha.com/mcp"
 tyc login --url "http://localhost:8080/mcp" --issuer "http://localhost:8080/oauth"
 
-# 非阻塞 OAuth：只打印授权 URL，不占住命令行；授权后手动传回 callback code
-tyc login --no-open --no-block
-tyc login --callback-token "<callback_code_or_full_callback_url>"
+# 非阻塞 OAuth：打印授权 URL 和 6 位验证码；网页授权后恢复登录
+tyc login --no-block
+tyc login --resume
 
 # API key 兼容路径：已有天眼查 OpenAPI token 时可直接写入
 tyc init --authorization "YOUR_API_TOKEN"
@@ -77,9 +77,9 @@ tyc init --authorization "YOUR_API_TOKEN" --no-verify
 > `Authorization: Bearer <access_token>` 和 refresh token 上下文写入
 > `~/.tyc/config.json`。后续业务命令会在 access token 临期时自动刷新；
 > 如果服务端返回 401，会强制刷新一次并重试当前请求。
-> `tyc login --no-open --no-block` 会打印授权 URL 后立即退出，并把一次性 PKCE 上下文
-> 保存到 `~/.tyc/oauth_pending.json`；完成浏览器授权后，页面会跳转到天眼查 CLI
-> 回调页并展示可复制命令，执行 `tyc login --callback-token "<...>"` 完成换 token。
+> `tyc login --no-block` 使用 OAuth Device Flow，打印授权 URL 和 6 位验证码后立即退出，
+> 并把一次性 `device_code` 保存到 `~/.tyc/oauth_pending.json`。在网页输入验证码并确认授权后，
+> 执行 `tyc login --resume` 完成换 token。旧版 `tyc login --callback-token "<...>"` 仍保留作兼容入口。
 > `tyc init` 保存配置后会立即校验 shared core endpoint；失败则退出码 1 并提示连通性问题。
 > 加 `--no-verify` 可跳过校验。
 
@@ -122,8 +122,9 @@ tyc executive personnel-dishonest "..." --humanName "张三"
 | 命令 | 说明 |
 |------|------|
 | `tyc login` | 浏览器 OAuth 登录；自动发现 metadata、使用 PKCE 获取 access token / refresh token 并写入配置 |
-| `tyc login --no-open --no-block` | 打印 OAuth 授权 URL 并立即退出，授权完成后按天眼查 CLI 回调页提示继续 |
-| `tyc login --callback-token <code-or-url>` | 使用上一步保存的 PKCE 上下文，把回调 code 换成 access token |
+| `tyc login --no-block` | 打印 Device Flow 授权 URL 和 6 位验证码并立即退出 |
+| `tyc login --resume` | 网页输入验证码并确认授权后，使用本地 pending device_code 换取 access token |
+| `tyc login --callback-token <code-or-url>` | 兼容旧版 PKCE 非阻塞登录，把回调 code 换成 access token |
 | `tyc login --url <url>` | 对指定 MCP endpoint 发起 OAuth 登录 |
 | `tyc init --authorization <token>` | 写入 `headers.Authorization`；保存后会立即校验 shared core 连通性 |
 | `tyc init --url <url>` | 设置 MCP endpoint |

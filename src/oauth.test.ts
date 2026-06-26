@@ -1,9 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildCliCallbackRedirectUri,
+  exchangeDeviceCode,
   exchangeRefreshToken,
   knownOAuthDefaultsForMcpURL,
+  OAuthTokenEndpointError,
   parseAuthorizationCallbackCode,
+  requestDeviceAuthorization,
 } from "./oauth.js";
 
 afterEach(() => {
@@ -121,5 +124,90 @@ describe("exchangeRefreshToken", () => {
     expect(body.get("client_secret")).toBe("secret-1");
     expect(body.get("refresh_token")).toBe("old-refresh-token");
     expect(body.get("resource")).toBe("https://mcp.example/mcp");
+  });
+});
+
+describe("requestDeviceAuthorization", () => {
+  it("requests an OAuth device authorization", async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            device_code: "device-secret",
+            user_code: "123456",
+            verification_uri: "https://issuer.example/oauth/device",
+            expires_in: 600,
+            interval: 5,
+          }),
+          { status: 200 },
+        ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const device = await requestDeviceAuthorization({
+      deviceAuthorizationEndpoint: "https://issuer.example/oauth/device_authorization",
+      clientId: "client-1",
+      scope: "mcp:tools.call",
+      resource: "https://mcp.example/mcp",
+    });
+
+    expect(device.user_code).toBe("123456");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const init = fetchMock.mock.calls[0][1] as RequestInit;
+    const body = init.body as URLSearchParams;
+    expect(body.get("client_id")).toBe("client-1");
+    expect(body.get("scope")).toBe("mcp:tools.call");
+    expect(body.get("resource")).toBe("https://mcp.example/mcp");
+  });
+});
+
+describe("exchangeDeviceCode", () => {
+  it("uses the RFC 8628 device_code grant", async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            access_token: "access-token",
+            token_type: "Bearer",
+            expires_in: 900,
+            refresh_token: "refresh-token",
+          }),
+          { status: 200 },
+        ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const token = await exchangeDeviceCode({
+      tokenEndpoint: "https://issuer.example/oauth/token",
+      clientId: "client-1",
+      deviceCode: "device-secret",
+      resource: "https://mcp.example/mcp",
+    });
+
+    expect(token.access_token).toBe("access-token");
+    const init = fetchMock.mock.calls[0][1] as RequestInit;
+    const body = init.body as URLSearchParams;
+    expect(body.get("grant_type")).toBe("urn:ietf:params:oauth:grant-type:device_code");
+    expect(body.get("device_code")).toBe("device-secret");
+  });
+
+  it("surfaces OAuth device polling errors", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ error: "authorization_pending" }), { status: 400 }),
+      ),
+    );
+
+    await expect(
+      exchangeDeviceCode({
+        tokenEndpoint: "https://issuer.example/oauth/token",
+        clientId: "client-1",
+        deviceCode: "device-secret",
+      }),
+    ).rejects.toMatchObject({
+      error: "authorization_pending",
+    } satisfies Partial<OAuthTokenEndpointError>);
   });
 });

@@ -14,22 +14,29 @@ import {
   buildCliCallbackRedirectUri,
   type CallbackServer,
   createPKCE,
+  DEVICE_CODE_GRANT_TYPE,
   discoverAuthorizationServer,
   discoverProtectedResourceMetadata,
   exchangeAuthorizationCode,
+  exchangeDeviceCode,
   knownOAuthDefaultsForMcpURL,
+  OAuthTokenEndpointError,
   openBrowser,
   parseAuthorizationCallbackCode,
   randomState,
   registerDynamicOAuthClient,
+  requestDeviceAuthorization,
   startCallbackServer,
   type OAuthEndpoints,
+  type OAuthTokenResponse,
 } from "../oauth.js";
 import {
   clearPendingOAuthLogin,
   loadPendingOAuthLogin,
   savePendingOAuthLogin,
+  type PendingOAuthDeviceLogin,
   type PendingOAuthLogin,
+  type PendingOAuthPKCELogin,
 } from "../oauthPending.js";
 import { printLoginSuccessBanner } from "../logo.js";
 
@@ -48,9 +55,11 @@ interface LoginOptions {
   callbackPath?: string;
   callbackToken?: string;
   token?: string;
+  resume?: boolean;
   open?: boolean;
   block?: boolean;
   verify?: boolean;
+  deviceAuthorizationEndpoint?: string;
 }
 
 function parsePort(raw: string | undefined): number {
@@ -76,7 +85,7 @@ function pickCallbackToken(opts: LoginOptions): string | undefined {
 
 function saveOAuthTokenConfig(
   mcpURL: string,
-  token: Awaited<ReturnType<typeof exchangeAuthorizationCode>>,
+  token: OAuthTokenResponse,
   oauth: OAuthTokenStoreOptions,
   verbose: boolean,
 ): void {
@@ -105,8 +114,20 @@ async function verifySavedOAuthLogin(verify: boolean, verbose: boolean): Promise
   printLoginSuccessBanner();
 }
 
+function isPendingDeviceLogin(pending: PendingOAuthLogin): pending is PendingOAuthDeviceLogin {
+  return pending.version === 2;
+}
+
+function isPendingPKCELogin(pending: PendingOAuthLogin): pending is PendingOAuthPKCELogin {
+  return pending.version === 1;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function completePendingOAuthLogin(
-  pending: PendingOAuthLogin,
+  pending: PendingOAuthPKCELogin,
   callbackToken: string,
   verify: boolean,
   verbose: boolean,
@@ -139,6 +160,73 @@ async function completePendingOAuthLogin(
   await verifySavedOAuthLogin(verify, verbose);
 }
 
+async function completePendingDeviceLogin(
+  pending: PendingOAuthDeviceLogin,
+  verify: boolean,
+  verbose: boolean,
+): Promise<void> {
+  if (pending.expiresAt <= Date.now()) {
+    clearPendingOAuthLogin(verbose);
+    throw new Error("OAuth device 授权已过期，请重新运行 tyc login --no-block。");
+  }
+
+  let intervalMs = Math.max(1, pending.interval || 5) * 1000;
+  const deadline = Date.now() + 30_000;
+  for (;;) {
+    try {
+      if (verbose) {
+        console.error("> polling OAuth device token endpoint");
+      }
+      const token = await exchangeDeviceCode({
+        tokenEndpoint: pending.tokenEndpoint,
+        clientId: pending.clientId,
+        clientSecret: pending.clientSecret,
+        deviceCode: pending.deviceCode,
+        resource: pending.resource,
+      });
+      saveOAuthTokenConfig(
+        pending.mcpURL,
+        token,
+        {
+          tokenEndpoint: pending.tokenEndpoint,
+          clientId: pending.clientId,
+          clientSecret: pending.clientSecret,
+          resource: pending.resource,
+          scope: pending.scope,
+        },
+        verbose,
+      );
+      clearPendingOAuthLogin(verbose);
+      await verifySavedOAuthLogin(verify, verbose);
+      return;
+    } catch (err) {
+      if (!(err instanceof OAuthTokenEndpointError)) {
+        throw err;
+      }
+      if (err.error === "authorization_pending" || err.error === "slow_down") {
+        if (err.error === "slow_down") {
+          intervalMs += 5_000;
+        }
+        if (Date.now() + intervalMs > deadline) {
+          throw new Error("授权尚未完成。请在网页输入 6 位验证码并确认后，再运行 tyc login --resume。");
+        }
+        await sleep(intervalMs);
+        continue;
+      }
+      if (["expired_token", "access_denied", "invalid_grant"].includes(err.error)) {
+        clearPendingOAuthLogin(verbose);
+      }
+      if (err.error === "expired_token") {
+        throw new Error("OAuth device 授权已过期，请重新运行 tyc login --no-block。");
+      }
+      if (err.error === "access_denied") {
+        throw new Error("OAuth device 授权已被拒绝，请重新运行 tyc login --no-block。");
+      }
+      throw err;
+    }
+  }
+}
+
 export function registerLoginCommand(program: Command): void {
   program
     .command("login")
@@ -152,21 +240,44 @@ export function registerLoginCommand(program: Command): void {
     .option("--resource-metadata-url <url>", "手动指定 MCP protected resource metadata URL")
     .option("--authorization-endpoint <url>", "手动指定 OAuth authorization endpoint")
     .option("--token-endpoint <url>", "手动指定 OAuth token endpoint")
+    .option("--device-authorization-endpoint <url>", "手动指定 OAuth device authorization endpoint")
     .option("--redirect-host <host>", "本地回调 host（默认 localhost）")
     .option("--redirect-port <port>", "本地回调端口（默认 7078）")
     .option("--callback-path <path>", "本地回调路径（默认 /oauth/callback）")
     .option("--callback-token <code-or-url>", "继续非阻塞登录：传入授权回调 code 或包含 code 的完整 callback URL")
     .option("--token <code-or-url>", "同 --callback-token（兼容别名；仍需传授权回调 code）")
+    .option("--resume", "继续 RFC 8628 device flow 非阻塞登录")
     .option("--no-open", "不自动打开浏览器，只打印授权 URL")
-    .option("--no-block", "配合 --no-open：打印授权 URL 并保存 pending 状态后立即退出")
+    .option("--no-block", "打印 Device Flow 授权 URL 和 6 位验证码并保存 pending 状态后立即退出")
     .option("--no-verify", "保存 token 后跳过 shared core 鉴权校验")
     .action(async (opts: LoginOptions) => {
       const verbose = !!program.opts().verbose;
       const callbackToken = pickCallbackToken(opts);
+      if (opts.resume) {
+        if (callbackToken) {
+          throw new Error("--resume 不能与 --callback-token/--token 同时使用。");
+        }
+        const pending = loadPendingOAuthLogin();
+        if (!pending) {
+          throw new Error("未找到待完成的 OAuth device 登录状态。请先运行 tyc login --no-block。");
+        }
+        if (!isPendingDeviceLogin(pending)) {
+          throw new Error("当前待完成的是旧版 callback 登录，请使用 tyc login --callback-token <code-or-url>。");
+        }
+        await completePendingDeviceLogin(
+          pending,
+          opts.verify !== false && pending.verify !== false,
+          verbose,
+        );
+        return;
+      }
       if (callbackToken) {
         const pending = loadPendingOAuthLogin();
         if (!pending) {
-          throw new Error("未找到待完成的 OAuth 登录状态。请先运行 tyc login --no-open --no-block。");
+          throw new Error("未找到待完成的 OAuth 登录状态。请先运行 tyc login --no-block。");
+        }
+        if (!isPendingPKCELogin(pending)) {
+          throw new Error("当前待完成的是 device 登录，请在网页确认后运行 tyc login --resume。");
         }
         if (verbose) {
           console.error(`> loaded pending OAuth login from ~/.tyc/oauth_pending.json (url=${pending.mcpURL})`);
@@ -181,9 +292,6 @@ export function registerLoginCommand(program: Command): void {
       }
 
       const noBlock = opts.block === false;
-      if (noBlock && opts.open !== false) {
-        throw new Error("--no-block 需要与 --no-open 一起使用。");
-      }
 
       const current = loadConfig() || {};
       const mcpURL = opts.url || process.env.TYC_MCP_ENDPOINT || current.url || DEFAULT_MCP_URL;
@@ -239,6 +347,7 @@ export function registerLoginCommand(program: Command): void {
         endpoints = {
           authorizationEndpoint: opts.authorizationEndpoint,
           tokenEndpoint: opts.tokenEndpoint,
+          deviceAuthorizationEndpoint: opts.deviceAuthorizationEndpoint,
           issuer,
         };
       } else {
@@ -246,11 +355,16 @@ export function registerLoginCommand(program: Command): void {
         endpoints.authorizationEndpoint =
           opts.authorizationEndpoint || endpoints.authorizationEndpoint;
         endpoints.tokenEndpoint = opts.tokenEndpoint || endpoints.tokenEndpoint;
+        endpoints.deviceAuthorizationEndpoint =
+          opts.deviceAuthorizationEndpoint || endpoints.deviceAuthorizationEndpoint;
       }
       resource ||= endpoints.resourceDocumentation || mcpURL;
       if (verbose) {
         console.error(`> authorization endpoint: ${endpoints.authorizationEndpoint}`);
         console.error(`> token endpoint: ${endpoints.tokenEndpoint}`);
+        if (endpoints.deviceAuthorizationEndpoint) {
+          console.error(`> device authorization endpoint: ${endpoints.deviceAuthorizationEndpoint}`);
+        }
         if (endpoints.registrationEndpoint) {
           console.error(`> registration endpoint: ${endpoints.registrationEndpoint}`);
         }
@@ -284,6 +398,10 @@ export function registerLoginCommand(program: Command): void {
             registrationEndpoint: endpoints.registrationEndpoint,
             clientName: "tyc-cli",
             redirectUris: [redirectUri],
+            grantTypes: noBlock
+              ? ["authorization_code", "refresh_token", DEVICE_CODE_GRANT_TYPE]
+              : undefined,
+            responseTypes: ["code"],
             tokenEndpointAuthMethod: "none",
           });
         } catch (err) {
@@ -296,6 +414,44 @@ export function registerLoginCommand(program: Command): void {
           console.error(`> registered client_id: ${clientId}`);
         }
       }
+      if (noBlock) {
+        if (!endpoints.deviceAuthorizationEndpoint) {
+          throw new Error("OAuth metadata 未提供 device_authorization_endpoint，请升级授权服务或使用 --device-authorization-endpoint 指定。");
+        }
+        const device = await requestDeviceAuthorization({
+          deviceAuthorizationEndpoint: endpoints.deviceAuthorizationEndpoint,
+          clientId,
+          clientSecret,
+          scope,
+          resource,
+        });
+        savePendingOAuthLogin({
+          version: 2,
+          flow: "device",
+          createdAt: Date.now(),
+          mcpURL,
+          tokenEndpoint: endpoints.tokenEndpoint,
+          clientId,
+          clientSecret,
+          deviceCode: device.device_code,
+          userCode: device.user_code,
+          verificationUri: device.verification_uri,
+          expiresAt: Date.now() + device.expires_in * 1000,
+          interval: device.interval || 5,
+          resource,
+          scope,
+          verify: opts.verify !== false,
+        });
+        console.error("请在浏览器打开以下 URL 完成登录：");
+        console.error(device.verification_uri);
+        console.error("");
+        console.error(`验证码：${device.user_code}`);
+        console.error("");
+        console.error("在网页输入 6 位验证码并确认授权后，运行：");
+        console.error("tyc login --resume");
+        return;
+      }
+
       const authorizationURL = buildAuthorizationURL({
         authorizationEndpoint: endpoints.authorizationEndpoint,
         clientId,
@@ -308,28 +464,6 @@ export function registerLoginCommand(program: Command): void {
 
       if (verbose) {
         console.error(`> OAuth callback: ${redirectUri}`);
-      }
-      if (noBlock) {
-        savePendingOAuthLogin({
-          version: 1,
-          createdAt: Date.now(),
-          mcpURL,
-          tokenEndpoint: endpoints.tokenEndpoint,
-          clientId,
-          clientSecret,
-          redirectUri,
-          codeVerifier: pkce.codeVerifier,
-          resource,
-          state,
-          verify: opts.verify !== false,
-        });
-        console.error("请在浏览器打开以下 URL 完成登录：");
-        console.error(authorizationURL);
-        console.error("");
-        console.error("完成授权后，浏览器会打开天眼查 CLI 回调页。请按页面提示复制命令到终端执行。");
-        console.error("也可以复制完整回调 URL 后运行：");
-        console.error(`tyc login --callback-token "${redirectUri}?code=...&state=..."`);
-        return;
       }
 
       if (opts.open === false) {

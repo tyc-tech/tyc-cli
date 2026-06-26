@@ -75,8 +75,9 @@ ${renderCategoryLines()}
 初始化与登录
 
   tyc login                                             OAuth 浏览器登录
-  tyc login --no-open --no-block                       打印 OAuth URL 后立即退出，手动完成
-  tyc login --callback-token <CODE_OR_CALLBACK_URL>    继续非阻塞 OAuth 登录
+  tyc login --no-block                                 打印 Device Flow URL 和 6 位验证码后立即退出
+  tyc login --resume                                   继续非阻塞 Device Flow 登录
+  tyc login --callback-token <CODE_OR_CALLBACK_URL>    继续旧版 callback OAuth 登录
   tyc login --url <MCP_URL>                             登录本地、预发或自托管 MCP
   tyc init --authorization <KEY>                        使用 API Key 兼容路径
   tyc init --url <MCP_URL> --authorization <KEY>        配置本地或自托管服务
