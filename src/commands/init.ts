@@ -71,6 +71,7 @@ export function registerInitCommand(program: Command): void {
       }
 
       if (resetOAuth) delete cfg.oauth;
+      const persistedAuthorization = cfg.headers.Authorization?.trim();
 
       saveConfig(cfg);
       const verbose = !!program.opts().verbose;
@@ -98,7 +99,11 @@ export function registerInitCommand(program: Command): void {
           if (verbose) {
             console.error("> Shared Core auth check passed");
           }
-          printLoginSuccessBanner();
+          if (persistedAuthorization) {
+            printLoginSuccessBanner();
+          } else {
+            console.log("Authorization 校验通过（来自 TYC_AUTHORIZATION；未写入 ~/.tyc/config.json）");
+          }
         } else {
           await verifyCoreEndpoint(verifyConfig, verbose);
           console.log("Shared Core endpoint 校验通过");
